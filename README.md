@@ -29,6 +29,4 @@ Setiap langkah pemain ditentukan oleh pilihan—dan setiap pilihan menyimpan gem
 - **Struktur Modular**  
   Kode dibangun dengan pendekatan fungsi dan class untuk memudahkan pengembangan.
 
----
 
-## 📂 Struktur Direktori
