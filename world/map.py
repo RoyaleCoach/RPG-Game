@@ -1,8 +1,8 @@
 import random
-from enemy import Enemy
-from puzzle import random_puzzle
-from npc import NPC
-from player import Player
+from core.enemy import Enemy
+from core.player import Player
+from world.puzzle import random_puzzle
+from world.npc import NPC
 from utils.text_effect import typewriter
 
 MAP = [

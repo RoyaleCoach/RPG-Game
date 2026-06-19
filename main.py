@@ -1,14 +1,25 @@
-from player import Player
-from map import explore, move
-from merchant import Merchant
+# Core
+from core.player import Player
+from core.inventory import inventory_check
+
+# World
+from world.map import explore
+from world.merchant import Merchant
+
+# Story
 from story.intro_story import intro_story
 from story.main_story import main_story
+
+# Utils
 from utils.press_any_key import press_any
-from inventory import inventory_check
 from utils.text_effect import typewriter
 
+from core.version import version, game_name, author
+
 def main():
-    print("=== ECHOES OF THE FORGOTTEN DUNGEON ===")
+    print(f"=== {game_name.upper()} ===")
+    print(f"Version: {version}")
+    print(f"Author: {author}")
 
     choice = input("Mulai baru (n) atau lanjutkan (l)? ").lower()
     player = Player.load() if choice == "l" else Player(input("Masukkan nama pemain: "))
@@ -16,13 +27,25 @@ def main():
     if choice == "n":
         intro_story(player)
     x=0
+
+    def show_main_menu():
+        print("\n=== MENU ===")
+        print("[1] Main Story")
+        print("[2] Jelajahi Dungeon")
+        print("[3] Merchant")
+        print("[4] Inventory")
+        print("[5] Simpan Game")
+        print("[0] Keluar")
+
+        return input("> ").strip().lower()
+
     while True:
         if x >= 1:
             press_any()
         x=1
         print(x)
         player.show_status()
-        action = input("\n[1] Main Story\n[2] Jelajahi dungeon\n[3] Merchant\n[4] Inventory\n[5] Simpan Game\n[0] Keluar\n> ")
+        action = show_main_menu()
 
         if action == "1":
             story_number = player.story_progress
@@ -33,20 +56,20 @@ def main():
                 print("\nGame Over.")
                 break
         elif action == "3":
-            move()
-        elif action == "4":
             merchant = Merchant()
             merchant.trade(player)
-        elif action == "5":
+        elif action == "4":
             inventory_check(player)
-        elif action == "6":
+        elif action == "5":
             player.save()
             print("💾 Game disimpan ke save.json")
         elif action == "0":
             print("Simpan Permainan? (y/n)")
-            save_choice = input("> ")
+            save_choice = input("> ").lower().strip()
             if save_choice == "y" or save_choice == "yes":
                 player.save()
+                typewriter("Keluar dari permainan", dramatic=True)
+                break
             elif save_choice == "n" or save_choice == "no":
                 typewriter("Keluar dari permainan", dramatic=True)
                 break
