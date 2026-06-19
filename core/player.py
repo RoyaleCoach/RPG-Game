@@ -3,17 +3,17 @@ import os
 import sys
 from .items import weapons, potions
 
-# Root project: RPG-Game/
-BASE_DIR = os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        ".."
+if getattr(sys, "frozen", False):
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            ".."
+        )
     )
-)
 
-# Folder save: RPG-Game/save/
 SAVE_DIR = os.path.join(BASE_DIR, "save")
-
 
 class Player:
     def __init__(
@@ -156,5 +156,6 @@ class Player:
 
             return Player(**data)
 
-        except FileNotFoundError:
+        except FileNotFoundError as e:
+            print("LOAD ERROR:", e)
             return Player()

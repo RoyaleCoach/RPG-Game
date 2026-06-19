@@ -1,4 +1,6 @@
 # Core
+import os
+
 from core.player import Player
 from core.inventory import inventory_check
 
@@ -20,6 +22,8 @@ def main():
     print(f"=== {game_name.upper()} ===")
     print(f"Version: {version}")
     print(f"Author: {author}")
+    import os
+    print(os.getcwd())
 
     choice = input("Mulai baru (n) atau lanjutkan (l)? ").lower()
     player = Player.load() if choice == "l" else Player(input("Masukkan nama pemain: "))
