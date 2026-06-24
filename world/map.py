@@ -6,14 +6,17 @@ from world.quest import (
     show_quests,
     check_quests
 )
+from world.dungeon import random_event
+
 
 def explore(player):
     while True:
-
+        token = 1
         print("\n=== DUNGEON ===")
         print("[1] Fight Enemy")
         print("[2] Solve Puzzle")
         print("[3] Quest Board")
+        print("[4] Random Event")
         print("[0] Return")
 
         choice = input("> ").strip()
@@ -54,9 +57,15 @@ def explore(player):
 
             show_quests(player)
 
-        else:
+        elif choice == "4":
+            random_event(player)
 
+        else:
+            token = 0
             print("Invalid choice.")
+
+        if random.randint(1, 100) <= 20 and token == 1:
+            random_event(player)
 
 
 def battle(player, enemy):

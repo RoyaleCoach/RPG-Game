@@ -6,14 +6,14 @@
         ↓
 1.4 Quest System
         ↓
-1.5 Dungeon Event
+2.0 Dungeon Event
         ↓
-1.6 Boss Battle
+3.0 Boss Battle
         ↓
-1.7 Choice & Consequence
+4.9 Choice & Consequence
         ↓
-1.8 Multiple Ending
+4.5 Multiple Ending
         ↓
-1.9 Skill System
+5.0 Skill System
         ↓
 2.0 Polishing & Release

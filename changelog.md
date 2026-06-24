@@ -92,13 +92,30 @@
 
 ## [0.2.0] - TBD
 
-### Planned
+### Added
 
-* Expanded Main Story
-* Quest System
-* Dynamic Dungeon Events
-* Additional Enemies
-* Boss Battles
-* Quest Rewards
-* Equipment Progression
-* NPC Interactions
+* Dungeon Event System
+* Treasure Room Event
+* Healing Fountain Event
+* Cursed Shrine Event
+* Ancient Statue Event
+* Gambler Event
+* Secret Passage Event
+* Lost Adventurer Event
+* Elite Enemy Encounters
+* Mimic Chest Encounters
+* Random Event Generation
+* Event-Based Rewards and Penalties
+
+### Gameplay Changes
+
+* Dungeon exploration now includes random non-combat encounters
+* Players can obtain gold, items, stat bonuses, or penalties through events
+* Secret Passages can advance floor progression
+* Some events introduce risk-versus-reward decisions
+
+### Improved
+
+* Dungeon variety and replayability
+* Exploration progression system
+* Reward distribution outside of combat

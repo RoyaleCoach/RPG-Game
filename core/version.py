@@ -1,3 +1,3 @@
-version = "0.1.4.1"
+version = "0.2.0"
 game_name = "Echoes of the Forgotten Dungeon"
 author = "RoyaleCoach"
