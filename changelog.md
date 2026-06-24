@@ -66,6 +66,30 @@
 
 ---
 
+## [0.1.4.1] - 2026-06-24
+
+### New Features
+- Quest progress tracking system
+- Dynamic quest completion rewards
+- Floor progression system
+- Equipment status indicator ([EQUIPPED])
+
+### Gameplay Changes
+- Defense is now consumed during battle instead of remaining static
+- Battle UI now shows current defense value
+- Floor increases every 3 enemy victories
+
+### Refactoring
+- Quest objectives now use type/target metadata
+- Simplified quest progress and completion logic
+- Improved maintainability for future quest additions
+
+### Fixes
+- Fixed quest progress not being displayed
+- Fixed floor progression not being linked to quest requirements
+
+---
+
 ## [0.2.0] - TBD
 
 ### Planned
