@@ -119,3 +119,31 @@
 * Dungeon variety and replayability
 * Exploration progression system
 * Reward distribution outside of combat
+
+---
+
+## [0.2.1] - 2026-06-25
+
+### Added
+
+* Boss Enemy System
+* Dedicated Boss Class
+* Level-Based Boss Scaling
+* Boss Reward System (EXP & Gold)
+* Boss Data Configuration via Dictionary
+* Automatic Boss Encounters
+
+### Gameplay Changes
+
+* Bosses now grant significantly higher rewards than normal enemies
+* Boss difficulty now scales with player progression
+* Enemy and Boss systems are now separated for easier balancing
+* Improved dungeon progression with milestone encounters
+* Boss battle is triggered every 3 dungeon expeditions
+* Boss encounters act as progression milestones
+
+### Refactoring
+
+* Introduced reusable Boss inheritance from Enemy
+* Centralized boss definitions in `enemy.py`
+* Improved combat reward handling for different enemy types
