@@ -1,7 +1,7 @@
 import json
 import os
 import sys
-from .items import weapons, potions
+from core.items import weapons, potions, defends
 
 if getattr(sys, "frozen", False):
     BASE_DIR = os.path.dirname(sys.executable)
@@ -29,6 +29,7 @@ class Player:
         level=1,
         floor=1,
         weapon="Fists",
+        armor=None,
         story_progress=0
     ):
         self.name = name
@@ -41,6 +42,7 @@ class Player:
         self.level = level
         self.floor = floor
         self.weapon = weapon
+        self.armor = armor
         self.story_progress = story_progress
         self.quest = quest or []
 
@@ -49,6 +51,7 @@ class Player:
         print(f"HP: {self.hp}")
         print(f"ATK: {self.attack} | DEF: {self.defense}")
         print(f"Weapon: {self.weapon}")
+        print(f"Armor : {self.armor or 'None'}")
         print(f"EXP: {self.exp}/100 | Floor: {self.floor}")
         print(f"Gold: {self.gold}")
 
@@ -80,8 +83,11 @@ class Player:
             print("⚠️ Senjata ini sudah digunakan.")
             return True
 
-        new_damage = weapons[weapon_name]
-        old_damage = weapons.get(self.weapon, 0)
+        new_damage = weapons[weapon_name]["attack"]
+
+        old_damage = 0
+        if self.weapon in weapons:
+            old_damage = weapons[self.weapon]["attack"]
 
         self.attack -= old_damage
         self.attack += new_damage
@@ -100,7 +106,7 @@ class Player:
             print("⚠️ Potion tidak dikenal.")
             return
 
-        heal_amount = potions[potion_name]
+        heal_amount = potions[potion_name]["effect"]
         self.hp += heal_amount
         self.inventory[potion_name] -= 1
 
@@ -112,6 +118,35 @@ class Player:
             f"HP bertambah {heal_amount}."
         )
 
+    def equip_defense(self, armor_name):
+
+        if armor_name not in self.inventory:
+            print("⚠️ Armor tidak ada di inventory.")
+            return True
+
+        if armor_name not in defends:
+            print("⚠️ Armor tidak dikenal.")
+            return True
+
+        if self.armor == armor_name:
+            print("⚠️ Armor ini sudah digunakan.")
+            return True
+
+        new_defense = defends[armor_name]["defense"]
+
+        old_defense = 0
+        if self.armor in defends:
+            old_defense = defends[self.armor]["defense"]
+
+        self.defense -= old_defense
+        self.defense += new_defense
+
+        self.armor = armor_name
+
+        print(f"🛡️ Kamu melengkapi {armor_name}!")
+
+        return False
+    
     def damage(self, amount):
         amount -= self.defense
 
