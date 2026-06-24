@@ -11,6 +11,18 @@ class Enemy:
         enemies = [
             Enemy("Goblin", 30, 8),
             Enemy("Skeleton", 40, 10),
-            Enemy("Dark Wolf", 50, 12)
+            Enemy("Dark Wolf", 50, 12),
+            Enemy("Bomber", 20, 20),
+            Enemy("Venom Spider", 45, 14),
+            Enemy("Ghoul", 60, 15),
+            Enemy("Bone Archer", 55, 16),
+            Enemy("Dark Shaman", 70, 18),
+            Enemy("Stone Golem", 120, 18),
+            Enemy("Ogre", 140, 20),
+            Enemy("Bomber", 20, 20),
+            Enemy("Necromancer", 90, 22),
+            Enemy("Doom Knight", 160, 25),
+            Enemy("Abyss Walker", 180, 28),
+            Enemy("Giant", 100, 15)
         ]
         return random.choice(enemies)

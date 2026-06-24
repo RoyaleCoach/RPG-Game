@@ -1,10 +1,10 @@
 0.1 System Stabilisation
         ↓
-0.2 Quest System
+0.2 Enemy Variation
         ↓
-0.3 Enemy Variation
+0.3 Equipment System
         ↓
-0.4 Equipment System
+0.4 Quest System
         ↓
 0.5 Dungeon Event
         ↓
