@@ -8,7 +8,6 @@ from world.quest import (
 )
 
 def explore(player):
-
     while True:
 
         print("\n=== DUNGEON ===")
@@ -46,9 +45,8 @@ def explore(player):
 
             else:
 
-                damage = 10
-
-                player.damage(damage)
+                damage = random.randint(5, 15)
+                player.hp -= damage
 
                 print(f"HP -{damage}")
 
@@ -62,11 +60,12 @@ def explore(player):
 
 
 def battle(player, enemy):
+    battle_defense = player.defense
 
     while player.hp > 0 and enemy.hp > 0:
 
         print(
-            f"\n{player.name} HP: {player.hp} | "
+            f"\n{player.name} HP: {player.hp} DEF: {battle_defense} | "
             f"{enemy.name} HP: {enemy.hp}"
         )
 
@@ -100,19 +99,23 @@ def battle(player, enemy):
 
         if enemy.hp > 0:
 
-            damage = random.randint(
+            incoming_damage = random.randint(
                 3,
                 enemy.attack
             )
 
             if action == "defend":
-                damage //= 2
+                incoming_damage //= 2
 
-            player.damage(damage)
+            final_damage = player.damage(incoming_damage, battle_defense)
+
+            if battle_defense >= 0:
+                battle_defense -= max(1, incoming_damage // 4)
+                battle_defense = max(0, battle_defense)
 
             print(
                 f"{enemy.name} dealt "
-                f"{damage} damage."
+                f"{final_damage} damage."
             )
 
     if player.hp <= 0:
@@ -122,13 +125,15 @@ def battle(player, enemy):
     else:
 
         reward = random.randint(10, 30)
-
         player.gold += reward
-
         player.enemies_killed += 1
-
+        if player.enemies_killed % 3 == 0:
+            player.floor += 1
+            print(
+                f"📈 Reached Floor {player.floor}!"
+            )
         player.gain_exp(10)
-
+        
         print(
             f"\n🏆 Victory!"
         )

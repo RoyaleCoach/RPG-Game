@@ -11,26 +11,36 @@ def inventory_check(player):
         else:
             for item, qty in player.inventory.items():
 
+                equipped = ""
+
+                if item == player.weapon:
+                    equipped = " [EQUIPPED]"
+
+                elif item == player.armor:
+                    equipped = " [EQUIPPED]"
+
                 if item in weapons:
-                    print(
+                    text = (
                         f"- {item} x{qty} "
                         f"(ATK: {weapons[item]['attack']})"
                     )
 
                 elif item in potions:
-                    print(
+                    text = (
                         f"- {item} x{qty} "
                         f"(Heal: {potions[item]['effect']} HP)"
                     )
 
                 elif item in defends:
-                    print(
+                    text = (
                         f"- {item} x{qty} "
                         f"(DEF: {defends[item]['defense']})"
                     )
 
                 else:
-                    print(f"- {item} x{qty}")
+                    text = f"- {item} x{qty}"
+
+                print(text + equipped)
 
         print("\n[1] Equip Weapon")
         print("[2] Use Potion")

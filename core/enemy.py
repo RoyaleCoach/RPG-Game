@@ -8,7 +8,7 @@ class Enemy:
 
     @staticmethod
     def random_enemy(floor):
-        if floor <= 3:
+        if floor <= 5:
             enemies = [
                 Enemy("Goblin", 30, 8),
                 Enemy("Skeleton", 40, 10),
@@ -16,7 +16,7 @@ class Enemy:
                 Enemy("Bomber", 20, 20)
             ]
 
-        elif floor <= 6:
+        elif floor <= 15:
             enemies = [
                 Enemy("Venom Spider", 45, 14),
                 Enemy("Ghoul", 60, 15),
@@ -24,7 +24,7 @@ class Enemy:
                 Enemy("Dark Shaman", 70, 18)
             ]
 
-        elif floor <= 10:
+        elif floor <= 25:
             enemies = [
                 Enemy("Stone Golem", 120, 18),
                 Enemy("Ogre", 140, 20),

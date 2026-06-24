@@ -1,22 +1,53 @@
 from core.quests import QUESTS
 
 
+def get_progress(player, quest_type):
+
+    if quest_type == "kills":
+        return player.enemies_killed
+
+    elif quest_type == "floor":
+        return player.floor
+
+    elif quest_type == "level":
+        return player.level
+
+    elif quest_type == "puzzle":
+        return player.puzzles_solved
+
+    return 0
+
+
 def show_quests(player):
 
     print("\n=== QUEST BOARD ===")
 
     for quest_name, data in QUESTS.items():
 
-        status = "Completed" \
-            if quest_name in player.completed_quests \
+        status = (
+            "Completed"
+            if quest_name in player.completed_quests
             else "Available"
+        )
+
+        current = get_progress(
+            player,
+            data["type"]
+        )
+
+        progress = (
+            f"{min(current, data['target'])}"
+            f"/{data['target']}"
+        )
 
         print(f"\n{quest_name}")
         print(f"Description : {data['description']}")
         print(f"Reward      : {data['reward']}")
         print(f"Gold        : {data['reward_gold']}")
         print(f"Status      : {status}")
-        
+        print(f"Progress    : {progress}")
+
+
 def check_quests(player):
 
     for quest_name, data in QUESTS.items():
@@ -24,25 +55,12 @@ def check_quests(player):
         if quest_name in player.completed_quests:
             continue
 
-        completed = False
+        current = get_progress(
+            player,
+            data["type"]
+        )
 
-        if quest_name == "Assassin's Legacy":
-            completed = player.enemies_killed >= 15
-
-        elif quest_name == "Dragon Hunt":
-            completed = player.floor >= 18
-
-        elif quest_name == "Sword in the Stone":
-            completed = player.level >= 20
-
-        elif quest_name == "Alchemist's Secret":
-            completed = player.puzzles_solved >= 10
-
-        elif quest_name == "Guardian's Oath":
-            completed = player.floor >= 22
-
-        elif quest_name == "Trial of the Gods":
-            completed = player.level >= 25
+        completed = current >= data["target"]
 
         if completed:
 
@@ -58,18 +76,7 @@ def check_quests(player):
                 quest_name
             )
 
-            print(
-                f"\n🏆 Quest Complete!"
-            )
-
-            print(
-                f"{quest_name}"
-            )
-
-            print(
-                f"Reward: {reward}"
-            )
-
-            print(
-                f"Gold: +{data['reward_gold']}"
-            )
+            print("\n🏆 Quest Complete!")
+            print(quest_name)
+            print(f"Reward: {reward}")
+            print(f"Gold: +{data['reward_gold']}")

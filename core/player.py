@@ -2,6 +2,7 @@ import json
 import os
 import sys
 from core.items import weapons, potions, defends
+from world.quest import check_quests
 
 if getattr(sys, "frozen", False):
     BASE_DIR = os.path.dirname(sys.executable)
@@ -65,11 +66,12 @@ class Player:
         self.exp += amount
         print(f"✨ Kamu mendapat {amount} EXP!")
 
-        if self.exp >= 100:
+        while self.exp >= 100:
             self.exp -= 100
             self.level += 1
             self.attack += 2
             self.hp += 20
+            check_quests(self)
 
             print(
                 f"🎉 Level UP! "
@@ -153,20 +155,16 @@ class Player:
 
         return False
     
-    def damage(self, amount):
-        amount -= self.defense
+    def damage(self, amount, guard):
 
-        if amount <= 0:
-            print("Damage tertangkis")
-            return 0
-
-        self.hp -= amount
+        final_damage = max(1, amount - guard)
+        self.hp -= final_damage
 
         if self.hp <= 0:
+            self.hp = 0
             print("Game Over!")
-            sys.exit()
 
-        return amount
+        return final_damage 
 
     def save(self, filename="save.json"):
         os.makedirs(SAVE_DIR, exist_ok=True)
@@ -197,6 +195,9 @@ class Player:
 
             return Player(**data)
 
-        except FileNotFoundError as e:
+        except (
+            FileNotFoundError,
+            json.JSONDecodeError
+        ) as e:
             print("LOAD ERROR:", e)
-            return Player()
+            return Player() 
