@@ -1,70 +1,140 @@
 import random
+
 from core.enemy import Enemy
-from core.player import Player
 from world.puzzle import random_puzzle
-from world.npc import NPC
-from utils.text_effect import typewriter
-
-MAP = [
-    ["enemy", "merchant", "puzzle"],
-    ["npc", "enemy", "nothing"],
-    ["puzzle", "enemy", "exit"]
-]
-
-player = Player.load()
-npc_mentor = NPC("Elder Rion", "Buktikan keberanianmu dengan mengalahkan satu musuh.", "Magic Staff", 50)
+from world.quest import (
+    show_quests,
+    check_quests
+)
 
 def explore(player):
-    event = random.choice(["enemy", "puzzle", "merchant", "npc", "nothing"])
 
-    if event == "enemy":
-        enemy = Enemy.random_enemy()
-        print(f"\n⚔️ Kamu bertemu {enemy.name}!")
-        battle(player, enemy)
+    while True:
 
-    elif event == "puzzle":
-        success = random_puzzle()
-        if success:
-            Player.gain_exp(player, 20)
-        elif not success:
-            amount = 10
-            Player.damage(player, amount)
-            print(f"HP berkurang sebanyak -{amount}")
+        print("\n=== DUNGEON ===")
+        print("[1] Fight Enemy")
+        print("[2] Solve Puzzle")
+        print("[3] Quest Board")
+        print("[0] Return")
 
-    elif event == "npc":
-        if "Quest: defeated enemy" in player.quest:
-            npc_mentor.complete(player)
+        choice = input("> ").strip()
+
+        if choice == "0":
+            break
+
+        elif choice == "1":
+
+            enemy = Enemy.random_enemy(player.floor)
+
+            print(
+                f"\n⚔️ You encountered {enemy.name}!"
+            )
+
+            battle(player, enemy)
+
+        elif choice == "2":
+
+            success = random_puzzle()
+
+            if success:
+
+                player.puzzles_solved += 1
+
+                player.gain_exp(20)
+
+                check_quests(player)
+
+            else:
+
+                damage = 10
+
+                player.damage(damage)
+
+                print(f"HP -{damage}")
+
+        elif choice == "3":
+
+            show_quests(player)
+
         else:
-            npc_mentor.talk(player)
 
-    else:
-        typewriter("\n🌿 Tidak ada yang terjadi di ruangan ini", dramatic=True)
+            print("Invalid choice.")
+
 
 def battle(player, enemy):
-    while player.hp > 0 and enemy.hp > 0:
-        print(f"\n{player.name} HP: {player.hp} | {enemy.name} HP: {enemy.hp}")
-        action = input("Pilih aksi (serang / bertahan): ").lower()
 
-        if action == "serang":
-            dmg = random.randint(5, player.attack)
-            enemy.hp -= dmg
-            print(f"Kamu menyerang {enemy.name} dan memberi {dmg} damage!")
-        elif action == "bertahan":
-            print("Kamu bertahan dan mengurangi damage musuh.")
+    while player.hp > 0 and enemy.hp > 0:
+
+        print(
+            f"\n{player.name} HP: {player.hp} | "
+            f"{enemy.name} HP: {enemy.hp}"
+        )
+
+        action = input(
+            "Choose action (attack / defend): "
+        ).lower()
+
+        if action == "attack":
+
+            damage = random.randint(
+                max(1, player.attack // 2),
+                player.attack
+            )
+
+            enemy.hp -= damage
+
+            print(
+                f"You dealt {damage} damage!"
+            )
+
+        elif action == "defend":
+
+            print(
+                "You brace yourself."
+            )
+
         else:
-            print("Aksi tidak valid.")
+
+            print("Invalid action.")
             continue
 
         if enemy.hp > 0:
-            amount = random.randint(3, enemy.attack)
-            if action == "bertahan":
-                amount //= 2
-            Player.damage(player, amount)
-            print(f"{enemy.name} menyerangmu! Kamu kehilangan {amount} HP.")
+
+            damage = random.randint(
+                3,
+                enemy.attack
+            )
+
+            if action == "defend":
+                damage //= 2
+
+            player.damage(damage)
+
+            print(
+                f"{enemy.name} dealt "
+                f"{damage} damage."
+            )
+
     if player.hp <= 0:
-        print("💀 Kamu kalah...")
+
+        print("\n💀 Defeat.")
+
     else:
+
         reward = random.randint(10, 30)
+
         player.gold += reward
-        print(f"🏆 Kamu menang dan mendapatkan {reward} gold!")
-        player.quest.append("Quest: defeated enemy")
+
+        player.enemies_killed += 1
+
+        player.gain_exp(10)
+
+        print(
+            f"\n🏆 Victory!"
+        )
+
+        print(
+            f"+{reward} Gold"
+        )
+
+        check_quests(player)

@@ -50,6 +50,22 @@
 
 ---
 
+## [0.1.4] - 2026-06-24
+
+### Added
+
+* Quest System
+* Quest Board
+* Quest Progress Tracking
+* Quest Completion Rewards
+* Quest-Exclusive Item Rewards
+* Enemy Kill Tracking
+* Puzzle Completion Tracking
+* Automatic Quest Completion Check
+* Integration Between Quests and Limited Items
+
+---
+
 ## [0.2.0] - TBD
 
 ### Planned

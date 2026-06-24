@@ -30,7 +30,10 @@ class Player:
         floor=1,
         weapon="Fists",
         armor=None,
-        story_progress=0
+        story_progress=0,
+        completed_quests=None,
+        enemies_killed=0,
+        puzzles_solved=0
     ):
         self.name = name
         self.hp = hp
@@ -45,6 +48,9 @@ class Player:
         self.armor = armor
         self.story_progress = story_progress
         self.quest = quest or []
+        self.enemies_killed = enemies_killed
+        self.puzzles_solved = puzzles_solved
+        self.completed_quests = completed_quests or []
 
     def show_status(self):
         print(f"\n=== {self.name} (Lv {self.level}) ===")
