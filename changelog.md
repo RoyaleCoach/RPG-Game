@@ -69,28 +69,32 @@
 ## [0.1.4.1] - 2026-06-24
 
 ### New Features
-- Quest progress tracking system
-- Dynamic quest completion rewards
-- Floor progression system
-- Equipment status indicator ([EQUIPPED])
+
+* Quest Progress Tracking System
+* Dynamic Quest Completion Rewards
+* Floor Progression System
+* Equipment Status Indicator ([EQUIPPED])
 
 ### Gameplay Changes
-- Defense is now consumed during battle instead of remaining static
-- Battle UI now shows current defense value
-- Floor increases every 3 enemy victories
+
+* Defense is now consumed during battle instead of remaining static
+* Battle UI now shows current defense value
+* Floor increases every 3 enemy victories
 
 ### Refactoring
-- Quest objectives now use type/target metadata
-- Simplified quest progress and completion logic
-- Improved maintainability for future quest additions
+
+* Quest objectives now use type/target metadata
+* Simplified quest progress and completion logic
+* Improved maintainability for future quest additions
 
 ### Fixes
-- Fixed quest progress not being displayed
-- Fixed floor progression not being linked to quest requirements
+
+* Fixed quest progress not being displayed
+* Fixed floor progression not being linked to quest requirements
 
 ---
 
-## [0.2.0] - TBD
+## [0.2.0] - 2026-06-24
 
 ### Added
 
@@ -147,3 +151,81 @@
 * Introduced reusable Boss inheritance from Enemy
 * Centralized boss definitions in `enemy.py`
 * Improved combat reward handling for different enemy types
+
+---
+
+## [0.3.0] - 2026-06-25
+
+### Added
+
+* JSON-Based Data System
+* DataLoader Utility
+* `items.json`
+* `quests.json`
+* `bosses.json`
+* `version.json`
+* Dynamic Version Loading
+* External Game Configuration Support
+* Merchant Item Loading From JSON
+* Boss Loading From JSON
+* Item Database Architecture
+
+### Refactoring
+
+* Migrated Items from Python dictionaries to JSON
+* Migrated Quests from Python dictionaries to JSON
+* Migrated Bosses from Python dictionaries to JSON
+* Refactored Inventory to use item database
+* Refactored Merchant to use centralized item data
+* Refactored Quest System to use loaded quest data
+* Refactored Boss System to use loaded boss data
+* Refactored Game Initialization Flow
+* Implemented Dependency Injection between systems
+* Reduced hardcoded game content
+
+### Improved
+
+* Easier balancing and content editing
+* Better separation between code and game data
+* Improved maintainability
+* Improved scalability for future content updates
+* Improved project organization
+
+---
+
+## [0.3.1] - 2026-06-25
+
+### Added
+
+* Save Directory Support
+* Automatic Save Folder Creation
+* PyInstaller-Friendly Path Handling
+* Centralized Version Information Display
+* Runtime Data Reload Support
+
+### Fixed
+
+* Save/Load Initialization Issues
+* Merchant Constructor Dependency Errors
+* Boss Loading Errors
+* Item Lookup After JSON Migration
+* Data File Path Resolution
+* Save File Location Handling
+* Version Data Loading
+* Multiple Dependency Injection Issues
+* Inventory Data Access Errors
+
+### Refactoring
+
+* Improved Save System Architecture
+* Improved Data Loading Reliability
+* Simplified System Initialization Order
+* Standardized Access to Game Data
+* Cleaned Up Legacy Hardcoded References
+
+### Technical
+
+* Prepared project for executable distribution
+* Improved compatibility with packaged builds
+* Centralized game content management
+* Established foundation for future modding support

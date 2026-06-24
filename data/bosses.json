@@ -1,0 +1,41 @@
+{
+    "1": {
+        "name": "Goblin King",
+        "hp": 150,
+        "attack": 20,
+        "exp_reward": 100,
+        "gold_reward": 150
+    },
+
+    "5": {
+        "name": "Skeleton Lord",
+        "hp": 250,
+        "attack": 30,
+        "exp_reward": 200,
+        "gold_reward": 250
+    },
+
+    "10": {
+        "name": "Ancient Dragon",
+        "hp": 400,
+        "attack": 45,
+        "exp_reward": 350,
+        "gold_reward": 400
+    },
+
+    "15": {
+        "name": "Demon Overlord",
+        "hp": 600,
+        "attack": 60,
+        "exp_reward": 500,
+        "gold_reward": 600
+    },
+
+    "20": {
+        "name": "Forgotten God",
+        "hp": 900,
+        "attack": 80,
+        "exp_reward": 1000,
+        "gold_reward": 1000
+    }
+}

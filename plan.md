@@ -8,12 +8,12 @@
         ↓
 2.0 Dungeon Event
         ↓
-3.0 Boss Battle
+4.0 Boss Battle
         ↓
-4.9 Choice & Consequence
+5.9 Choice & Consequence
         ↓
-4.5 Multiple Ending
+6.5 Multiple Ending
         ↓
-5.0 Skill System
+7.0 Skill System
         ↓
-2.0 Polishing & Release
+1.0.0 Polishing & Release

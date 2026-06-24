@@ -1,4 +1,4 @@
-QUESTS = {
+{
     "Assassin's Legacy": {
         "description": "Defeat 15 enemies.",
         "type": "kills",

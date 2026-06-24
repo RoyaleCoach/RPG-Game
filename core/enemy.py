@@ -3,15 +3,26 @@ import random
 
 class Enemy:
 
+    bosses = {}
+
+    @classmethod
+    def load_bosses(cls, bosses_data):
+        cls.bosses = bosses_data
+
     def __init__(self, name, hp, attack):
+
         self.name = name
         self.hp = hp
         self.attack = attack
 
+    # -------------------------
+    # RANDOM ENEMY
+    # -------------------------
     @staticmethod
     def random_enemy(floor):
 
         if floor <= 5:
+
             enemies = [
                 Enemy("Goblin", 30, 8),
                 Enemy("Skeleton", 40, 10),
@@ -20,6 +31,7 @@ class Enemy:
             ]
 
         elif floor <= 15:
+
             enemies = [
                 Enemy("Venom Spider", 45, 14),
                 Enemy("Ghoul", 60, 15),
@@ -28,6 +40,7 @@ class Enemy:
             ]
 
         elif floor <= 25:
+
             enemies = [
                 Enemy("Stone Golem", 120, 18),
                 Enemy("Ogre", 140, 20),
@@ -36,6 +49,7 @@ class Enemy:
             ]
 
         else:
+
             enemies = [
                 Enemy("Doom Knight", 160, 25),
                 Enemy("Abyss Walker", 180, 28)
@@ -43,15 +57,31 @@ class Enemy:
 
         return random.choice(enemies)
 
-    @staticmethod
-    def random_boss(player_level):
+    # -------------------------
+    # RANDOM BOSS
+    # -------------------------
+    @classmethod
+    def random_boss(cls, player_level):
 
-        selected = BOSSES[1]
+        if not cls.bosses:
+            raise ValueError(
+                "Boss data belum dimuat."
+            )
 
-        for level_req, boss_data in BOSSES.items():
+        selected = None
 
-            if player_level >= level_req:
+        for level_req, boss_data in sorted(
+            cls.bosses.items(),
+            key=lambda x: int(x[0])
+        ):
+
+            if player_level >= int(level_req):
                 selected = boss_data
+
+        if selected is None:
+            selected = next(
+                iter(cls.bosses.values())
+            )
 
         return Boss(
             selected["name"],
@@ -72,6 +102,7 @@ class Boss(Enemy):
         exp_reward,
         gold_reward
     ):
+
         super().__init__(
             name,
             hp,
@@ -80,46 +111,3 @@ class Boss(Enemy):
 
         self.exp_reward = exp_reward
         self.gold_reward = gold_reward
-
-
-BOSSES = {
-    1: {
-        "name": "Goblin King",
-        "hp": 150,
-        "attack": 20,
-        "exp_reward": 100,
-        "gold_reward": 150
-    },
-
-    5: {
-        "name": "Skeleton Lord",
-        "hp": 250,
-        "attack": 30,
-        "exp_reward": 200,
-        "gold_reward": 250
-    },
-
-    10: {
-        "name": "Ancient Dragon",
-        "hp": 400,
-        "attack": 45,
-        "exp_reward": 350,
-        "gold_reward": 400
-    },
-
-    15: {
-        "name": "Demon Overlord",
-        "hp": 600,
-        "attack": 60,
-        "exp_reward": 500,
-        "gold_reward": 600
-    },
-
-    20: {
-        "name": "Forgotten God",
-        "hp": 900,
-        "attack": 80,
-        "exp_reward": 1000,
-        "gold_reward": 1000
-    }
-}

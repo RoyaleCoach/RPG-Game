@@ -1,21 +1,3 @@
-import json
-import os
-import sys
-from core.items import weapons, potions, defends
-from world.quest import check_quests
-
-if getattr(sys, "frozen", False):
-    BASE_DIR = os.path.dirname(sys.executable)
-else:
-    BASE_DIR = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            ".."
-        )
-    )
-
-SAVE_DIR = os.path.join(BASE_DIR, "save")
-
 class Player:
     def __init__(
         self,
@@ -36,58 +18,164 @@ class Player:
         enemies_killed=0,
         puzzles_solved=0,
         boss_progress=0,
-        dungeon_runs=0
+        dungeon_runs=0,
+        items=None
     ):
         self.name = name
-        self.hp = hp
-        self.attack = attack
-        self.defense = defense
+
+        self.items = items or {}
+
+        self.weapons = self.items.get(
+            "weapons",
+            {}
+        )
+
+        self.potions = self.items.get(
+            "potions",
+            {}
+        )
+
+        self.defends = self.items.get(
+            "defends",
+            {}
+        )
+
+        self._hp = hp
+        self._base_attack = attack
+        self._base_defense = defense
+
         self.gold = gold
-        self.inventory = inventory if inventory is not None else {"Fists": 1}
+
+        self.inventory = (
+            inventory
+            if inventory is not None
+            else {"Fists": 1}
+        )
+
         self.exp = exp
         self.level = level
         self.floor = floor
+
         self.weapon = weapon
         self.armor = armor
+
         self.story_progress = story_progress
         self.quest = quest or []
+
         self.enemies_killed = enemies_killed
         self.puzzles_solved = puzzles_solved
-        self.completed_quests = completed_quests or []
+
+        self.completed_quests = (
+            completed_quests or []
+        )
+
         self.boss_progress = boss_progress
         self.dungeon_runs = dungeon_runs
 
+    # ==========================
+    # Properties
+    # ==========================
+
+    @property
+    def hp(self):
+        return self._hp
+
+    @hp.setter
+    def hp(self, value):
+        self._hp = min(
+            max(0, value),
+            self.max_hp
+        )
+
+    @property
+    def max_hp(self):
+        return self.level * 100
+
+    @property
+    def attack(self):
+        weapon_bonus = 0
+
+        if self.weapon in self.weapons:
+            weapon_bonus = (
+                self.weapons[self.weapon]["attack"]
+            )
+
+        return self._base_attack + weapon_bonus
+
+    @property
+    def defense(self):
+        armor_bonus = 0
+
+        if self.armor in self.defends:
+            armor_bonus = (
+                self.defends[self.armor]["defense"]
+            )
+
+        return self._base_defense + armor_bonus
+
+    @property
+    def is_alive(self):
+        return self.hp > 0
+
+    @property
+    def exp_to_next_level(self):
+        return max(0, 100 - self.exp)
+
+    # ==========================
+    # Display
+    # ==========================
+
     def show_status(self):
         print(f"\n=== {self.name} (Lv {self.level}) ===")
-        print(f"HP: {self.hp}")
-        print(f"ATK: {self.attack} | DEF: {self.defense}")
+        print(f"HP: {self.hp}/{self.max_hp}")
+        print(f"ATK: {self.attack}")
+        print(f"DEF: {self.defense}")
         print(f"Weapon: {self.weapon}")
         print(f"Armor : {self.armor or 'None'}")
-        print(f"EXP: {self.exp}/100 | Floor: {self.floor}")
+        print(
+            f"EXP: {self.exp}/100 "
+            f"(Need {self.exp_to_next_level})"
+        )
+        print(f"Floor: {self.floor}")
         print(f"Gold: {self.gold}")
+
+    # ==========================
+    # Experience
+    # ==========================
 
     def gain_exp(self, amount):
         self.exp += amount
-        print(f"✨ Kamu mendapat {amount} EXP!")
+
+        print(
+            f"✨ Kamu mendapat "
+            f"{amount} EXP!"
+        )
 
         while self.exp >= 100:
+
             self.exp -= 100
             self.level += 1
-            self.attack += 2
-            self.hp += 20
-            check_quests(self)
+
+            self._base_attack += 2
+
+            self.hp = self.max_hp
 
             print(
                 f"🎉 Level UP! "
-                f"Sekarang Lv {self.level} (+ATK, +HP)"
+                f"Sekarang Lv {self.level}"
             )
 
+    # ==========================
+    # Equipment
+    # ==========================
+
     def equip_weapon(self, weapon_name):
+
         if weapon_name not in self.inventory:
             print("⚠️ Senjata tidak ada di inventory.")
             return True
 
-        if weapon_name not in weapons:
+        if weapon_name not in self.weapons:
             print("⚠️ Senjata tidak dikenal.")
             return True
 
@@ -95,40 +183,14 @@ class Player:
             print("⚠️ Senjata ini sudah digunakan.")
             return True
 
-        new_damage = weapons[weapon_name]["attack"]
-
-        old_damage = 0
-        if self.weapon in weapons:
-            old_damage = weapons[self.weapon]["attack"]
-
-        self.attack -= old_damage
-        self.attack += new_damage
-
         self.weapon = weapon_name
 
-        print(f"🗡️ Kamu melengkapi {weapon_name}!")
-        return False
-
-    def equip_potion(self, potion_name):
-        if potion_name not in self.inventory:
-            print("⚠️ Potion tidak ada di inventory.")
-            return
-
-        if potion_name not in potions:
-            print("⚠️ Potion tidak dikenal.")
-            return
-
-        heal_amount = potions[potion_name]["effect"]
-        self.hp += heal_amount
-        self.inventory[potion_name] -= 1
-
-        if self.inventory[potion_name] <= 0:
-            self.inventory.pop(potion_name)
-
         print(
-            f"🧪 Kamu menggunakan {potion_name}! "
-            f"HP bertambah {heal_amount}."
+            f"🗡️ Kamu melengkapi "
+            f"{weapon_name}!"
         )
+
+        return False
 
     def equip_defense(self, armor_name):
 
@@ -136,7 +198,7 @@ class Player:
             print("⚠️ Armor tidak ada di inventory.")
             return True
 
-        if armor_name not in defends:
+        if armor_name not in self.defends:
             print("⚠️ Armor tidak dikenal.")
             return True
 
@@ -144,64 +206,87 @@ class Player:
             print("⚠️ Armor ini sudah digunakan.")
             return True
 
-        new_defense = defends[armor_name]["defense"]
-
-        old_defense = 0
-        if self.armor in defends:
-            old_defense = defends[self.armor]["defense"]
-
-        self.defense -= old_defense
-        self.defense += new_defense
-
         self.armor = armor_name
 
-        print(f"🛡️ Kamu melengkapi {armor_name}!")
+        print(
+            f"🛡️ Kamu melengkapi "
+            f"{armor_name}!"
+        )
 
         return False
-    
+
+    # ==========================
+    # Potions
+    # ==========================
+
+    def equip_potion(self, potion_name):
+
+        if potion_name not in self.inventory:
+            print("⚠️ Potion tidak ada di inventory.")
+            return
+
+        if potion_name not in self.potions:
+            print("⚠️ Potion tidak dikenal.")
+            return
+
+        heal_amount = (
+            self.potions[potion_name]["effect"]
+        )
+
+        self.hp += heal_amount
+
+        self.inventory[potion_name] -= 1
+
+        if self.inventory[potion_name] <= 0:
+            self.inventory.pop(potion_name)
+
+        print(
+            f"🧪 Kamu menggunakan "
+            f"{potion_name}! "
+            f"HP bertambah "
+            f"{heal_amount}."
+        )
+
+    # ==========================
+    # Combat
+    # ==========================
+
     def damage(self, amount, guard):
 
-        final_damage = max(1, amount - guard)
+        final_damage = max(
+            1,
+            amount - guard
+        )
+
         self.hp -= final_damage
 
-        if self.hp <= 0:
-            self.hp = 0
-            print("Game Over!")
+        if not self.is_alive:
+            print("💀 Game Over!")
 
-        return final_damage 
+        return final_damage
 
-    def save(self, filename="save.json"):
-        os.makedirs(SAVE_DIR, exist_ok=True)
+    # ==========================
+    # Save Data
+    # ==========================
 
-        path = os.path.join(
-            SAVE_DIR,
-            filename
-        )
-
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(
-                self.__dict__,
-                f,
-                indent=4,
-                ensure_ascii=False
-            )
-
-    @staticmethod
-    def load(filename="save.json"):
-        path = os.path.join(
-            SAVE_DIR,
-            filename
-        )
-
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-
-            return Player(**data)
-
-        except (
-            FileNotFoundError,
-            json.JSONDecodeError
-        ) as e:
-            print("LOAD ERROR:", e)
-            return Player() 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "hp": self.hp,
+            "attack": self._base_attack,
+            "defense": self._base_defense,
+            "gold": self.gold,
+            "inventory": self.inventory,
+            "exp": self.exp,
+            "level": self.level,
+            "floor": self.floor,
+            "weapon": self.weapon,
+            "armor": self.armor,
+            "story_progress": self.story_progress,
+            "quest": self.quest,
+            "enemies_killed": self.enemies_killed,
+            "puzzles_solved": self.puzzles_solved,
+            "completed_quests": self.completed_quests,
+            "boss_progress": self.boss_progress,
+            "dungeon_runs": self.dungeon_runs
+        }

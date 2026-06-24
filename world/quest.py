@@ -1,82 +1,136 @@
-from core.quests import QUESTS
+class QuestSystem:
 
+    def __init__(self, quests):
 
-def get_progress(player, quest_type):
+        self.quests = quests
 
-    if quest_type == "kills":
-        return player.enemies_killed
+    # -------------------------
+    # PROGRESS TRACKER
+    # -------------------------
+    def get_progress(
+        self,
+        player,
+        quest_type
+    ):
 
-    elif quest_type == "floor":
-        return player.floor
+        progress_map = {
+            "kills": player.enemies_killed,
+            "floor": player.floor,
+            "level": player.level,
+            "puzzle": player.puzzles_solved
+        }
 
-    elif quest_type == "level":
-        return player.level
-
-    elif quest_type == "puzzle":
-        return player.puzzles_solved
-
-    return 0
-
-
-def show_quests(player):
-
-    print("\n=== QUEST BOARD ===")
-
-    for quest_name, data in QUESTS.items():
-
-        status = (
-            "Completed"
-            if quest_name in player.completed_quests
-            else "Available"
+        return progress_map.get(
+            quest_type,
+            0
         )
 
-        current = get_progress(
-            player,
-            data["type"]
-        )
+    # -------------------------
+    # SHOW QUEST BOARD
+    # -------------------------
+    def show(self, player):
 
-        progress = (
-            f"{min(current, data['target'])}"
-            f"/{data['target']}"
-        )
+        print("\n=== QUEST BOARD ===")
 
-        print(f"\n{quest_name}")
-        print(f"Description : {data['description']}")
-        print(f"Reward      : {data['reward']}")
-        print(f"Gold        : {data['reward_gold']}")
-        print(f"Status      : {status}")
-        print(f"Progress    : {progress}")
+        for quest_name, data in self.quests.items():
 
+            completed = (
+                quest_name
+                in player.completed_quests
+            )
 
-def check_quests(player):
+            status = (
+                "Completed"
+                if completed
+                else "Available"
+            )
 
-    for quest_name, data in QUESTS.items():
+            current = self.get_progress(
+                player,
+                data["type"]
+            )
 
-        if quest_name in player.completed_quests:
-            continue
+            progress = (
+                f"{min(current, data['target'])}"
+                f"/{data['target']}"
+            )
 
-        current = get_progress(
-            player,
-            data["type"]
-        )
+            print(f"\n{quest_name}")
+            print(
+                f"Description : "
+                f"{data['description']}"
+            )
 
-        completed = current >= data["target"]
+            print(
+                f"Reward      : "
+                f"{data['reward']}"
+            )
 
-        if completed:
+            print(
+                f"Gold        : "
+                f"{data['reward_gold']}"
+            )
+
+            print(
+                f"Status      : "
+                f"{status}"
+            )
+
+            print(
+                f"Progress    : "
+                f"{progress}"
+            )
+
+    # -------------------------
+    # CHECK QUEST COMPLETION
+    # -------------------------
+    def check(self, player):
+
+        for quest_name, data in self.quests.items():
+
+            if (
+                quest_name
+                in player.completed_quests
+            ):
+                continue
+
+            current = self.get_progress(
+                player,
+                data["type"]
+            )
+
+            if current < data["target"]:
+                continue
 
             reward = data["reward"]
 
             player.inventory[reward] = (
-                player.inventory.get(reward, 0) + 1
+                player.inventory.get(
+                    reward,
+                    0
+                ) + 1
             )
 
-            player.gold += data["reward_gold"]
+            player.gold += (
+                data["reward_gold"]
+            )
 
             player.completed_quests.append(
                 quest_name
             )
 
-            print("\n🏆 Quest Complete!")
-            print(quest_name)
-            print(f"Reward: {reward}")
-            print(f"Gold: +{data['reward_gold']}")
+            print(
+                "\n🏆 Quest Complete!"
+            )
+
+            print(
+                quest_name
+            )
+
+            print(
+                f"Reward: {reward}"
+            )
+
+            print(
+                f"Gold: +{data['reward_gold']}"
+            )

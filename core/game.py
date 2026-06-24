@@ -1,0 +1,306 @@
+from core.player import Player
+from core.saveload import SaveSystem
+from core.combat import Combat
+from core.data_loader import DataLoader
+from core.inventory import Inventory
+from core.enemy import Enemy
+
+from world.map import Explore
+from world.merchant import Merchant
+from world.dungeon import Dungeon
+from world.quest import QuestSystem
+
+from utils.press_any_key import press_any
+from utils.text_effect import typewriter
+
+from story.intro_story import intro_story
+from story.main_story import main_story
+
+
+class Game:
+
+    def __init__(self):
+
+        self.player = None
+
+        # -------------------------
+        # DATA
+        # -------------------------
+        self.data_loader = DataLoader()
+
+        self.quests = self.data_loader.load_quests()
+        self.bosses = self.data_loader.load_bosses()
+        self.items = self.data_loader.load_items()
+
+        version_data = self.data_loader.load_version()
+
+        self.version = version_data.get(
+            "version",
+            "Unknown"
+        )
+
+        self.game_name = version_data.get(
+            "game_name",
+            "Unknown Game"
+        )
+
+        self.author = version_data.get(
+            "author",
+            "Unknown"
+        )
+
+        # -------------------------
+        # LOAD BOSS DATA
+        # -------------------------
+        Enemy.load_bosses(
+            self.bosses
+        )
+
+        # -------------------------
+        # CORE SYSTEMS
+        # -------------------------
+        self.save_system = SaveSystem(self)
+
+        self.quest_system = QuestSystem(
+            self.quests
+        )
+
+        self.combat = Combat(
+            self.quest_system
+        )
+
+        self.dungeon_system = Dungeon()
+
+        self.inventory_system = Inventory(
+            self.items
+        )
+
+        self.merchant = Merchant(
+            self.items
+        )
+
+        # -------------------------
+        # EXPLORE SYSTEM
+        # -------------------------
+        self.explore_system = Explore(
+            combat=self.combat,
+            dungeon_system=self.dungeon_system,
+            quest_system=self.quest_system
+        )
+
+        self.first_loop = True
+
+    # -------------------------
+    # PLAYER SETUP
+    # -------------------------
+    def setup_player_data(self):
+
+        self.player.items = self.items
+
+        self.player.weapons = (
+            self.items.get(
+                "weapons",
+                {}
+            )
+        )
+
+        self.player.potions = (
+            self.items.get(
+                "potions",
+                {}
+            )
+        )
+
+        self.player.defends = (
+            self.items.get(
+                "defends",
+                {}
+            )
+        )
+
+    # -------------------------
+    # BOOT GAME
+    # -------------------------
+    def start(self):
+
+        print(
+            f"=== {self.game_name.upper()} ==="
+        )
+
+        print(
+            f"Version: {self.version}"
+        )
+
+        print(
+            f"Author: {self.author}\n"
+        )
+
+        choice = None
+
+        while choice not in ["n", "l"]:
+
+            print(
+                "Mulai baru (n) atau lanjutkan (l)?"
+            )
+
+            choice = (
+                input("> ")
+                .lower()
+                .strip()
+            )
+
+        # -------------------------
+        # LOAD GAME
+        # -------------------------
+        if choice == "l":
+
+            self.player = self.save_system.load()
+
+            if self.player is None:
+
+                print(
+                    "⚠️ Save tidak ditemukan, membuat game baru..."
+                )
+
+                self.player = Player(
+                    items=self.items
+                )
+
+                self.setup_player_data()
+
+                intro_story(
+                    self.player
+                )
+
+            else:
+
+                self.setup_player_data()
+
+        # -------------------------
+        # NEW GAME
+        # -------------------------
+        else:
+
+            self.player = Player(
+                name=input(
+                    "Masukkan nama pemain: "
+                ),
+                items=self.items
+            )
+
+            self.setup_player_data()
+
+            intro_story(
+                self.player
+            )
+
+        self.game_loop()
+
+    # -------------------------
+    # MAIN LOOP
+    # -------------------------
+    def game_loop(self):
+
+        while True:
+
+            if not self.first_loop:
+                press_any()
+
+            self.first_loop = False
+
+            self.player.show_status()
+
+            action = (
+                self.show_main_menu()
+            )
+
+            if action == "1":
+
+                main_story(
+                    self.player,
+                    self.player.story_progress
+                )
+
+            elif action == "2":
+
+                self.explore_system.explore(
+                    self.player
+                )
+
+                if self.player.hp <= 0:
+
+                    print(
+                        "\n💀 Game Over."
+                    )
+
+                    break
+
+            elif action == "3":
+
+                self.merchant.trade(
+                    self.player
+                )
+
+            elif action == "4":
+
+                self.inventory_system.open(
+                    self.player
+                )
+
+            elif action == "5":
+
+                self.save_system.save()
+
+            elif action == "0":
+
+                self.exit_game()
+
+                break
+
+            else:
+
+                print(
+                    "❌ Pilihan tidak valid."
+                )
+
+    # -------------------------
+    # MENU
+    # -------------------------
+    def show_main_menu(self):
+
+        print("\n=== MENU ===")
+        print("[1] Main Story")
+        print("[2] Jelajahi Dungeon")
+        print("[3] Merchant")
+        print("[4] Inventory")
+        print("[5] Simpan Game")
+        print("[0] Keluar")
+
+        return input("> ").strip()
+
+    # -------------------------
+    # EXIT HANDLER
+    # -------------------------
+    def exit_game(self):
+
+        print(
+            "Simpan Permainan? (y/n)"
+        )
+
+        save_choice = (
+            input("> ")
+            .lower()
+            .strip()
+        )
+
+        if save_choice in [
+            "y",
+            "yes"
+        ]:
+
+            self.save_system.save()
+
+        typewriter(
+            "Keluar dari permainan",
+            dramatic=True
+        )
