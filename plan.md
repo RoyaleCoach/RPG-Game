@@ -1,19 +1,19 @@
-0.1 System Stabilisation
+1.1 System Stabilisation
         ↓
-0.2 Enemy Variation
+1.2 Enemy Variation
         ↓
-0.3 Equipment System
+1.3 Equipment System
         ↓
-0.4 Quest System
+1.4 Quest System
         ↓
-0.5 Dungeon Event
+1.5 Dungeon Event
         ↓
-0.6 Boss Battle
+1.6 Boss Battle
         ↓
-0.7 Choice & Consequence
+1.7 Choice & Consequence
         ↓
-0.8 Multiple Ending
+1.8 Multiple Ending
         ↓
-0.9 Skill System
+1.9 Skill System
         ↓
-1.0 Polishing & Release
+2.0 Polishing & Release
