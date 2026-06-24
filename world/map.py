@@ -1,6 +1,6 @@
 import random
 
-from core.enemy import Enemy
+from core.enemy import Enemy, Boss
 from world.puzzle import random_puzzle
 from world.quest import (
     show_quests,
@@ -9,9 +9,28 @@ from world.quest import (
 from world.dungeon import random_event
 
 
+
 def explore(player):
     while True:
         token = 1
+        player.dungeon_runs += 1
+        if player.dungeon_runs % 3 == 0:
+
+            boss = Enemy.random_boss(player.level)
+
+            print(
+                f"\n👑 A Boss Appears!"
+            )
+
+            print(
+                f"{boss.name} blocks your path!"
+            )
+
+            battle(player, boss)
+
+            if player.hp <= 0:
+                return
+            
         print("\n=== DUNGEON ===")
         print("[1] Fight Enemy")
         print("[2] Solve Puzzle")
@@ -131,24 +150,39 @@ def battle(player, enemy):
 
         print("\n💀 Defeat.")
 
+    if player.hp <= 0:
+
+        print("\n💀 Defeat.")
+
     else:
 
-        reward = random.randint(10, 30)
-        player.gold += reward
-        player.enemies_killed += 1
-        if player.enemies_killed % 3 == 0:
-            player.floor += 1
-            print(
-                f"📈 Reached Floor {player.floor}!"
-            )
-        player.gain_exp(10)
-        
-        print(
-            f"\n🏆 Victory!"
-        )
+        if isinstance(enemy, Boss):
 
-        print(
-            f"+{reward} Gold"
-        )
+            player.gold += enemy.gold_reward
+            player.gain_exp(enemy.exp_reward)
+
+            print("\n👑 Boss Defeated!")
+            print(f"+{enemy.gold_reward} Gold")
+            print(f"+{enemy.exp_reward} EXP")
+
+        else:
+
+            reward = random.randint(10, 30)
+
+            player.gold += reward
+            player.enemies_killed += 1
+
+            if player.enemies_killed % 3 == 0:
+
+                player.floor += 1
+
+                print(
+                    f"📈 Reached Floor {player.floor}!"
+                )
+
+            player.gain_exp(10)
+
+            print("\n🏆 Victory!")
+            print(f"+{reward} Gold")
 
         check_quests(player)

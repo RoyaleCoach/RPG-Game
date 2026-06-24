@@ -18,7 +18,7 @@ from core.version import version, game_name, author
 def main():
     print(f"=== {game_name.upper()} ===")
     print(f"Version: {version}")
-    print(f"Author: {author}")
+    print(f"Author: {author}\n")
 
     choice = None
     while choice not in ["n", "l"]:
@@ -29,7 +29,6 @@ def main():
 
     if choice == "n":
         intro_story(player)
-    x=0
 
     def show_main_menu():
         print("\n=== MENU ===")
@@ -42,6 +41,7 @@ def main():
 
         return input("> ").strip().lower()
 
+    x=0
     while True:
         if x >= 1:
             press_any()
