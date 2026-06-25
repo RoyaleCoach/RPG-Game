@@ -384,3 +384,41 @@
 
 ---
 
+## [0.6.1] - 2026-06-26
+
+### Added
+
+* Logging System
+* Centralized Game Logger
+* Combat Event Logging
+* Save/Load Activity Logging
+* Error Logging Support
+* Log File Output (`logs/game.log`)
+* Unit Testing Framework
+* Player System Tests
+* Combat System Tests
+* Inventory System Tests
+* Save/Load System Tests
+
+### Improved
+
+* Easier debugging and issue tracking
+* Improved reliability of core gameplay systems
+* Better visibility into runtime events and errors
+* Safer future refactoring through automated tests
+
+### Technical
+
+* Introduced Python `logging` module integration
+* Added structured log messages for major game events
+* Established automated test suite using `unittest`
+* Created foundation for Continuous Integration (CI)
+* Improved maintainability and code quality assurance
+
+### Refactoring
+
+* Replaced selected debug `print()` statements with logger calls
+* Standardized system event reporting
+* Separated runtime diagnostics from gameplay output
+
+---
