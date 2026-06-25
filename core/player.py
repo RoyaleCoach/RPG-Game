@@ -147,7 +147,7 @@ class Player:
         self.exp += amount
 
         print(
-            f"✨ Kamu mendapat "
+            f"✨ You gained "
             f"{amount} EXP!"
         )
 
@@ -162,7 +162,7 @@ class Player:
 
             print(
                 f"🎉 Level UP! "
-                f"Sekarang Lv {self.level}"
+                f"Now Lv {self.level}"
             )
 
     # ==========================
@@ -179,21 +179,21 @@ class Player:
                 break
 
         if matched_weapon is None:
-            print("⚠️ Senjata tidak dikenal.")
+            print("⚠️ Unknown weapon.")
             return True
 
         if matched_weapon not in self.inventory:
-            print("⚠️ Senjata tidak ada di inventory.")
+            print("⚠️ Weapon not in inventory.")
             return True
 
         if self.weapon == matched_weapon:
-            print("⚠️ Senjata ini sudah digunakan.")
+            print("⚠️ This weapon is already equipped.")
             return True
 
         self.weapon = matched_weapon
 
         print(
-            f"🗡️ Kamu melengkapi "
+            f"🗡️ You equipped "
             f"{matched_weapon}!"
         )
 
@@ -211,21 +211,21 @@ class Player:
                 break
 
         if matched_armor is None:
-            print("⚠️ Armor tidak dikenal.")
+            print("⚠️ Unknown armor.")
             return True
 
         if matched_armor not in self.inventory:
-            print("⚠️ Armor tidak ada di inventory.")
+            print("⚠️ Armor not in inventory.")
             return True
 
         if self.armor == matched_armor:
-            print("⚠️ Armor ini sudah digunakan.")
+            print("⚠️ This armor is already equipped.")
             return True
 
         self.armor = matched_armor
 
         print(
-            f"🛡️ Kamu melengkapi "
+            f"🛡️ You equipped "
             f"{matched_armor}!"
         )
 
@@ -247,11 +247,11 @@ class Player:
                 break
 
         if matched_potion is None:
-            print("⚠️ Potion tidak dikenal.")
+            print("⚠️ Unknown potion.")
             return
 
         if matched_potion not in self.inventory:
-            print("⚠️ Potion tidak ada di inventory.")
+            print("⚠️ Potion not in inventory.")
             return
 
         heal_amount = (
@@ -266,9 +266,9 @@ class Player:
             self.inventory.pop(matched_potion)
 
         print(
-            f"🧪 Kamu menggunakan "
+            f"🧪 You used "
             f"{matched_potion}! "
-            f"HP bertambah "
+            f"HP increased by "
             f"{heal_amount}."
         )
 

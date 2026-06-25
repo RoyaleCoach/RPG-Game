@@ -41,7 +41,7 @@ def wait_for_single_key():
             )
 
 
-def press_any(msg="Tekan tombol apa pun untuk melanjutkan"):
+def press_any(msg="Press any key to continue"):
 
     stop_event = threading.Event()
 

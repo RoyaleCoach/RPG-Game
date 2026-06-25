@@ -141,7 +141,7 @@ class Game:
         while choice not in ["n", "l"]:
 
             print(
-                "Mulai baru (n) atau lanjutkan (l)?"
+                "Start new (n) or load (l)?"
             )
 
             choice = (
@@ -160,7 +160,7 @@ class Game:
             if self.player is None:
 
                 print(
-                    "⚠️ Save tidak ditemukan, membuat game baru..."
+                    "⚠️ Save not found, creating new game..."
                 )
 
                 self.player = Player(
@@ -184,7 +184,7 @@ class Game:
 
             self.player = Player(
                 name=input(
-                    "Masukkan nama pemain: "
+                    "Enter player name: "
                 ),
                 items=self.items
             )
@@ -260,9 +260,8 @@ class Game:
                 break
 
             else:
-
                 print(
-                    "❌ Pilihan tidak valid."
+                    "❌ Invalid choice."
                 )
 
     # -------------------------
@@ -272,11 +271,11 @@ class Game:
 
         print("\n=== MENU ===")
         print("[1] Main Story")
-        print("[2] Jelajahi Dungeon")
+        print("[2] Explore Dungeon")
         print("[3] Merchant")
         print("[4] Inventory")
-        print("[5] Simpan Game")
-        print("[0] Keluar")
+        print("[5] Save Game")
+        print("[0] Exit")
 
         return input("> ").strip()
 
@@ -286,7 +285,7 @@ class Game:
     def exit_game(self):
 
         print(
-            "Simpan Permainan? (y/n)"
+            "Save game? (y/n)"
         )
 
         save_choice = (
@@ -303,6 +302,6 @@ class Game:
             self.save_system.save()
 
         typewriter(
-            "Keluar dari permainan",
+            "Exiting the game",
             dramatic=True
         )

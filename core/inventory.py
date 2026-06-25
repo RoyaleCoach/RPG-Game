@@ -27,9 +27,8 @@ class Inventory:
             print("\n=== INVENTORY ===")
 
             if not player.inventory:
-
                 print(
-                    "Inventory kosong."
+                    "Inventory is empty."
                 )
 
             else:
@@ -76,7 +75,7 @@ class Inventory:
             print("\n[1] Equip Weapon")
             print("[2] Use Potion")
             print("[3] Equip Armor")
-            print("[0] Keluar")
+            print("[0] Exit")
 
             choice = input("> ").strip()
 
@@ -104,7 +103,7 @@ class Inventory:
             else:
 
                 print(
-                    "Pilihan tidak valid."
+                    "Invalid choice."
                 )
 
     # -------------------------
@@ -123,7 +122,7 @@ class Inventory:
         if not available_weapons:
 
             print(
-                "Tidak ada senjata."
+                "No weapons available."
             )
 
             return
@@ -136,7 +135,7 @@ class Inventory:
             )
 
         weapon_name = input(
-            "\nMasukkan nama senjata: "
+            "\nEnter weapon name: "
         ).strip()
 
         player.equip_weapon(
@@ -159,7 +158,7 @@ class Inventory:
         if not available_potions:
 
             print(
-                "Tidak ada potion."
+                "No potions available."
             )
 
             return
@@ -172,7 +171,7 @@ class Inventory:
             )
 
         potion_name = input(
-            "\nMasukkan nama potion: "
+            "\nEnter potion name: "
         ).strip()
 
         player.equip_potion(
@@ -195,7 +194,7 @@ class Inventory:
         if not available_armors:
 
             print(
-                "Tidak ada armor."
+                "No armor available."
             )
 
             return
@@ -208,7 +207,7 @@ class Inventory:
             )
 
         armor_name = input(
-            "\nMasukkan nama armor: "
+            "\nEnter armor name: "
         ).strip()
 
         player.equip_defense(

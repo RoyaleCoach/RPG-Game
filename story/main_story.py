@@ -7,229 +7,229 @@ from core.enemy import TheFirstHollow
 
 def main_story(player, story_number, combat):
     if story_number == 0:
-        typewriter("Hening", dramatic=True)
-        typewriter("Hanya ada gemuruh samar air menetes dari langit-langit batu.",)
-        typewriter("Lalu aku mendengar suara itu lagi — lembut, tapi jauh di dalam kepalaku",dramatic=True)
+        typewriter("Silence", dramatic=True)
+        typewriter("Only the faint drip of water echoed from the stone ceiling.")
+        typewriter("Then I heard that voice again — soft, but far inside my head", dramatic=True)
         time.sleep(1)
 
-        typewriter('Seren: "Lyren... bangunlah.”')
+        typewriter('Seren: "Lyren... wake."')
 
         typewriter("""
-                   Aku membuka mata. Dunia di sekitarku berdenyut biru pucat.
-                   Lantai berkilau seperti kaca, dan di tengah ruangan,
-                   berdiri Eiden — tubuhnya dipenuhi luka, tapi matanya masih menatap penuh tekad ke arah Crystal of Origin.
+                   I opened my eyes. The world around me pulsed with pale blue light.
+                   The floor gleamed like glass, and in the center of the room,
+                   stood Eiden — his body scarred, but his eyes fixed on the Crystal of Origin with unwavering resolve.
                    """)
-        typewriter("Aku", dramatic=True)
+        typewriter("I", dramatic=True)
         typewriter("""
-                   tidak seharusnya ada di sini.
-                   Aku mati di dalam dungeon ini bertahun-tahun lalu.
-                   Tapi sesuatu — atau seseorang — memanggilku kembali.
+                   I shouldn't be here.
+                   I died in this dungeon years ago.
+                   Yet something — or someone — called me back.
                    """)
-        
+
         player.story_progress = 1
 
     elif story_number == 1:
         level_req = 5
         if player.level >= level_req:
-            print("=== Pertemuan Kembali ===")
-            typewriter("Aku melangkah maju, jari-jariku menyentuh udara yang terasa berat dan dingin.")
-            typewriter("Cahaya kristal memantulkan bayanganku di lantai — tapi bukan hanya aku.")
-            typewriter("Ada dua wajah.")
-            typewriter("Aku(...) dan Seren", dramatic_mid=True)
+            print("=== Reunion ===")
+            typewriter("I stepped forward, my fingers brushing air that felt heavy and cold.")
+            typewriter("The crystal's light reflected my shadow on the floor — but I was not alone.")
+            typewriter("There were two faces.")
+            typewriter("Me(...) and Seren", dramatic_mid=True)
 
-            typewriter("\nWajahnya sama sepertiku, tapi matanya memantulkan kedamaian yang asing.")
+            typewriter("\nHis face mirrored mine, but his eyes reflected a strange calm.")
 
-            typewriter("\nEiden: (terkejut) “Lyren...? Tidak... ini tidak mungkin...”")
-            typewriter("Aku tersenyum samar. “Mungkin. Tapi seperti halnya kau yang tak pernah menyerah, jiwaku pun menolak hilang begitu saja.”")
+            typewriter("\nEiden: (startled) 'Lyren...? No... this can't be...'")
+            typewriter("I smiled faintly. 'Maybe. But just as you never gave up, my soul refused to fade away.'")
 
-            typewriter("\nSeren: (berbisik) “Kau... adalah aku.”")
+            typewriter("\nSeren: (whisper) 'You... are me.'")
 
-            typewriter("\nAku menatapnya lama, dan seketika itu aku mengerti.")
-            typewriter("Seren bukan orang asing. Ia adalah bagian jiwaku yang diselamatkan Eiden, ketika tubuhku hancur.")
-            typewriter("Aku adalah yang tertinggal — bayangan dari dirinya.")
+            typewriter("\nI stared at him for a long moment, and then I understood.")
+            typewriter("Seren was not a stranger. He was part of my soul saved by Eiden when my body was shattered.")
+            typewriter("I was what remained — a shadow of him.")
 
             player.story_progress = 2
-        else: 
-            print(f"Level yang dibutuhkan ", {level_req})
+        else:
+            print(f"Level required {level_req}")
             return False
     elif story_number == 2:
         level_req = 10
         if player.level >= level_req:
-            print("=== Suara yang Memanggil ===")
+            print("=== The Calling Voice ===")
 
-            typewriter("Setelah pertemuan itu, Seren terus muncul di dalam mimpiku.")
-            typewriter("Setiap malam aku melihat lorong batu yang sama, semakin dalam dan semakin gelap.")
-            typewriter("Di ujung lorong itu berdiri sebuah pintu raksasa yang tertutup rantai hitam.")
+            typewriter("After that encounter, Seren kept appearing in my dreams.")
+            typewriter("Every night I saw the same stone corridor, growing deeper and darker.")
+            typewriter("At the corridor's end stood a giant door bound by black chains.")
 
-            typewriter('\nSeren: "Tempat itu ada di bawah dungeon."')
-            typewriter('Seren: "Di sanalah semuanya dimulai."')
+            typewriter('\nSeren: "That place lies beneath the dungeon."')
+            typewriter('Seren: "It is where it all began."')
 
-            typewriter("Aku dan Eiden akhirnya turun menuju lapisan terdalam The Forgotten Dungeon.")
-            typewriter("Udara menjadi dingin. Bahkan obor-obor sihir mulai padam satu per satu.")
+            typewriter("Eiden and I finally descended into the deepest layers of The Forgotten Dungeon.")
+            typewriter("The air grew cold. Even the magical torches dimmed one by one.")
 
-            typewriter("Lalu suara itu terdengar lagi.")
-            typewriter('"Kembalikan apa yang telah dicuri..."', dramatic=True)
+            typewriter("Then the voice came again.")
+            typewriter('"Return what was stolen..."', dramatic=True)
 
-            typewriter("\nDi depan pintu raksasa terdapat simbol yang sama dengan kalung retak milikku.")
+            typewriter("\nIn front of the giant door was the same symbol as my cracked necklace.")
 
-            typewriter("Ketika kusentuhkan kalung itu, rantai-rantai hitam mulai hancur.")
-            typewriter("Pintu perlahan terbuka.")
+            typewriter("When I touched the necklace, the black chains began to crumble.")
+            typewriter("The door slowly opened.")
 
-            typewriter("\nDi baliknya terdapat ruangan luas berisi ribuan kristal yang menyimpan kenangan manusia.")
+            typewriter("\nBehind it lay a vast chamber filled with thousands of crystals, each holding human memories.")
 
-            typewriter("Dan di tengah ruangan itu...")
-            typewriter("Seseorang yang wajahnya sama persis denganku berdiri menunggu.", dramatic=True)
+            typewriter("And in the center of the room...")
+            typewriter("Someone with a face identical to mine stood waiting.", dramatic=True)
 
             player.story_progress = 3
         else:
-            print(f"Level yang dibutuhkan {level_req}")
+            print(f"Level required {level_req}")
             return False
     elif story_number == 3:
         level_req = 15
         if player.level >= level_req:
-            print("=== Sang Penjaga Echo ===")
+            print("=== The Echo Guardian ===")
 
-            typewriter("Sosok itu mengenakan jubah putih yang telah usang dimakan waktu.")
+            typewriter("The figure wore a white robe, aged and worn by time.")
 
-            typewriter('\n???: "Akhirnya kau datang, Lyren."')
+            typewriter('\n???: "At last you have come, Lyren."')
 
-            typewriter("Eiden langsung menghunus pedangnya.")
-            typewriter('Eiden: "Siapa kau?"')
+            typewriter('Eiden drew his sword at once.')
+            typewriter('Eiden: "Who are you?"')
 
-            typewriter('???: "Aku adalah Echo pertama."')
-            typewriter('"Sisa jiwa yang tertinggal ketika Gerbang Abadi runtuh."')
+            typewriter('???: "I am the First Echo."')
+            typewriter('"A remnant soul left behind when the Eternal Gate collapsed."')
 
-            typewriter("Kenangan yang bukan milikku tiba-tiba mengalir deras ke dalam pikiranku.")
+            typewriter("Memories not my own suddenly flooded my mind.")
 
-            typewriter("Aku melihat kerajaan kuno.")
-            typewriter("Aku melihat para penyihir membuka Gerbang Abadi.")
-            typewriter("Dan aku melihat diriku sendiri berdiri di antara mereka.")
+            typewriter("I saw an ancient kingdom.")
+            typewriter("I saw mages opening the Eternal Gate.")
+            typewriter("And I saw myself standing among them.")
 
-            typewriter('\nAku berbisik, "Aku... ada di sana?"')
+            typewriter('\nI whispered, "Was I... there?"')
 
-            typewriter('Echo: "Bukan hanya ada."')
-            typewriter('"Kaulah yang memulai semuanya."')
+            typewriter('Echo: "Not only were you there."')
+            typewriter('"You were the one who began it all."')
 
-            typewriter("Dunia di sekitarku terasa runtuh.")
+            typewriter("The world around me felt like it was collapsing.")
 
             player.story_progress = 4
         else:
-            print(f"Level yang dibutuhkan {level_req}")
+            print(f"Level required {level_req}")
             return False
     elif story_number == 4:
         level_req = 20
         if player.level >= level_req:
-            print("=== Dosa yang Terlupakan ===")
+            print("=== Forgotten Sins ===")
 
-            typewriter("Echo pertama menunjukkan kenangan yang selama ini disegel.")
+            typewriter("The First Echo revealed memories that had been sealed away.")
 
-            typewriter("Ratusan tahun lalu, Lyren adalah seorang peneliti yang terobsesi mengalahkan kematian.")
-            typewriter("Ia percaya bahwa semua penderitaan manusia berasal dari kefanaan.")
+            typewriter("Hundreds of years ago, Lyren was a researcher obsessed with conquering death.")
+            typewriter("He believed that all human suffering stemmed from mortality.")
 
-            typewriter("Bersama para penyihir kerajaan, ia menciptakan Gerbang Abadi.")
+            typewriter("Together with the kingdom's mages, he created the Eternal Gate.")
 
-            typewriter("Namun gerbang itu tidak membuka jalan menuju kehidupan kekal.")
-            typewriter("Gerbang itu membuka jalan menuju emosi, penyesalan, dan ketakutan seluruh umat manusia.")
+            typewriter("But the gate did not open a path to eternal life.")
+            typewriter("It opened a path to the emotions, regrets, and fears of all humanity.")
 
-            typewriter("Dari situlah The Hollow lahir.")
+            typewriter("From there, The Hollow was born.")
 
-            typewriter("\nEiden menatapku tanpa berkata apa-apa.")
+            typewriter("\nEiden stared at me without saying a word.")
 
-            typewriter("Aku mengerti sekarang.")
-            typewriter("Monster-monster itu ada karena kesalahanku.")
+            typewriter("I understood now.")
+            typewriter("Those monsters existed because of my mistakes.")
 
-            typewriter('\nEcho: "Dan sekarang kau harus menentukan nasib dunia."')
+            typewriter('\nEcho: "And now you must decide the fate of the world."')
 
             player.story_progress = 5
         else:
-            print(f"Level yang dibutuhkan {level_req}")
+            print(f"Level required {level_req}")
             return False
     elif story_number == 5:
         level_req = 25
         if player.level >= level_req:
             print("=== Crystal of Origin ===")
 
-            typewriter("Kami akhirnya mencapai ruang terdalam dungeon.")
+            typewriter("We finally reached the dungeon's deepest chamber.")
 
-            typewriter("Crystal of Origin berdiri megah di tengah kehampaan.")
-            typewriter("Cahaya biru yang dipancarkannya terasa hidup.")
+            typewriter("The Crystal of Origin stood majestic in the void.")
+            typewriter("The blue light it emitted felt alive.")
 
-            typewriter("Seren muncul sekali lagi.")
+            typewriter("Seren appeared once more.")
 
-            typewriter('\nSeren: "Sekarang kau tahu semuanya."')
-            typewriter('"Tapi mengetahui kebenaran tidak berarti kau siap menerimanya."')
+            typewriter('\nSeren: "Now you know everything."')
+            typewriter('"But knowing the truth does not mean you are ready to accept it."')
 
-            typewriter("Untuk pertama kalinya, Seren dan diriku berdiri berdampingan.")
+            typewriter("For the first time, Seren and I stood side by side.")
 
-            typewriter("Aku melihat diriku yang seharusnya.")
-            typewriter("Bukan bayangan. Bukan pecahan jiwa.")
+            typewriter("I saw the self I was meant to be.")
+            typewriter("Not a shadow. Not a fragment of a soul.")
 
-            typewriter("Utuh.")
+            typewriter("Whole.")
 
-            typewriter("Crystal mulai bergetar.")
-            typewriter("Gerbang Abadi perlahan terbuka kembali di belakangnya.")
+            typewriter("The Crystal began to tremble.")
+            typewriter("The Eternal Gate slowly reopened behind it.")
 
-            typewriter("\nDan dari dalam gerbang itu muncul sesuatu yang bahkan The Hollow takuti.")
+            typewriter("\nAnd from within the gate emerged something even The Hollow feared.")
 
             typewriter("The First Hollow.", dramatic=True)
 
             player.story_progress = 6
         else:
-            print(f"Level yang dibutuhkan {level_req}")
+            print(f"Level required {level_req}")
             return False
     elif story_number == 6:
         level_req = 30
         if player.level >= level_req:
             print("=== The First Hollow ===")
 
-            typewriter("The First Hollow adalah makhluk yang menakutkan.")
-            typewriter("Tubuhnya seperti kabut hitam yang berputar, tapi matanya bersinar merah seperti bara.")
+            typewriter("The First Hollow is a terrifying creature.")
+            typewriter("Its body swirls like black mist, but its eyes glow crimson like embers.")
 
-            typewriter("Aku dan Eiden bersiap menghadapi makhluk itu.")
+            typewriter("Eiden and I prepared to face the beast.")
 
-            typewriter('\nEiden: "Kita harus menghentikannya."')
+            typewriter('\nEiden: "We must stop it."')
 
-            typewriter('Aku mengangguk. "Ini adalah ujian terakhir."')
+            typewriter('I nodded. "This is the final test."')
 
-            typewriter("Pertempuran itu sengit.")
-            typewriter("The First Hollow menyerang dengan kekuatan yang belum pernah kami rasakan sebelumnya.")
+            typewriter("The battle was fierce.")
+            typewriter("The First Hollow attacked with a power we had never felt before.")
 
-            typewriter("Namun dengan kerja sama dan tekad, kami berhasil mengalahkannya.")
+            typewriter("But through teamwork and determination, we prevailed.")
 
-            typewriter("\nDengan kematian The First Hollow, cahaya dari Crystal of Origin menyebar ke seluruh dungeon.")
-            typewriter("The Hollow mulai menghilang, dan dunia perlahan kembali normal.")
+            typewriter("\nWith the First Hollow's death, light from the Crystal of Origin spread through the dungeon.")
+            typewriter("The Hollow began to fade, and the world slowly returned to normal.")
 
             player.story_progress = 7
         else:
-            print(f"Level yang dibutuhkan {level_req}")
+            print(f"Level required {level_req}")
             return False
     elif story_number == 7:
         level_req = 35
         if player.level >= level_req:
             player.story_progress = 999
             print("=== The Final Choice ===")
-            typewriter("Crystal of Origin mulai retak.")
-            typewriter("The First Hollow melangkah keluar dari Gerbang Abadi.")
-            typewriter("Setiap langkahnya membuat kenangan dan mimpi buruk berputar di udara.")
+            typewriter("The Crystal of Origin began to crack.")
+            typewriter("The First Hollow stepped out of the Eternal Gate.")
+            typewriter("Each step stirred memories and nightmares into the air.")
 
-            typewriter('\nThe First Hollow: "Aku adalah penyesalan yang tidak pernah diterima."')
-            typewriter('"Aku adalah dosa yang tidak pernah ditebus."')
+            typewriter('\nThe First Hollow: "I am the regret never accepted."')
+            typewriter('"I am the sin never redeemed."')
 
-            typewriter('\nEiden: "Lyren... hanya ada satu kesempatan."')
+            typewriter('\nEiden: "Lyren... there is only one chance."')
 
-            typewriter('\nSeren: "Apa pun pilihanmu, dunia akan mengingatnya."')
+            typewriter('\nSeren: "Whatever you choose, the world will remember it."')
             print("\n ## this choice will have consequences ## \n")
             choice = dialog_choice(
-                    "The First Hollow berdiri di hadapanmu. Aura gelapnya membuat dungeon bergetar.",
+                    "The First Hollow stands before you. Its dark aura makes the dungeon quake.",
                     {
-                        "1": "Aku akan melawannya.",
-                        "2": "Aku harus pergi dari sini."
+                        "1": "I will fight it.",
+                        "2": "I must leave this place."
                     }
                 )
             if choice == "1":
-                typewriter("\nAku menggenggam pedangku erat.")
-                typewriter("Untuk pertama kalinya aku tidak lari dari masa laluku.")
-                typewriter('"Aku akan mengakhirinya di sini."', dramatic=True)
+                typewriter("\nI gripped my sword tightly.")
+                typewriter("For the first time I would not run from my past.")
+                typewriter('"I will end it here."', dramatic=True)
                 
                 battle_result = combat.fight(
                     player,
@@ -241,19 +241,19 @@ def main_story(player, story_number, combat):
                 else:
                     bad_ending(player)
             elif choice == "2":
-                typewriter("\nAku melangkah mundur.")
+                typewriter("\nI stepped back.")
 
-                typewriter('"Tidak..."')
-                typewriter('"Aku tidak sanggup."', dramatic=True)
+                typewriter('"No..."')
+                typewriter('"I cannot do this."', dramatic=True)
 
-                typewriter("Aku meninggalkan Crystal of Origin.")
-                typewriter("Meninggalkan Eiden.")
-                typewriter("Meninggalkan Seren.")
+                typewriter("I left the Crystal of Origin.")
+                typewriter("Leaving Eiden behind.")
+                typewriter("Leaving Seren behind.")
 
                 bad_ending(player)
         else:
-            print(f"Level yang dibutuhkan {level_req}")
+            print(f"Level required {level_req}")
             return False
     else:
-        print("Cerita utama telah selesai.")
+        print("The main story is complete.")
         return False

@@ -3,20 +3,20 @@ from utils.text_effect import typewriter, dialog_choice
 import time
 
 def intro_story(player):
-    typewriter(f"\nSelamat datang, {player.name}\n", 0.04, dramatic=True)
+    typewriter(f"\nWelcome, {player.name}\n", 0.04, dramatic=True)
     time.sleep(1)
-    typewriter("Ratusan tahun lalu, dunia “Eidral” hancur akibat ritual yang gagal membuka “Gerbang Abadi”.")
-    typewriter("Semenjak itu, manusia hidup di bawah bayangan “The Hollow”, makhluk yang lahir dari sisa emosi dan dosa masa lalu.")
-    typewriter("Semua sejarah tentang kejadian itu telah dihapus, namun gema (echoes) dari masa itu masih terdengar di bawah tanah — di The Forgotten Dungeon.", dramatic=True)
+    typewriter("Hundreds of years ago, the world 'Eidral' was shattered by a ritual that failed to open the 'Eternal Gate'.")
+    typewriter("Since then, humanity has lived under the shadow of 'The Hollow', creatures born from leftover emotions and past sins.")
+    typewriter("All records of that event were erased, but echoes of that time still linger underground — in The Forgotten Dungeon.", dramatic=True)
     press_any()
 
-    typewriter(f"\n{player.name}, seorang pemuda tanpa masa lalu yang terbangun di reruntuhan kota tua. Ia hanya membawa:")
-    typewriter("Pedang patah dengan tulisan kuno: “Forgive the past, or repeat it.”")
-    typewriter("Kalung berbentuk lingkaran retak, terasa hangat setiap kali ia mendekati sesuatu yang “tidak seharusnya ada”.")
+    typewriter(f"\n{player.name}, a young man with no memory, woke in the ruins of an ancient city. He carried only:")
+    typewriter("A broken sword engraved with an ancient phrase: 'Forgive the past, or repeat it.'")
+    typewriter("A cracked circular necklace that grows warm whenever he nears something 'that shouldn't be.'")
     press_any()
 
-    typewriter("Ia tidak tahu siapa dirinya, hanya bahwa suara di kepalanya berbisik:")
-    typewriter("“Temukan makna dari Echo. Jangan percaya cahaya, jangan takut kegelapan.”", dramatic=True)
+    typewriter("He did not know who he was, only that a voice in his head whispered:")
+    typewriter("'Find the meaning of the Echo. Trust not the light, fear not the dark.'", dramatic=True)
 
-    typewriter("\nPetualanganmu baru saja dimulai...")
+    typewriter("\nYour adventure has only just begun...")
     press_any()

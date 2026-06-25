@@ -125,20 +125,20 @@ def typewriter(
 
 def dialog_choice(question, choices):
     """
-    Menampilkan pertanyaan + daftar pilihan.
+    Display a question with a list of choices.
 
-    Bisa menerima:
-        ["Ya", "Tidak"]
+    Accepts:
+        ["Yes", "No"]
 
-    atau
+    or
 
         {
-            "1": "Ya",
-            "2": "Tidak"
+            "1": "Yes",
+            "2": "No"
         }
 
     Return:
-        key pilihan dalam bentuk string.
+        selected choice key as a string.
     """
 
     typewriter(f"\n{question}")
@@ -153,10 +153,10 @@ def dialog_choice(question, choices):
         for i, text in enumerate(choices, start=1):
             print(f"[{i}] {text}")
 
-    else:
-        raise TypeError(
-            "choices harus berupa list atau dict"
-        )
+        else:
+            raise TypeError(
+                "choices must be a list or dict"
+            )
 
     while True:
 
@@ -177,6 +177,6 @@ def dialog_choice(question, choices):
                 return str(answer)
 
         typewriter(
-            "Pilihan tidak valid. Coba lagi.",
+            "Invalid choice. Try again.",
             skip_enabled=False
         )

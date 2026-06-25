@@ -75,7 +75,7 @@ class Merchant:
     def show_items(self):
 
         print(
-            "\n🪙 Merchant: Selamat datang, petualang!"
+            "\n🪙 Merchant: Welcome, traveler!"
         )
 
         for i, (item, price) in enumerate(
@@ -86,7 +86,7 @@ class Merchant:
                 f"[{i}] {item} - {price} gold"
             )
 
-        print("[0] Keluar")
+        print("[0] Exit")
 
     # -------------------------
     # BUY ITEM
@@ -98,13 +98,13 @@ class Merchant:
             self.show_items()
 
             choice = input(
-                "\nPilih barang: "
+                "\nChoose item: "
             ).strip()
 
             if choice == "0":
 
                 print(
-                    "Merchant: Semoga perjalananmu aman!"
+                    "Merchant: Safe travels!"
                 )
 
                 break
@@ -121,7 +121,7 @@ class Merchant:
             ):
 
                 print(
-                    "❌ Pilihan tidak valid."
+                    "❌ Invalid choice."
                 )
 
                 continue
@@ -129,7 +129,7 @@ class Merchant:
             if player.gold < price:
 
                 print(
-                    "❌ Uangmu tidak cukup!"
+                    "❌ You don't have enough gold!"
                 )
 
                 continue
@@ -144,5 +144,5 @@ class Merchant:
             )
 
             print(
-                f"✅ Kamu membeli {item}!"
+                f"✅ You bought {item}!"
             )

@@ -3,17 +3,17 @@ from utils.text_effect import typewriter
 import time
 
 def bad_ending(player):
-    typewriter("Aku gagal.")
+    typewriter("I failed.")
 
-    typewriter("Gerbang Abadi terbuka sepenuhnya.")
+    typewriter("The Eternal Gate fully opens.")
 
-    typewriter("The First Hollow menelan Crystal of Origin.")
-    typewriter("Kegelapan menyebar ke seluruh dunia.")
+    typewriter("The First Hollow swallows the Crystal of Origin.")
+    typewriter("Darkness spreads across the world.")
 
-    typewriter("Kota demi kota menghilang.")
-    typewriter("Harapan berubah menjadi Hollow baru.")
+    typewriter("City by city disappears.")
+    typewriter("Hope is turned into new Hollows.")
 
-    typewriter("Dan namaku terlupakan untuk kedua kalinya.")
+    typewriter("And my name is forgotten for the second time.")
 
     typewriter("\nBAD ENDING")
     typewriter("The Cycle Repeats", dramatic=True)

@@ -3,18 +3,18 @@ from utils.text_effect import typewriter
 import time
 
 def good_ending(player):
-    typewriter("The First Hollow jatuh.")
+    typewriter("The First Hollow falls.")
 
-    typewriter("Untuk pertama kalinya dalam ratusan tahun, dungeon menjadi sunyi.")
+    typewriter("For the first time in centuries, the dungeon falls silent.")
 
-    typewriter("Seren tersenyum.")
+    typewriter("Seren smiles.")
 
-    typewriter('"Kau akhirnya memilih untuk hidup."', dramatic=True)
+    typewriter('"You finally chose to live."', dramatic=True)
 
-    typewriter("Pecahan jiwaku kembali menjadi satu.")
+    typewriter("The fragments of my soul become whole again.")
 
-    typewriter("Gerbang Abadi tertutup selamanya.")
-    typewriter("Dan dunia akhirnya bebas dari bayang-bayang masa lalu.")
+    typewriter("The Eternal Gate closes forever.")
+    typewriter("And the world is finally free from the shadows of the past.")
 
     typewriter("Echoes of Redemption", dramatic=True)
     typewriter("\n✨ GOOD ENDING ✨", 0.04)

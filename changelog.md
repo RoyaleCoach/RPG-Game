@@ -322,3 +322,19 @@
 * Ending trigger conditions
 * Story completion flow
 
+---
+
+## [0.5.1] - 2026-06-26
+
+### Added
+
+* English localization for in-game text, menus, and story
+* Translated story scripts, UI prompts, README, and supporting utilities
+
+### Changed
+
+* Default language set to English across the codebase
+
+### Fixed
+
+* Corrected various untranslated prompts and inconsistent messages

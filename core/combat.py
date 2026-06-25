@@ -71,8 +71,7 @@ class Combat:
 
                 
                 if not available_potions:
-
-                    print("Tidak ada potion.")
+                    print("No potions available.")
                     continue
 
                 for item in available_potions:
@@ -83,7 +82,7 @@ class Combat:
                     )
                     
                 potion_name = input(
-                    "\nMasukkan nama potion: "
+                    "\nEnter potion name: "
                 ).strip()
 
                 player.equip_potion(

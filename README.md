@@ -1,32 +1,33 @@
+
 # Echoes of the Forgotten Dungeon
 
-_Petualangan gelap yang berbisik dari bawah tanah, ditulis dengan kode dan imajinasi._
+_A dark text-RPG adventure whispering from the depths, crafted with code and imagination._
 
 ---
 
-## ✨ Ringkasan Proyek
+## ✨ Project Summary
 
-Echoes of the Forgotten Dungeon adalah game RPG berbasis teks yang dikembangkan dengan Python.  
-Proyek ini menghadirkan eksplorasi dungeon, sistem pertarungan, dan percabangan cerita yang dinamis.  
-Setiap langkah pemain ditentukan oleh pilihan—dan setiap pilihan menyimpan gema yang dapat mengubah akhir kisah.
+Echoes of the Forgotten Dungeon is a text-based RPG written in Python.  
+The project features dungeon exploration, a combat system, and branching narrative with multiple endings.  
+Every step is shaped by choices — and each choice holds an echo that can alter the story's conclusion.
 
 ---
 
-## 🧭 Fitur Utama
+## 🧭 Key Features
 
-- **Sistem Naratif Cabang**  
-  Multiple endings (Good Ending, Bad Ending, Secret Ending) yang dipicu oleh aksi dan item tertentu.
+- **Branching Narrative System**  
+  Multiple endings (Good Ending, Bad Ending, Secret Ending) triggered by actions and specific items.
 
-- **Mode Pertarungan Adaptif**  
-  Damage senjata, efek potion, dan status pemain diperhitungkan secara dinamis.
+- **Adaptive Combat Mode**  
+  Weapon damage, potion effects, and player status are calculated dynamically.
 
-- **Efek Dialog Sinematik**  
-  typewriter(), dramatic, dan dramatic_mid memberikan pengalaman dialog yang lebih hidup.
+- **Cinematic Dialogue Effects**  
+  `typewriter()`, `dramatic`, and `dramatic_mid` provide a more immersive dialog experience.
 
-- **Inventori Interaktif**  
-  Menampilkan item lengkap beserta efeknya—senjata, potion, dan item unik untuk membuka ending rahasia.
+- **Interactive Inventory**  
+  Shows full item details — weapons, potions, and unique items that can unlock secret endings.
 
-- **Struktur Modular**  
-  Kode dibangun dengan pendekatan fungsi dan class untuk memudahkan pengembangan.
+- **Modular Structure**  
+  Code is built with functions and classes to ease further development.
 
 

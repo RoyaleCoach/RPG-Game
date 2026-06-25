@@ -2,17 +2,17 @@ import random
 
 def random_puzzle():
     puzzles = [
-        ("Apa yang lebih berat, 1 kg kapas atau 1 kg besi?", "sama"),
-        ("Saya punya kunci tapi tidak punya pintu. Apakah saya?", "piano"),
-        ("Angka apa yang jika dikali 0 tetap 0?", "semua")
+        ("Which is heavier, 1 kg of cotton or 1 kg of iron?", "same"),
+        ("I have keys but no doors. What am I?", "piano"),
+        ("Which number multiplied by 0 remains 0?", "any")
     ]
     question, answer = random.choice(puzzles)
-    print("\n❓ Teka-teki muncul!")
+    print("\n❓ A puzzle appears!")
     print(question)
-    guess = input("Jawabanmu: ").lower()
+    guess = input("Your answer: ").lower()
     if answer in guess:
-        print("✅ Benar! Kamu berhasil memecahkan teka-teki.")
+        print("✅ Correct! You solved the puzzle.")
         return True
     else:
-        print("❌ Salah! Kamu kehilangan sedikit HP.")
+        print("❌ Wrong! You lose a little HP.")
         return False
