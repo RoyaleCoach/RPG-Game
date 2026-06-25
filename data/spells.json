@@ -1,36 +1,97 @@
 {
   "fireball": {
     "type": "aoe/damage",
-    "damage": "lvl d6",
-    "effects": "burning",
     "level": 3,
-    "job": "spellcaster",
-    "description": "[caster] casted fireball on [target] and dealt [amount] damage!",
-    "cost": 20
+    "description": "[caster] casts Fireball!",
+    "cost": 20,
+    "obtain": "boss"
   },
+
   "icicle": {
     "type": "st/damage",
     "level": 2,
-    "job": "spellcaster",
-    "damage": "2d6",
-    "effects": "frozen",
-    "description": "[caster] casted icicle on [target] and dealt [amount] damage!",
-    "cost": 10
+    "description": "[caster] casts Icicle!",
+    "cost": 10,
+    "obtain": "merchant"
   },
+
   "rage": {
-    "level": 2,
-    "job": "warrior",
     "type": "st/buff",
-    "effects": "rage",
-    "description": "[caster] used rage!",
-    "cost": 5
-  },
-  "minor_healing": {
     "level": 2,
-    "job": "cleric",
+    "description": "[caster] uses Rage!",
+    "cost": 5,
+    "obtain": "boss"
+  },
+
+  "minor_healing": {
     "type": "st/heal",
-    "damage": "lvl d4",
-    "description": "[caster] healed [target] for [amount]!",
-    "cost": 10
+    "level": 2,
+    "description": "[caster] casts Minor Healing!",
+    "cost": 10,
+    "obtain": "merchant"
+  },
+
+  "stone_skin": {
+    "type": "st/buff",
+    "level": 4,
+    "description": "[caster] hardens their skin like stone!",
+    "cost": 15,
+    "obtain": "dungeon"
+  },
+
+  "shadow_bolt": {
+    "type": "st/damage",
+    "level": 5,
+    "description": "[caster] launches a Shadow Bolt!",
+    "cost": 18,
+    "obtain": "dungeon"
+  },
+
+  "arcane_burst": {
+    "type": "aoe/damage",
+    "level": 7,
+    "description": "[caster] releases an Arcane Burst!",
+    "cost": 25,
+    "obtain": "dungeon"
+  },
+
+  "mana_shield": {
+    "type": "st/buff",
+    "level": 6,
+    "description": "[caster] surrounds themselves with a Mana Shield!",
+    "cost": 20,
+    "obtain": "merchant"
+  },
+
+  "greater_healing": {
+    "type": "st/heal",
+    "level": 8,
+    "description": "[caster] casts Greater Healing!",
+    "cost": 25,
+    "obtain": "merchant"
+  },
+
+  "echo_vision": {
+    "type": "st/buff",
+    "level": 15,
+    "description": "[caster] peers into forgotten memories.",
+    "cost": 30,
+    "obtain": "story"
+  },
+
+  "origin_flame": {
+    "type": "aoe/damage",
+    "level": 25,
+    "description": "[caster] summons the Flame of Origin!",
+    "cost": 40,
+    "obtain": "story"
+  },
+
+  "requiem_of_light": {
+    "type": "aoe/damage",
+    "level": 35,
+    "description": "[caster] unleashes the Requiem of Light!",
+    "cost": 60,
+    "obtain": "story"
   }
 }

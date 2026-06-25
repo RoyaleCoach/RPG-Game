@@ -338,3 +338,49 @@
 ### Fixed
 
 * Corrected various untranslated prompts and inconsistent messages
+
+---
+
+## [0.6.0] - 2026-06-26
+
+### Added
+
+* Spell System with Skill Management
+* Mana resource system for players (scales with level)
+* Player spell learning and tracking (learned_spells)
+* Spell casting in combat as a dedicated battle action
+* Spell effect system (damage, healing, buff types)
+* Mana cost enforcement and validation
+* Dynamic spell availability based on learned spells
+* Spell-to-effect resolution with type-based handling
+* Persistent spell state in save/load system
+* Integration with JSON-based spell data from `spells.json`
+
+### Gameplay Changes
+
+* Players now gain mana pool that regenerates on level-up
+* Combat offers four actions: attack, defend, heal (potions), and **spell**
+* Spells consume mana and produce varied effects (damage enemies, heal self, boost defense)
+* Spells are learned progressively throughout gameplay
+* Initial player setup now includes a starter spell (Icicle)
+* Spell descriptions are displayed dynamically during combat
+
+### Improved
+
+* Combat depth and strategic variety
+* Player progression through spell acquisition
+* Combat UI now displays current mana pool alongside HP
+* Spell selection menu shows mana costs and spell types
+* Effect application based on spell metadata
+
+### Technical
+
+* Created `Skill` class for spell management and lookup
+* Enhanced `Player` class with mana property and spell tracking
+* Rewrote `Combat.fight()` to support spell action handling
+* Implemented `apply_spell_effect()` for flexible spell type processing
+* Updated `SaveSystem` to persist mana and learned_spells on save/load
+* Established foundation for future spell balancing and spell trees
+
+---
+

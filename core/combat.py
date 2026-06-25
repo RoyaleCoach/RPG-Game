@@ -5,13 +5,14 @@ from core.enemy import Boss
 
 class Combat:
 
-    def __init__(self, quest_system, items):
+    def __init__(self, quest_system, items, skill_system=None):
 
         self.quest_system = quest_system
         self.potions = items.get(
             "potions",
             {}
         )
+        self.skill_system = skill_system
 
     # -------------------------
     # MAIN BATTLE SYSTEM
@@ -23,13 +24,15 @@ class Combat:
         while player.hp > 0 and enemy.hp > 0:
 
             print(
-                f"\n{player.name} HP: {player.hp} DEF: {battle_defense} | "
+                f"\n{player.name} HP: {player.hp}/{player.max_hp} "
+                f"| Mana: {player.mana}/{player.max_mana} "
+                f"| DEF: {battle_defense} | "
                 f"{enemy.name} HP: {enemy.hp}"
             )
 
             action = (
                 input(
-                    "Choose action (attack / defend / heal): "
+                    "Choose action (attack / defend / heal / spell): "
                 )
                 .lower()
                 .strip()
@@ -59,8 +62,9 @@ class Combat:
                 print(
                     "You brace yourself."
                 )
-                
+
             elif action == "heal":
+
                 print("\n=== POTIONS ===")
 
                 available_potions = [
@@ -69,7 +73,6 @@ class Combat:
                     if item in self.potions
                 ]
 
-                
                 if not available_potions:
                     print("No potions available.")
                     continue
@@ -80,7 +83,7 @@ class Combat:
                         f"- {item} "
                         f"(Heal: {self.potions[item]['effect']} HP)"
                     )
-                    
+
                 potion_name = input(
                     "\nEnter potion name: "
                 ).strip()
@@ -88,12 +91,71 @@ class Combat:
                 player.equip_potion(
                     potion_name
                 )
+
+            elif action == "spell":
+
+                if self.skill_system is None:
+                    print("Magic is unavailable.")
+                    continue
+
+                available_spells = self.skill_system.get_available_spells(
+                    player
+                )
+
+                if not available_spells:
+                    print("You do not know any spells.")
+                    continue
+
+                print("\n=== SPELLS ===")
+
+                for name, data in available_spells.items():
+                    print(
+                        f"- {name} (Cost: {data.get('cost', 0)} Mana, "
+                        f"Type: {data.get('type')})"
+                    )
+
+                spell_name = input(
+                    "\nEnter spell name: "
+                ).strip()
+
+                spell = self.skill_system.get_spell(
+                    spell_name
+                )
+
+                if spell is None or spell_name not in player.learned_spells:
+                    print("⚠️ Invalid spell.")
+                    continue
+
+                cost = spell.get("cost", 0)
+                if player.mana < cost:
+                    print("⚠️ Not enough mana.")
+                    continue
+
+                player.mana -= cost
+                description = spell.get(
+                    "description",
+                    f"{player.name} casts {spell_name}!"
+                )
+
+                print(
+                    description.replace(
+                        "[caster]",
+                        player.name
+                    )
+                )
+
+                battle_defense = self.apply_spell_effect(
+                    player,
+                    enemy,
+                    spell,
+                    battle_defense
+                )
+
             else:
 
                 print(
                     "Invalid action."
                 )
-
                 continue
 
             # -------------------------
@@ -135,13 +197,11 @@ class Combat:
         if not player.is_alive:
 
             print("\n💀 Defeat.")
-
             return False
-        
+
         if isinstance(enemy, Boss):
 
             player.gold += enemy.gold_reward
-
             player.gain_exp(
                 enemy.exp_reward
             )
@@ -149,11 +209,9 @@ class Combat:
             print(
                 "\n👑 Boss Defeated!"
             )
-
             print(
                 f"+{enemy.gold_reward} Gold"
             )
-
             print(
                 f"+{enemy.exp_reward} EXP"
             )
@@ -171,22 +229,60 @@ class Combat:
             if player.enemies_killed % 3 == 0:
 
                 player.floor += 1
-
                 print(
                     f"📈 Reached Floor "
                     f"{player.floor}!"
                 )
 
             player.gain_exp(10)
-
             print("\n🏆 Victory!")
             print(f"+{reward} Gold")
 
         # -------------------------
         # QUEST CHECK
-        # -------------------------
         self.quest_system.check(
             player
         )
 
         return True
+
+    def apply_spell_effect(self, player, enemy, spell, battle_defense):
+
+        spell_type = spell.get("type", "st/damage")
+
+        if "damage" in spell_type:
+            damage = random.randint(
+                max(1, spell.get("cost", 5)),
+                player.attack + spell.get("level", 1) * 2
+            )
+            enemy.hp = max(
+                0,
+                enemy.hp - damage
+            )
+            print(
+                f"{enemy.name} takes {damage} damage!"
+            )
+
+        elif "heal" in spell_type:
+            heal_amount = random.randint(
+                spell.get("cost", 5),
+                spell.get("cost", 5) + player.level * 2
+            )
+            player.hp += heal_amount
+            print(
+                f"You healed {heal_amount} HP!"
+            )
+
+        elif "buff" in spell_type:
+            boost = spell.get("level", 1) * 2
+            battle_defense += boost
+            print(
+                f"Your defense increases by {boost} this turn!"
+            )
+
+        else:
+            print(
+                "The spell fizzles without effect."
+            )
+
+        return battle_defense

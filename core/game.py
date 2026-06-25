@@ -4,6 +4,7 @@ from core.combat import Combat
 from core.data_loader import DataLoader
 from core.inventory import Inventory
 from core.enemy import Enemy
+from core.skill import Skill
 
 from world.map import Explore
 from world.merchant import Merchant
@@ -16,6 +17,8 @@ from utils.text_effect import typewriter
 from story.intro_story import intro_story
 from story.main_story import main_story
 
+#Welcome to NIGTMARE mate
+#if it works it works
 
 class Game:
 
@@ -31,6 +34,7 @@ class Game:
         self.quests = self.data_loader.load_quests()
         self.bosses = self.data_loader.load_bosses()
         self.items = self.data_loader.load_items()
+        self.spells = self.data_loader.load_spells()
 
         version_data = self.data_loader.load_version()
 
@@ -48,6 +52,8 @@ class Game:
             "author",
             "Unknown"
         )
+
+        self.skill_system = Skill(self.spells)
 
         # -------------------------
         # LOAD BOSS DATA
@@ -67,7 +73,8 @@ class Game:
 
         self.combat = Combat(
             self.quest_system,
-            self.items
+            self.items,
+            self.skill_system
         )
 
         self.dungeon_system = Dungeon()
@@ -145,7 +152,9 @@ class Game:
             )
 
             choice = (
-                input("> ")
+                input(
+                    "> "
+                )
                 .lower()
                 .strip()
             )
@@ -168,7 +177,10 @@ class Game:
                 )
 
                 self.setup_player_data()
-
+                self.skill_system.learn_spell(
+                    self.player,
+                    "icicle"
+                )
                 intro_story(
                     self.player
                 )
@@ -190,7 +202,10 @@ class Game:
             )
 
             self.setup_player_data()
-
+            self.skill_system.learn_spell(
+                self.player,
+                "icicle"
+            )
             intro_story(
                 self.player
             )
@@ -198,7 +213,7 @@ class Game:
         self.game_loop()
 
     # -------------------------
-    # MAIN LOOP
+    # GAME LOOP
     # -------------------------
     def game_loop(self):
 
@@ -211,9 +226,7 @@ class Game:
 
             self.player.show_status()
 
-            action = (
-                self.show_main_menu()
-            )
+            action = self.show_main_menu()
 
             if action == "1":
 
@@ -266,7 +279,6 @@ class Game:
 
     # -------------------------
     # MENU
-    # -------------------------
     def show_main_menu(self):
 
         print("\n=== MENU ===")
@@ -281,7 +293,6 @@ class Game:
 
     # -------------------------
     # EXIT HANDLER
-    # -------------------------
     def exit_game(self):
 
         print(
@@ -289,7 +300,9 @@ class Game:
         )
 
         save_choice = (
-            input("> ")
+            input(
+                "> "
+            )
             .lower()
             .strip()
         )

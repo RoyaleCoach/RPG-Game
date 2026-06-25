@@ -14,6 +14,6 @@
         ↓
 5.5 Multiple Ending (Done)
         ↓
-6.0 Skill System (On Progress)
+6.0 Skill System (Done)
         ↓
-1.0.0 Polishing & Release
+1.0.0 Polishing & Release (On Progress)

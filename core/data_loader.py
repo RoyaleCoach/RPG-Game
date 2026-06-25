@@ -52,6 +52,9 @@ class DataLoader:
     def load_items(self):
         return self.load_json("items.json")
 
+    def load_spells(self):
+        return self.load_json("spells.json")
+
     def load_version(self):
         return self.load_json("version.json")
 

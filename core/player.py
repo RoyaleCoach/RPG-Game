@@ -19,7 +19,9 @@ class Player:
         puzzles_solved=0,
         boss_progress=0,
         dungeon_runs=0,
-        items=None
+        items=None,
+        mana=None,
+        learned_spells=None
     ):
         self.name = name
 
@@ -72,6 +74,16 @@ class Player:
         self.boss_progress = boss_progress
         self.dungeon_runs = dungeon_runs
 
+        self._mana = (
+            mana
+            if mana is not None
+            else self.max_mana
+        )
+
+        self.learned_spells = (
+            learned_spells or []
+        )
+
     # ==========================
     # Properties
     # ==========================
@@ -121,6 +133,21 @@ class Player:
     def exp_to_next_level(self):
         return max(0, 100 - self.exp)
 
+    @property
+    def max_mana(self):
+        return self.level * 10
+
+    @property
+    def mana(self):
+        return self._mana
+
+    @mana.setter
+    def mana(self, value):
+        self._mana = min(
+            max(0, value),
+            self.max_mana
+        )
+
     # ==========================
     # Display
     # ==========================
@@ -128,6 +155,7 @@ class Player:
     def show_status(self):
         print(f"\n=== {self.name} (Lv {self.level}) ===")
         print(f"HP: {self.hp}/{self.max_hp}")
+        print(f"Mana: {self.mana}/{self.max_mana}")
         print(f"ATK: {self.attack}")
         print(f"DEF: {self.defense}")
         print(f"Weapon: {self.weapon}")
@@ -159,6 +187,7 @@ class Player:
             self._base_attack += 2
 
             self.hp = self.max_hp
+            self.mana = self.max_mana
 
             print(
                 f"🎉 Level UP! "
@@ -313,5 +342,7 @@ class Player:
             "puzzles_solved": self.puzzles_solved,
             "completed_quests": self.completed_quests,
             "boss_progress": self.boss_progress,
-            "dungeon_runs": self.dungeon_runs
+            "dungeon_runs": self.dungeon_runs,
+            "mana": self.mana,
+            "learned_spells": self.learned_spells
         }
