@@ -21,7 +21,9 @@ class Player:
         dungeon_runs=0,
         items=None,
         mana=None,
-        learned_spells=None
+        learned_spells=None,
+        skill_points=0,
+        unlocked_skills=None
     ):
         self.name = name
 
@@ -74,6 +76,8 @@ class Player:
         self.boss_progress = boss_progress
         self.dungeon_runs = dungeon_runs
 
+        self._max_mana_bonus = 0
+
         self._mana = (
             mana
             if mana is not None
@@ -82,6 +86,12 @@ class Player:
 
         self.learned_spells = (
             learned_spells or []
+        )
+
+        self.skill_points = skill_points
+
+        self.unlocked_skills = (
+            unlocked_skills or []
         )
 
     # ==========================
@@ -135,7 +145,7 @@ class Player:
 
     @property
     def max_mana(self):
-        return self.level * 10
+        return self.level * 10 + self._max_mana_bonus
 
     @property
     def mana(self):
@@ -166,6 +176,7 @@ class Player:
         )
         print(f"Floor: {self.floor}")
         print(f"Gold: {self.gold}")
+        print(f"Skill Points: {self.skill_points}")
 
     # ==========================
     # Experience
@@ -186,12 +197,19 @@ class Player:
 
             self._base_attack += 2
 
+            self.skill_points += 1
+
             self.hp = self.max_hp
             self.mana = self.max_mana
 
             print(
                 f"🎉 Level UP! "
                 f"Now Lv {self.level}"
+            )
+
+            print(
+                f"🎯 +1 Skill Point "
+                f"(Total: {self.skill_points})"
             )
 
     # ==========================
@@ -344,5 +362,7 @@ class Player:
             "boss_progress": self.boss_progress,
             "dungeon_runs": self.dungeon_runs,
             "mana": self.mana,
-            "learned_spells": self.learned_spells
+            "learned_spells": self.learned_spells,
+            "skill_points": self.skill_points,
+            "unlocked_skills": self.unlocked_skills
         }

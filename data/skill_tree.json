@@ -1,0 +1,102 @@
+{
+  "skill_nodes": {
+    "magic_apprentice": {
+      "id": "magic_apprentice",
+      "name": "Magic Apprentice",
+      "type": "passive",
+      "cost": 0,
+      "description": "Unlock basic magic and passive bonuses",
+      "prerequisites": [],
+      "effects": {
+        "max_mana": 50
+      }
+    },
+    "fireball": {
+      "id": "fireball",
+      "name": "Fireball",
+      "type": "active",
+      "cost": 1,
+      "description": "Hurl a ball of fire at your enemy",
+      "prerequisites": ["magic_apprentice"],
+      "spell": "fireball"
+    },
+    "ice_shard": {
+      "id": "ice_shard",
+      "name": "Ice Shard",
+      "type": "active",
+      "cost": 1,
+      "description": "Launch a shard of ice",
+      "prerequisites": ["magic_apprentice"],
+      "spell": "icicle"
+    },
+    "mana_mastery": {
+      "id": "mana_mastery",
+      "name": "Mana Mastery",
+      "type": "passive",
+      "cost": 2,
+      "description": "Increase max mana pool",
+      "prerequisites": ["magic_apprentice"],
+      "effects": {
+        "max_mana": 100
+      }
+    },
+    "flame_burst": {
+      "id": "flame_burst",
+      "name": "Flame Burst",
+      "type": "active",
+      "cost": 2,
+      "description": "Burst of flames in an area",
+      "prerequisites": ["fireball"],
+      "spell": "flame_burst"
+    },
+    "frost_lance": {
+      "id": "frost_lance",
+      "name": "Frost Lance",
+      "type": "active",
+      "cost": 2,
+      "description": "Pierce with frozen lance",
+      "prerequisites": ["ice_shard"],
+      "spell": "frost_lance"
+    },
+    "inferno": {
+      "id": "inferno",
+      "name": "Inferno",
+      "type": "active",
+      "cost": 3,
+      "description": "Ultimate fire spell",
+      "prerequisites": ["flame_burst"],
+      "spell": "inferno"
+    },
+    "absolute_zero": {
+      "id": "absolute_zero",
+      "name": "Absolute Zero",
+      "type": "active",
+      "cost": 3,
+      "description": "Ultimate ice spell",
+      "prerequisites": ["frost_lance"],
+      "spell": "absolute_zero"
+    },
+    "combat_training": {
+      "id": "combat_training",
+      "name": "Combat Training",
+      "type": "passive",
+      "cost": 1,
+      "description": "Increase attack power",
+      "prerequisites": [],
+      "effects": {
+        "attack": 5
+      }
+    },
+    "defensive_stance": {
+      "id": "defensive_stance",
+      "name": "Defensive Stance",
+      "type": "passive",
+      "cost": 1,
+      "description": "Increase defense",
+      "prerequisites": [],
+      "effects": {
+        "defense": 5
+      }
+    }
+  }
+}

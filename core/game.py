@@ -5,6 +5,8 @@ from core.data_loader import DataLoader
 from core.inventory import Inventory
 from core.enemy import Enemy
 from core.skill import Skill
+from core.skill_tree import SkillTree
+from core.skill_tree_menu import SkillTreeMenu
 
 from world.map import Explore
 from world.merchant import Merchant
@@ -35,6 +37,7 @@ class Game:
         self.bosses = self.data_loader.load_bosses()
         self.items = self.data_loader.load_items()
         self.spells = self.data_loader.load_spells()
+        self.skill_tree_data = self.data_loader.load_skill_tree()
 
         version_data = self.data_loader.load_version()
 
@@ -54,6 +57,8 @@ class Game:
         )
 
         self.skill_system = Skill(self.spells)
+        self.skill_tree = SkillTree(self.skill_tree_data)
+        self.skill_tree_menu = SkillTreeMenu(self.skill_tree)
 
         # -------------------------
         # LOAD BOSS DATA
@@ -173,7 +178,8 @@ class Game:
                 )
 
                 self.player = Player(
-                    items=self.items
+                    items=self.items,
+                    skill_points=1
                 )
 
                 self.setup_player_data()
@@ -198,7 +204,8 @@ class Game:
                 name=input(
                     "Enter player name: "
                 ),
-                items=self.items
+                items=self.items,
+                skill_points=1
             )
 
             self.setup_player_data()
@@ -264,6 +271,12 @@ class Game:
 
             elif action == "5":
 
+                self.skill_tree_menu.show_skill_tree(
+                    self.player
+                )
+
+            elif action == "6":
+
                 self.save_system.save()
 
             elif action == "0":
@@ -286,7 +299,8 @@ class Game:
         print("[2] Explore Dungeon")
         print("[3] Merchant")
         print("[4] Inventory")
-        print("[5] Save Game")
+        print("[5] Skill Tree")
+        print("[6] Save Game")
         print("[0] Exit")
 
         return input("> ").strip()

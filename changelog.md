@@ -422,3 +422,84 @@
 * Separated runtime diagnostics from gameplay output
 
 ---
+
+## [0.7.0] - 2026-06-26
+
+### Added
+
+* Comprehensive Skill Tree System
+* SkillNode class for individual skill management
+* SkillTree class for skill hierarchy and progression
+* SkillTreeMenu class for interactive UI
+* Skill Points earned on level-up (1 per level)
+* Player skill_points and unlocked_skills tracking
+* Skill Tree data architecture (`skill_tree.json`)
+* JSON-based skill configuration system
+* Two skill types: Active Skills (spells) and Passive Skills (stat bonuses)
+* Skill prerequisites and unlock validation
+* Passive skill effects (mana bonus, attack bonus, defense bonus)
+* Skill Tree Menu with multiple display modes:
+  - View All Skills
+  - View Unlocked Skills
+  - View Available Skills to Unlock
+  - View Passive/Active Skills Separately
+  - Search Skills by Name
+* Dynamic skill availability based on prerequisites
+* Skill cost system (variable SP cost per skill)
+* Spell integration with skill tree (unlocking skills teaches spells)
+
+### Gameplay Changes
+
+* Players earn 1 Skill Point per level
+* New players start with 1 Skill Point and can immediately unlock skills
+* Skill Points can be spent to unlock new spells or passive abilities
+* Passive skills grant permanent stat bonuses
+* Max Mana can be increased through "Mana Mastery" passive skill
+* Attack and Defense can be improved through passive skills
+* Skill prerequisites prevent skill spam and encourage meaningful progression
+* Skill Tree access available from main menu
+
+### Progression Example
+
+```
+Magic Apprentice (Base Passive, Cost: 0)
+├── Fireball (Cost: 1, Requires: Magic Apprentice)
+│   └── Flame Burst (Cost: 2, Requires: Fireball)
+│       └── Inferno (Cost: 3, Requires: Flame Burst)
+├── Ice Shard (Cost: 1, Requires: Magic Apprentice)
+│   └── Frost Lance (Cost: 2, Requires: Ice Shard)
+│       └── Absolute Zero (Cost: 3, Requires: Frost Lance)
+└── Mana Mastery (Passive, Cost: 2)
+```
+
+### Improved
+
+* Character progression depth and replayability
+* Strategic choice in skill allocation
+* Long-term progression goals beyond level grinding
+* Modular skill system for easy content expansion
+* Save/Load persistence for skill tree state
+
+### Technical
+
+* Created `core/skill_tree.py` with SkillNode and SkillTree classes
+* Created `core/skill_tree_menu.py` for interactive UI
+* Updated `Player` class with skill point tracking
+* Added `_max_mana_bonus` property for skill effects
+* Updated `DataLoader` to load skill tree JSON
+* Integrated skill tree into Game initialization
+* Enhanced `SaveSystem` to persist skill_points and unlocked_skills
+* Updated `gain_exp()` to award skill points on level-up
+
+### Refactoring
+
+* Separated skill tree logic into dedicated modules
+* Established foundation for future skill expansions
+* Improved Player class for stat bonus management
+* Created modular menu system for UI flexibility
+
+### Fixes
+
+* Player status now displays available Skill Points
+* Proper save/load of skill progression
+* Menu system updated to accommodate new Skill Tree menu option
