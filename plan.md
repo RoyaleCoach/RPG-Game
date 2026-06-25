@@ -12,8 +12,8 @@
         ↓
 4.0 Choice & Consequence (Done)
         ↓
-5.5 Multiple Ending (On Progress)
+5.5 Multiple Ending (Done)
         ↓
-6.0 Skill System 
+6.0 Skill System (On Progress)
         ↓
 1.0.0 Polishing & Release

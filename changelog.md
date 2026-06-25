@@ -270,7 +270,7 @@
 * Reduced duplicate item validation code
 * Improved separation between combat logic and item data access
 
-# Changelog
+---
 
 ## [0.4.0] - 2026-06-26
 
@@ -296,3 +296,29 @@
 * Story progression tracking
 * Chapter unlock consistency
 * Final battle and ending flow
+
+---
+
+## [0.5.0] - 2026-06-26
+
+### Added
+
+* Multiple Ending System
+* Good Ending: Echoes of Redemption
+* Bad Ending: The Cycle Repeats
+* Final decision event with meaningful consequences
+* The First Hollow final confrontation
+* Ending paths based on player choices and battle outcome
+
+### Changed
+
+* Reworked final chapter flow
+* Improved narrative impact of player decisions
+* Enhanced story conclusion and character arcs
+
+### Fixed
+
+* Final boss progression logic
+* Ending trigger conditions
+* Story completion flow
+
