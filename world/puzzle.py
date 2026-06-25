@@ -1,5 +1,4 @@
 import random
-from core.player import Player
 
 def random_puzzle():
     puzzles = [

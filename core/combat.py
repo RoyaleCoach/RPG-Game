@@ -5,9 +5,13 @@ from core.enemy import Boss
 
 class Combat:
 
-    def __init__(self, quest_system):
+    def __init__(self, quest_system, items):
 
         self.quest_system = quest_system
+        self.potions = items.get(
+            "potions",
+            {}
+        )
 
     # -------------------------
     # MAIN BATTLE SYSTEM
@@ -25,7 +29,7 @@ class Combat:
 
             action = (
                 input(
-                    "Choose action (attack / defend): "
+                    "Choose action (attack / defend / heal): "
                 )
                 .lower()
                 .strip()
@@ -55,7 +59,36 @@ class Combat:
                 print(
                     "You brace yourself."
                 )
+                
+            elif action == "heal":
+                print("\n=== POTIONS ===")
 
+                available_potions = [
+                    item
+                    for item in player.inventory
+                    if item in self.potions
+                ]
+
+                
+                if not available_potions:
+
+                    print("Tidak ada potion.")
+                    continue
+
+                for item in available_potions:
+
+                    print(
+                        f"- {item} "
+                        f"(Heal: {self.potions[item]['effect']} HP)"
+                    )
+                    
+                potion_name = input(
+                    "\nMasukkan nama potion: "
+                ).strip()
+
+                player.equip_potion(
+                    potion_name
+                )
             else:
 
                 print(

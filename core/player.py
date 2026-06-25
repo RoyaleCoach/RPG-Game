@@ -170,47 +170,63 @@ class Player:
     # ==========================
 
     def equip_weapon(self, weapon_name):
+        weapon_name = weapon_name.lower()
+        matched_weapon = None
+        
+        for weapon in self.weapons:
+            if weapon.lower() == weapon_name:
+                matched_weapon = weapon
+                break
 
-        if weapon_name not in self.inventory:
-            print("⚠️ Senjata tidak ada di inventory.")
-            return True
-
-        if weapon_name not in self.weapons:
+        if matched_weapon is None:
             print("⚠️ Senjata tidak dikenal.")
             return True
 
-        if self.weapon == weapon_name:
+        if matched_weapon not in self.inventory:
+            print("⚠️ Senjata tidak ada di inventory.")
+            return True
+
+        if self.weapon == matched_weapon:
             print("⚠️ Senjata ini sudah digunakan.")
             return True
 
-        self.weapon = weapon_name
+        self.weapon = matched_weapon
 
         print(
             f"🗡️ Kamu melengkapi "
-            f"{weapon_name}!"
+            f"{matched_weapon}!"
         )
 
         return False
 
     def equip_defense(self, armor_name):
 
-        if armor_name not in self.inventory:
-            print("⚠️ Armor tidak ada di inventory.")
-            return True
+        armor_name = armor_name.lower()
 
-        if armor_name not in self.defends:
+        matched_armor = None
+
+        for armor in self.defends:
+            if armor.lower() == armor_name:
+                matched_armor = armor
+                break
+
+        if matched_armor is None:
             print("⚠️ Armor tidak dikenal.")
             return True
 
-        if self.armor == armor_name:
+        if matched_armor not in self.inventory:
+            print("⚠️ Armor tidak ada di inventory.")
+            return True
+
+        if self.armor == matched_armor:
             print("⚠️ Armor ini sudah digunakan.")
             return True
 
-        self.armor = armor_name
+        self.armor = matched_armor
 
         print(
             f"🛡️ Kamu melengkapi "
-            f"{armor_name}!"
+            f"{matched_armor}!"
         )
 
         return False
@@ -221,28 +237,37 @@ class Player:
 
     def equip_potion(self, potion_name):
 
-        if potion_name not in self.inventory:
-            print("⚠️ Potion tidak ada di inventory.")
-            return
+        potion_name = potion_name.lower()
 
-        if potion_name not in self.potions:
+        matched_potion = None
+
+        for potion in self.potions:
+            if potion.lower() == potion_name:
+                matched_potion = potion
+                break
+
+        if matched_potion is None:
             print("⚠️ Potion tidak dikenal.")
             return
 
+        if matched_potion not in self.inventory:
+            print("⚠️ Potion tidak ada di inventory.")
+            return
+
         heal_amount = (
-            self.potions[potion_name]["effect"]
+            self.potions[matched_potion]["effect"]
         )
 
         self.hp += heal_amount
 
-        self.inventory[potion_name] -= 1
+        self.inventory[matched_potion] -= 1
 
-        if self.inventory[potion_name] <= 0:
-            self.inventory.pop(potion_name)
+        if self.inventory[matched_potion] <= 0:
+            self.inventory.pop(matched_potion)
 
         print(
             f"🧪 Kamu menggunakan "
-            f"{potion_name}! "
+            f"{matched_potion}! "
             f"HP bertambah "
             f"{heal_amount}."
         )

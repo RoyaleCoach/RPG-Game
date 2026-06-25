@@ -11,8 +11,8 @@ def intro_story(player):
     press_any()
 
     typewriter(f"\n{player.name}, seorang pemuda tanpa masa lalu yang terbangun di reruntuhan kota tua. Ia hanya membawa:")
-    typewriter("\tPedang patah dengan tulisan kuno: “Forgive the past, or repeat it.”")
-    typewriter("\tKalung berbentuk lingkaran retak, terasa hangat setiap kali ia mendekati sesuatu yang “tidak seharusnya ada”.")
+    typewriter("Pedang patah dengan tulisan kuno: “Forgive the past, or repeat it.”")
+    typewriter("Kalung berbentuk lingkaran retak, terasa hangat setiap kali ia mendekati sesuatu yang “tidak seharusnya ada”.")
     press_any()
 
     typewriter("Ia tidak tahu siapa dirinya, hanya bahwa suara di kepalanya berbisik:")

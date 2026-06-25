@@ -229,3 +229,44 @@
 * Improved compatibility with packaged builds
 * Centralized game content management
 * Established foundation for future modding support
+
+---
+
+## [0.3.2] - 2026-06-25
+
+### Added
+
+* In-Battle Potion Usage
+* Combat Heal Action
+* Potion Selection During Battle
+* Case-Insensitive Equipment Selection
+* Case-Insensitive Potion Usage
+* Equipment Validation Improvements
+
+### Gameplay Changes
+
+* Players can now consume potions directly during combat
+* Healing is now available as a dedicated battle action
+* Weapon, Armor, and Potion names are no longer case-sensitive
+* Equipment and consumable selection is more user-friendly
+
+### Improved
+
+* Inventory interaction flow
+* Combat usability and survivability
+* Item lookup reliability
+* User input handling for equipment and consumables
+
+### Fixed
+
+* Equipment selection failing due to letter case mismatch
+* Potion usage lookup inconsistencies
+* Invalid item name recognition issues
+* Inventory item validation edge cases
+
+### Refactoring
+
+* Unified item name matching logic across weapons, armor, and potions
+* Reduced duplicate item validation code
+* Improved separation between combat logic and item data access
+

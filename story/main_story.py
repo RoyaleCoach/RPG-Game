@@ -6,9 +6,9 @@ import time
 
 def main_story(player, story_number):
     if story_number == 0:
-        typewriter("\tHening", dramatic=True)
-        typewriter("\tHanya ada gemuruh samar air menetes dari langit-langit batu.",)
-        typewriter("\tLalu aku mendengar suara itu lagi — lembut, tapi jauh di dalam kepalaku",dramatic=True)
+        typewriter("Hening", dramatic=True)
+        typewriter("Hanya ada gemuruh samar air menetes dari langit-langit batu.",)
+        typewriter("Lalu aku mendengar suara itu lagi — lembut, tapi jauh di dalam kepalaku",dramatic=True)
         time.sleep(1)
 
         typewriter('Seren: "Lyren... bangunlah.”')

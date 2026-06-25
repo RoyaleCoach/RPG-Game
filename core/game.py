@@ -66,7 +66,8 @@ class Game:
         )
 
         self.combat = Combat(
-            self.quest_system
+            self.quest_system,
+            self.items
         )
 
         self.dungeon_system = Dungeon()
