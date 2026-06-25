@@ -270,3 +270,29 @@
 * Reduced duplicate item validation code
 * Improved separation between combat logic and item data access
 
+# Changelog
+
+## [0.4.0] - 2026-06-26
+
+### Added
+
+* Main Story Chapter 1–7
+* Story progression system based on player level
+* New characters: Lyren, Seren, Eiden, Echo, and The First Hollow
+* Crystal of Origin storyline
+* Final Choice event
+* The First Hollow final boss battle
+* Story-based level requirements
+* Narrative dialogue and cutscene sequences
+
+### Changed
+
+* Improved story pacing and progression
+* Refined dungeon lore and worldbuilding
+* Integrated story progression with player save data
+
+### Fixed
+
+* Story progression tracking
+* Chapter unlock consistency
+* Final battle and ending flow

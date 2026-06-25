@@ -111,3 +111,9 @@ class Boss(Enemy):
 
         self.exp_reward = exp_reward
         self.gold_reward = gold_reward
+
+class TheFirstHollow(Enemy):
+    def __init__(self):
+        super().__init__("The First Hollow", 500, 50)
+        self.exp_reward = 1000
+        self.gold_reward = 500

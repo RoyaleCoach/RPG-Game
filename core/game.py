@@ -219,7 +219,8 @@ class Game:
 
                 main_story(
                     self.player,
-                    self.player.story_progress
+                    self.player.story_progress,
+                    self.combat
                 )
 
             elif action == "2":

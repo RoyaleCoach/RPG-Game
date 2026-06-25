@@ -137,8 +137,8 @@ class Combat:
 
             print("\n💀 Defeat.")
 
-            return
-
+            return False
+        
         if isinstance(enemy, Boss):
 
             player.gold += enemy.gold_reward
@@ -189,3 +189,5 @@ class Combat:
         self.quest_system.check(
             player
         )
+
+        return True
