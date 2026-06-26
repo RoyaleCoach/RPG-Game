@@ -105,15 +105,15 @@ class Game:
         ctx = self.ctx  # local alias for brevity inside lambdas
 
         return MenuRegistry([
-            MenuEntry("1", "Main Story",     self._do_main_story),
+            MenuEntry("1", "Main Story", self._do_main_story),
             MenuEntry("2", "Explore Dungeon", self._do_explore),
             MenuEntry("3", "Merchant", lambda: ctx.merchant.trade(ctx.player)),
             MenuEntry("4", "Inventory",
                       lambda: ctx.inventory.open(ctx.player)),
             MenuEntry("5", "Skill Tree",
                       lambda: ctx.skill_tree_menu.show_skill_tree(ctx.player)),
-            MenuEntry("6", "Save Game",       ctx.save_system.save),
-            MenuEntry("0", "Exit",            self._do_exit),
+            MenuEntry("6", "Save Game", ctx.save_system.save),
+            MenuEntry("0", "Exit", self._do_exit),
         ])
 
     # ── Menu actions ──────────────────────────────────────────────────────────
