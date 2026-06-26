@@ -36,7 +36,8 @@ class Dungeon:
 
     def _choose_event(self, player):
         weights = self.build_event_weights(player)
-        event_names = [name for name in weights if name not in self.event_cooldowns]
+        event_names = [
+            name for name in weights if name not in self.event_cooldowns]
 
         if self.last_event in event_names:
             event_names.remove(self.last_event)
@@ -99,7 +100,8 @@ class Dungeon:
         elif bonus_name == "Jump 2 floors":
             player.floor += 2
         else:
-            player.inventory[bonus_name] = player.inventory.get(bonus_name, 0) + 1
+            player.inventory[bonus_name] = player.inventory.get(
+                bonus_name, 0) + 1
 
         print(f"✨ Bonus: {bonus_name}")
 
@@ -152,7 +154,8 @@ class Dungeon:
             print("😈 It's a Mimic!")
 
             if self.combat is not None:
-                self.combat.fight(player, Enemy("Mimic", mimic_hp, mimic_attack))
+                self.combat.fight(player, Enemy(
+                    "Mimic", mimic_hp, mimic_attack))
             else:
                 print(f"The mimic lunges with {mimic_attack} force.")
 
@@ -338,7 +341,8 @@ class Dungeon:
             ]
         )
 
-        jump_distance = 2 if random.randint(1, 100) <= 15 + max(0, player.luck) else 1
+        jump_distance = 2 if random.randint(
+            1, 100) <= 15 + max(0, player.luck) else 1
         player.floor += jump_distance
         player.gain_exp(self._scaled_exp(player, 6))
 

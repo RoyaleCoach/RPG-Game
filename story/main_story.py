@@ -5,11 +5,13 @@ from story.bad_ending import bad_ending
 import time
 from core.enemy import TheFirstHollow
 
+
 def main_story(player, story_number, combat):
     if story_number == 0:
         typewriter("Silence", dramatic=True)
         typewriter("Only the faint drip of water echoed from the stone ceiling.")
-        typewriter("Then I heard that voice again — soft, but far inside my head", dramatic=True)
+        typewriter(
+            "Then I heard that voice again — soft, but far inside my head", dramatic=True)
         time.sleep(1)
 
         typewriter('Seren: "Lyren... wake."')
@@ -32,20 +34,26 @@ def main_story(player, story_number, combat):
         level_req = 5
         if player.level >= level_req:
             print("=== Reunion ===")
-            typewriter("I stepped forward, my fingers brushing air that felt heavy and cold.")
-            typewriter("The crystal's light reflected my shadow on the floor — but I was not alone.")
+            typewriter(
+                "I stepped forward, my fingers brushing air that felt heavy and cold.")
+            typewriter(
+                "The crystal's light reflected my shadow on the floor — but I was not alone.")
             typewriter("There were two faces.")
             typewriter("Me(...) and Seren", dramatic_mid=True)
 
-            typewriter("\nHis face mirrored mine, but his eyes reflected a strange calm.")
+            typewriter(
+                "\nHis face mirrored mine, but his eyes reflected a strange calm.")
 
             typewriter("\nEiden: (startled) 'Lyren...? No... this can't be...'")
-            typewriter("I smiled faintly. 'Maybe. But just as you never gave up, my soul refused to fade away.'")
+            typewriter(
+                "I smiled faintly. 'Maybe. But just as you never gave up, my soul refused to fade away.'")
 
             typewriter("\nSeren: (whisper) 'You... are me.'")
 
-            typewriter("\nI stared at him for a long moment, and then I understood.")
-            typewriter("Seren was not a stranger. He was part of my soul saved by Eiden when my body was shattered.")
+            typewriter(
+                "\nI stared at him for a long moment, and then I understood.")
+            typewriter(
+                "Seren was not a stranger. He was part of my soul saved by Eiden when my body was shattered.")
             typewriter("I was what remained — a shadow of him.")
 
             player.story_progress = 2
@@ -57,28 +65,37 @@ def main_story(player, story_number, combat):
         if player.level >= level_req:
             print("=== The Calling Voice ===")
 
-            typewriter("After that encounter, Seren kept appearing in my dreams.")
-            typewriter("Every night I saw the same stone corridor, growing deeper and darker.")
-            typewriter("At the corridor's end stood a giant door bound by black chains.")
+            typewriter(
+                "After that encounter, Seren kept appearing in my dreams.")
+            typewriter(
+                "Every night I saw the same stone corridor, growing deeper and darker.")
+            typewriter(
+                "At the corridor's end stood a giant door bound by black chains.")
 
             typewriter('\nSeren: "That place lies beneath the dungeon."')
             typewriter('Seren: "It is where it all began."')
 
-            typewriter("Eiden and I finally descended into the deepest layers of The Forgotten Dungeon.")
-            typewriter("The air grew cold. Even the magical torches dimmed one by one.")
+            typewriter(
+                "Eiden and I finally descended into the deepest layers of The Forgotten Dungeon.")
+            typewriter(
+                "The air grew cold. Even the magical torches dimmed one by one.")
 
             typewriter("Then the voice came again.")
             typewriter('"Return what was stolen..."', dramatic=True)
 
-            typewriter("\nIn front of the giant door was the same symbol as my cracked necklace.")
+            typewriter(
+                "\nIn front of the giant door was the same symbol as my cracked necklace.")
 
-            typewriter("When I touched the necklace, the black chains began to crumble.")
+            typewriter(
+                "When I touched the necklace, the black chains began to crumble.")
             typewriter("The door slowly opened.")
 
-            typewriter("\nBehind it lay a vast chamber filled with thousands of crystals, each holding human memories.")
+            typewriter(
+                "\nBehind it lay a vast chamber filled with thousands of crystals, each holding human memories.")
 
             typewriter("And in the center of the room...")
-            typewriter("Someone with a face identical to mine stood waiting.", dramatic=True)
+            typewriter(
+                "Someone with a face identical to mine stood waiting.", dramatic=True)
 
             player.story_progress = 3
         else:
@@ -97,7 +114,8 @@ def main_story(player, story_number, combat):
             typewriter('Eiden: "Who are you?"')
 
             typewriter('???: "I am the First Echo."')
-            typewriter('"A remnant soul left behind when the Eternal Gate collapsed."')
+            typewriter(
+                '"A remnant soul left behind when the Eternal Gate collapsed."')
 
             typewriter("Memories not my own suddenly flooded my mind.")
 
@@ -121,15 +139,20 @@ def main_story(player, story_number, combat):
         if player.level >= level_req:
             print("=== Forgotten Sins ===")
 
-            typewriter("The First Echo revealed memories that had been sealed away.")
+            typewriter(
+                "The First Echo revealed memories that had been sealed away.")
 
-            typewriter("Hundreds of years ago, Lyren was a researcher obsessed with conquering death.")
-            typewriter("He believed that all human suffering stemmed from mortality.")
+            typewriter(
+                "Hundreds of years ago, Lyren was a researcher obsessed with conquering death.")
+            typewriter(
+                "He believed that all human suffering stemmed from mortality.")
 
-            typewriter("Together with the kingdom's mages, he created the Eternal Gate.")
+            typewriter(
+                "Together with the kingdom's mages, he created the Eternal Gate.")
 
             typewriter("But the gate did not open a path to eternal life.")
-            typewriter("It opened a path to the emotions, regrets, and fears of all humanity.")
+            typewriter(
+                "It opened a path to the emotions, regrets, and fears of all humanity.")
 
             typewriter("From there, The Hollow was born.")
 
@@ -138,7 +161,8 @@ def main_story(player, story_number, combat):
             typewriter("I understood now.")
             typewriter("Those monsters existed because of my mistakes.")
 
-            typewriter('\nEcho: "And now you must decide the fate of the world."')
+            typewriter(
+                '\nEcho: "And now you must decide the fate of the world."')
 
             player.story_progress = 5
         else:
@@ -157,7 +181,8 @@ def main_story(player, story_number, combat):
             typewriter("Seren appeared once more.")
 
             typewriter('\nSeren: "Now you know everything."')
-            typewriter('"But knowing the truth does not mean you are ready to accept it."')
+            typewriter(
+                '"But knowing the truth does not mean you are ready to accept it."')
 
             typewriter("For the first time, Seren and I stood side by side.")
 
@@ -169,7 +194,8 @@ def main_story(player, story_number, combat):
             typewriter("The Crystal began to tremble.")
             typewriter("The Eternal Gate slowly reopened behind it.")
 
-            typewriter("\nAnd from within the gate emerged something even The Hollow feared.")
+            typewriter(
+                "\nAnd from within the gate emerged something even The Hollow feared.")
 
             typewriter("The First Hollow.", dramatic=True)
 
@@ -183,7 +209,8 @@ def main_story(player, story_number, combat):
             print("=== The First Hollow ===")
 
             typewriter("The First Hollow is a terrifying creature.")
-            typewriter("Its body swirls like black mist, but its eyes glow crimson like embers.")
+            typewriter(
+                "Its body swirls like black mist, but its eyes glow crimson like embers.")
 
             typewriter("Eiden and I prepared to face the beast.")
 
@@ -192,12 +219,15 @@ def main_story(player, story_number, combat):
             typewriter('I nodded. "This is the final test."')
 
             typewriter("The battle was fierce.")
-            typewriter("The First Hollow attacked with a power we had never felt before.")
+            typewriter(
+                "The First Hollow attacked with a power we had never felt before.")
 
             typewriter("But through teamwork and determination, we prevailed.")
 
-            typewriter("\nWith the First Hollow's death, light from the Crystal of Origin spread through the dungeon.")
-            typewriter("The Hollow began to fade, and the world slowly returned to normal.")
+            typewriter(
+                "\nWith the First Hollow's death, light from the Crystal of Origin spread through the dungeon.")
+            typewriter(
+                "The Hollow began to fade, and the world slowly returned to normal.")
 
             player.story_progress = 7
         else:
@@ -210,27 +240,29 @@ def main_story(player, story_number, combat):
             print("=== The Final Choice ===")
             typewriter("The Crystal of Origin began to crack.")
             typewriter("The First Hollow stepped out of the Eternal Gate.")
-            typewriter("Each step stirred memories and nightmares into the air.")
+            typewriter(
+                "Each step stirred memories and nightmares into the air.")
 
             typewriter('\nThe First Hollow: "I am the regret never accepted."')
             typewriter('"I am the sin never redeemed."')
 
             typewriter('\nEiden: "Lyren... there is only one chance."')
 
-            typewriter('\nSeren: "Whatever you choose, the world will remember it."')
+            typewriter(
+                '\nSeren: "Whatever you choose, the world will remember it."')
             print("\n ## this choice will have consequences ## \n")
             choice = dialog_choice(
-                    "The First Hollow stands before you. Its dark aura makes the dungeon quake.",
-                    {
-                        "1": "I will fight it.",
-                        "2": "I must leave this place."
-                    }
-                )
+                "The First Hollow stands before you. Its dark aura makes the dungeon quake.",
+                {
+                    "1": "I will fight it.",
+                    "2": "I must leave this place."
+                }
+            )
             if choice == "1":
                 typewriter("\nI gripped my sword tightly.")
                 typewriter("For the first time I would not run from my past.")
                 typewriter('"I will end it here."', dramatic=True)
-                
+
                 battle_result = combat.fight(
                     player,
                     TheFirstHollow()

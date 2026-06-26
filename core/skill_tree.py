@@ -165,4 +165,3 @@ class SkillTree:
             node_id: node.to_dict()
             for node_id, node in self.nodes.items()
         }
-

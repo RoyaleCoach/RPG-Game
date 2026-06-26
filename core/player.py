@@ -245,7 +245,7 @@ class Player:
     def equip_weapon(self, weapon_name):
         weapon_name = weapon_name.lower()
         matched_weapon = None
-        
+
         for weapon in self.weapons:
             if weapon.lower() == weapon_name:
                 matched_weapon = weapon

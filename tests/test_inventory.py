@@ -36,9 +36,9 @@ class TestInventory(unittest.TestCase):
                 }
             }
         }
-        
+
         self.inventory = Inventory(self.items)
-        
+
         self.player = Player(
             name="TestPlayer",
             hp=100,
@@ -76,19 +76,22 @@ class TestInventory(unittest.TestCase):
 
     def test_add_to_inventory(self):
         """Test adding items to inventory."""
-        self.player.inventory["health_potion"] = self.player.inventory.get("health_potion", 0) + 1
+        self.player.inventory["health_potion"] = self.player.inventory.get(
+            "health_potion", 0) + 1
         self.assertGreater(self.player.inventory.get("health_potion", 0), 0)
 
     def test_weapon_attack_bonus(self):
         """Test weapon attack bonus."""
         self.player.weapon = "Iron Sword"
-        expected_attack = self.player._base_attack + self.items["weapons"]["Iron Sword"]["attack"]
+        expected_attack = self.player._base_attack + \
+            self.items["weapons"]["Iron Sword"]["attack"]
         self.assertEqual(self.player.attack, expected_attack)
 
     def test_armor_defense_bonus(self):
         """Test armor defense bonus."""
         self.player.armor = "Iron Armor"
-        expected_defense = self.player._base_defense + self.items["defends"]["Iron Armor"]["defense"]
+        expected_defense = self.player._base_defense + \
+            self.items["defends"]["Iron Armor"]["defense"]
         self.assertEqual(self.player.defense, expected_defense)
 
 

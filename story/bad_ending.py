@@ -2,6 +2,7 @@ from utils.press_any_key import press_any
 from utils.text_effect import typewriter
 import time
 
+
 def bad_ending(player):
     typewriter("I failed.")
 

@@ -19,8 +19,6 @@ from utils.text_effect import typewriter
 from story.intro_story import intro_story
 from story.main_story import main_story
 
-#Welcome to NIGTMARE mate
-#if it works it works
 
 class Game:
 

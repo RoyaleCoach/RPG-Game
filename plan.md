@@ -121,16 +121,16 @@
 
 ## Future Ideas (Backlog)
 
-* Puzzle Dungeon
-* Kingdom Rank System
-* Guild Hall
-* Town Upgrade
-* Luck System
-* Seasonal Events
-* Procedural Dungeon Generation
-* Equipment Set Bonus
-* Legendary Artifacts
-* Challenge Modes
-* Custom Difficulty
-* Mod Support (Long-Term)
-* Multiplayer / Online Features (Very Long-Term)
+- Puzzle Dungeon
+- Kingdom Rank System
+- Guild Hall
+- Town Upgrade
+- Luck System
+- Seasonal Events
+- Procedural Dungeon Generation
+- Equipment Set Bonus
+- Legendary Artifacts
+- Challenge Modes
+- Custom Difficulty
+- Mod Support (Long-Term)
+- Multiplayer / Online Features (Very Long-Term)

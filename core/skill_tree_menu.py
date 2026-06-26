@@ -65,7 +65,8 @@ class SkillTreeMenu:
             )
 
             print(
-                str(idx) + ". " + node.name + " (" + status + ") - Cost: " + str(node.cost)
+                str(idx) + ". " + node.name +
+                " (" + status + ") - Cost: " + str(node.cost)
             )
             print("   " + node.description)
             print()
@@ -83,7 +84,8 @@ class SkillTreeMenu:
 
         for idx, node in enumerate(unlocked, 1):
 
-            print(str(idx) + ". " + node.name + " (" + node.skill_type.upper() + ")")
+            print(str(idx) + ". " + node.name +
+                  " (" + node.skill_type.upper() + ")")
             print("   " + node.description)
 
             if node.spell:
@@ -106,7 +108,7 @@ class SkillTreeMenu:
         for idx, node in enumerate(available, 1):
 
             print(
-                str(idx) + ". " + node.name + " - Cost: " + str(node.cost) + 
+                str(idx) + ". " + node.name + " - Cost: " + str(node.cost) +
                 " (You have: " + str(player.skill_points) + ")"
             )
             print("   " + node.description)
@@ -149,7 +151,8 @@ class SkillTreeMenu:
             )
 
             print(
-                str(idx) + ". [" + status + "] " + node.name + " - Cost: " + str(node.cost)
+                str(idx) + ". [" + status + "] " +
+                node.name + " - Cost: " + str(node.cost)
             )
             print("   " + node.description)
 
@@ -178,7 +181,8 @@ class SkillTreeMenu:
             )
 
             print(
-                str(idx) + ". [" + status + "] " + node.name + " - Cost: " + str(node.cost)
+                str(idx) + ". [" + status + "] " +
+                node.name + " - Cost: " + str(node.cost)
             )
             print("   " + node.description)
 

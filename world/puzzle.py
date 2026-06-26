@@ -1,5 +1,6 @@
 import random
 
+
 def random_puzzle():
     puzzles = [
         ("Which is heavier, 1 kg of cotton or 1 kg of iron?", "same"),

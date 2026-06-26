@@ -54,11 +54,11 @@ class TestPlayer(unittest.TestCase):
         """Test mana property clamping."""
         self.player.mana = 50
         self.assertEqual(self.player.mana, 50)
-        
+
         # Test upper bound
         self.player.mana = 10000
         self.assertEqual(self.player.mana, self.player.max_mana)
-        
+
         # Test lower bound
         self.player.mana = -10
         self.assertEqual(self.player.mana, 0)
@@ -73,7 +73,7 @@ class TestPlayer(unittest.TestCase):
         """Test player serialization."""
         self.player.learned_spells = ["icicle"]
         player_dict = self.player.to_dict()
-        
+
         self.assertIn("name", player_dict)
         self.assertIn("hp", player_dict)
         self.assertIn("mana", player_dict)
