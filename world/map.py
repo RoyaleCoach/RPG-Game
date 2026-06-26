@@ -16,6 +16,11 @@ class Explore:
     # -------------------------
     def check_dungeon_boss(self, player):
 
+        if player.skip_next_boss_preparation:
+            print("🛡️ Boss preparation was skipped by fate.")
+            player.skip_next_boss_preparation = False
+            return
+
         player.dungeon_runs += 1
 
         if player.dungeon_runs % 3 == 0:
@@ -54,6 +59,11 @@ class Explore:
             # -------------------------
             elif choice == "1":
 
+                if player.skip_next_battle:
+                    print("🛡️ The next battle was skipped.")
+                    player.skip_next_battle = False
+                    continue
+
                 self.check_dungeon_boss(player)
 
                 enemy = Enemy.random_enemy(player.floor)
@@ -68,6 +78,11 @@ class Explore:
             elif choice == "2":
 
                 success = random_puzzle()
+
+                if player.skip_next_trap:
+                    print("🧩 The trap was skipped.")
+                    player.skip_next_trap = False
+                    success = True
 
                 if success:
 

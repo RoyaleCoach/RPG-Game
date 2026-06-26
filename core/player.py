@@ -23,7 +23,13 @@ class Player:
         mana=None,
         learned_spells=None,
         skill_points=0,
-        unlocked_skills=None
+        unlocked_skills=None,
+        luck=0,
+        reputation=0,
+        last_event=None,
+        skip_next_battle=False,
+        skip_next_trap=False,
+        skip_next_boss_preparation=False
     ):
         self.name = name
 
@@ -94,6 +100,13 @@ class Player:
             unlocked_skills or []
         )
 
+        self.luck = luck
+        self.reputation = reputation
+        self.last_event = last_event
+        self.skip_next_battle = skip_next_battle
+        self.skip_next_trap = skip_next_trap
+        self.skip_next_boss_preparation = skip_next_boss_preparation
+
     # ==========================
     # Properties
     # ==========================
@@ -124,6 +137,10 @@ class Player:
 
         return self._base_attack + weapon_bonus
 
+    @attack.setter
+    def attack(self, value):
+        self._base_attack = value
+
     @property
     def defense(self):
         armor_bonus = 0
@@ -134,6 +151,10 @@ class Player:
             )
 
         return self._base_defense + armor_bonus
+
+    @defense.setter
+    def defense(self, value):
+        self._base_defense = value
 
     @property
     def is_alive(self):
@@ -158,6 +179,9 @@ class Player:
             self.max_mana
         )
 
+        if self._mana < 0:
+            self._mana = 0
+
     # ==========================
     # Display
     # ==========================
@@ -176,6 +200,8 @@ class Player:
         )
         print(f"Floor: {self.floor}")
         print(f"Gold: {self.gold}")
+        print(f"Luck: {self.luck}")
+        print(f"Reputation: {self.reputation}")
         print(f"Skill Points: {self.skill_points}")
 
     # ==========================
@@ -364,5 +390,11 @@ class Player:
             "mana": self.mana,
             "learned_spells": self.learned_spells,
             "skill_points": self.skill_points,
-            "unlocked_skills": self.unlocked_skills
+            "unlocked_skills": self.unlocked_skills,
+            "luck": self.luck,
+            "reputation": self.reputation,
+            "last_event": self.last_event,
+            "skip_next_battle": self.skip_next_battle,
+            "skip_next_trap": self.skip_next_trap,
+            "skip_next_boss_preparation": self.skip_next_boss_preparation
         }
