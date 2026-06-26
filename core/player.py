@@ -43,10 +43,7 @@ class Player:
         items: dict | None = None,
     ):
         # ── Item catalog (injected from game data) ───────────────────────────
-        self.items = items or {}
-        self.weapons = self.items.get("weapons", {})
-        self.potions = self.items.get("potions", {})
-        self.defends = self.items.get("defends", {})
+        self.initialize_items(items or {})
 
         # ── Core stats ───────────────────────────────────────────────────────
         self.name = name
@@ -92,6 +89,21 @@ class Player:
         self.skip_next_battle = skip_next_battle
         self.skip_next_trap = skip_next_trap
         self.skip_next_boss_preparation = skip_next_boss_preparation
+
+    # ── Item catalog ─────────────────────────────────────────────────────────
+
+    def initialize_items(self, items: dict) -> None:
+        """
+        Attach the shared item catalog to the player.
+
+        Called after creating a new player or loading a save.
+        Keeping this logic inside Player prevents external classes
+        from depending on Player's internal attributes.
+        """
+        self.items = items
+        self.weapons = items.get("weapons", {})
+        self.potions = items.get("potions", {})
+        self.defends = items.get("defends", {})
 
     # ── Properties ───────────────────────────────────────────────────────────
 

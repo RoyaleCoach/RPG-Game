@@ -522,3 +522,30 @@ Magic Apprentice (Base Passive, Cost: 0)
 
 - Fixed inconsistencies in dungeon event outcomes.
 - Improved overall dungeon system stability and gameplay flow.
+
+---
+
+```markdown
+## [0.7.2] - 2026-06-26
+
+### Added
+
+- `game_context.py` to centralize shared game state and systems.
+- `game_menu.py` to separate main menu configuration and actions.
+
+### Improved
+
+- Polished `game.py` architecture for better readability and maintainability.
+- Simplified game initialization flow.
+- Reduced coupling between game systems.
+- Improved dependency management through `GameContext`.
+- Enhanced menu organization and extensibility.
+
+### Refactoring
+
+- Moved shared game state into `GameContext`.
+- Separated menu logic from the main game loop.
+- Encapsulated player initialization responsibilities.
+- Reduced direct dependencies inside `Game`.
+- Improved overall project structure following the Single Responsibility Principle (SRP).
+```

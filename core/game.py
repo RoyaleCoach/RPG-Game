@@ -1,176 +1,145 @@
+"""
+game.py
+-------
+Top-level orchestrator. Game's only job is to wire context + menu together
+and run the main loop. It knows *what* to do, not *how* systems work.
+
+All shared state lives in GameContext.
+All menu configuration lives in MenuRegistry.
+"""
+
+from __future__ import annotations
+
 from core.player import Player
-from core.saveload import SaveSystem
-from core.combat import Combat
-from core.data_loader import DataLoader
-from core.inventory import Inventory
-from core.enemy import Enemy
-from core.skill import Skill
-from core.skill_tree import SkillTree
-from core.skill_tree_menu import SkillTreeMenu
-
-from world.map import Explore
-from world.merchant import Merchant
-from world.dungeon import Dungeon
-from world.quest import QuestSystem
-
 from utils.press_any_key import press_any
 from utils.text_effect import typewriter
-
 from story.intro_story import intro_story
 from story.main_story import main_story
 
+from core.game_context import GameContext
+from core.game_menu import MenuEntry, MenuRegistry
+
 
 class Game:
+    """
+    Bootstraps the game and runs the main loop.
 
-    MENU_OPTIONS = {
-        "1": "Main Story",
-        "2": "Explore Dungeon",
-        "3": "Merchant",
-        "4": "Inventory",
-        "5": "Skill Tree",
-        "6": "Save Game",
-        "0": "Exit",
-    }
+    Keeps no game state itself — everything lives in ``self.ctx``.
+    To add a new feature, add a system to GameContext and a MenuEntry here.
+    """
 
-    def __init__(self):
-        self.player = None
-        self._init_data()
-        self._init_systems()
+    def __init__(self) -> None:
+        self.ctx = GameContext()
         self.first_loop = True
 
-    # ── Data ────────────────────────────────────────────────────────────────
+    # ── Boot ─────────────────────────────────────────────────────────────────
 
-    def _init_data(self):
-        loader = DataLoader()
-
-        self.items = loader.load_items()
-        self.spells = loader.load_spells()
-        self.quests = loader.load_quests()
-        self.bosses = loader.load_bosses()
-        self.skill_tree_data = loader.load_skill_tree()
-
-        version = loader.load_version()
-        self.version = version.get("version", "Unknown")
-        self.game_name = version.get("game_name", "Unknown Game")
-        self.author = version.get("author", "Unknown")
-
-    # ── Systems ─────────────────────────────────────────────────────────────
-
-    def _init_systems(self):
-        Enemy.load_bosses(self.bosses)
-
-        self.skill_system = Skill(self.spells)
-        self.skill_tree = SkillTree(self.skill_tree_data)
-        self.skill_tree_menu = SkillTreeMenu(self.skill_tree)
-
-        self.save_system = SaveSystem(self)
-        self.quest_system = QuestSystem(self.quests)
-        self.combat = Combat(self.quest_system, self.items, self.skill_system)
-        self.dungeon_system = Dungeon()
-        self.inventory_system = Inventory(self.items)
-        self.merchant = Merchant(self.items)
-        self.explore_system = Explore(
-            combat=self.combat,
-            dungeon_system=self.dungeon_system,
-            quest_system=self.quest_system,
-        )
-
-    # ── Player setup ────────────────────────────────────────────────────────
-
-    def _setup_player_data(self):
-        """Attach item references to the player after load or creation."""
-        self.player.items = self.items
-        self.player.weapons = self.items.get("weapons", {})
-        self.player.potions = self.items.get("potions", {})
-        self.player.defends = self.items.get("defends", {})
-
-    def _new_player(self, name: str | None = None) -> Player:
-        if name is None:
-            name = input("Enter player name: ").strip()
-        player = Player(name=name, items=self.items, skill_points=1)
-        self._setup_player_data()
-        self.skill_system.learn_spell(player, "icicle")
-        intro_story(player)
-        return player
-
-    # ── Boot ────────────────────────────────────────────────────────────────
-
-    def start(self):
-        print(f"=== {self.game_name.upper()} ===")
-        print(f"Version : {self.version}")
-        print(f"Author  : {self.author}\n")
+    def start(self) -> None:
+        self._print_title()
 
         choice = self._prompt_until_valid(
-            "Start new (n) or load (l)? ", {"n", "l"}
-        )
+            "Start new (n) or load (l)? ", {"n", "l"})
 
         if choice == "l":
-            self.player = self.save_system.load()
-            if self.player is None:
+            self.ctx.player = self.ctx.save_system.load()
+            if self.ctx.player is None:
                 print("⚠️  Save not found — starting a new game.")
-                self.player = self._new_player()
+                self.ctx.player = self._create_new_player()
             else:
-                self._setup_player_data()
+                self.ctx.player.initialize_items(self.ctx.data.items)
         else:
-            self.player = self._new_player()
+            self.ctx.player = self._create_new_player()
 
         self._game_loop()
 
-    # ── Game loop ────────────────────────────────────────────────────────────
+    # ── Player creation ───────────────────────────────────────────────────────
 
-    def _game_loop(self):
-        actions = {
-            "1": self._do_main_story,
-            "2": self._do_explore,
-            "3": lambda: self.merchant.trade(self.player),
-            "4": lambda: self.inventory_system.open(self.player),
-            "5": lambda: self.skill_tree_menu.show_skill_tree(self.player),
-            "6": self.save_system.save,
-            "0": self._do_exit,
-        }
+    def _create_new_player(self, name: str | None = None) -> Player:
+        """
+        Prompt for a name (if not supplied), build a Player, run the intro.
+
+        The player is fully initialised here so _game_loop receives a ready
+        object and never has to check for partial state.
+        """
+        if name is None:
+            name = input("Enter player name: ").strip()
+
+        player = Player(name=name, items=self.ctx.data.items, skill_points=1)
+        player.initialize_items(self.ctx.data.items)
+        self.ctx.skill_system.learn_spell(player, "icicle")
+        intro_story(player)
+        return player
+
+    # ── Game loop ─────────────────────────────────────────────────────────────
+
+    def _game_loop(self) -> None:
+        menu = self._build_menu()
 
         while True:
             if not self.first_loop:
                 press_any()
             self.first_loop = False
 
-            self.player.show_status()
-            action = self._show_main_menu()
+            self.ctx.player.show_status()
+            key = menu.show()
 
-            handler = actions.get(action)
-            if handler is None:
+            if not menu.dispatch(key):
                 print("❌ Invalid choice.")
                 continue
 
-            handler()
-
-            if action == "0" or self.player.hp <= 0:
+            if menu.is_exit(key) or self.ctx.player.hp <= 0:
                 break
 
-        if self.player.hp <= 0:
+        if self.ctx.player.hp <= 0:
             print("\n💀 Game Over.")
 
-    # ── Menu actions ─────────────────────────────────────────────────────────
+    # ── Menu construction ─────────────────────────────────────────────────────
 
-    def _do_main_story(self):
-        main_story(self.player, self.player.story_progress, self.combat)
+    def _build_menu(self) -> MenuRegistry:
+        """
+        Declare all menu entries in one place.
 
-    def _do_explore(self):
-        self.explore_system.explore(self.player)
+        To add a new feature (e.g. Crafting), add one MenuEntry line here
+        and implement the corresponding _do_* method. Nothing else changes.
+        """
+        ctx = self.ctx  # local alias for brevity inside lambdas
 
-    def _do_exit(self):
+        return MenuRegistry([
+            MenuEntry("1", "Main Story",     self._do_main_story),
+            MenuEntry("2", "Explore Dungeon", self._do_explore),
+            MenuEntry("3", "Merchant", lambda: ctx.merchant.trade(ctx.player)),
+            MenuEntry("4", "Inventory",
+                      lambda: ctx.inventory.open(ctx.player)),
+            MenuEntry("5", "Skill Tree",
+                      lambda: ctx.skill_tree_menu.show_skill_tree(ctx.player)),
+            MenuEntry("6", "Save Game",       ctx.save_system.save),
+            MenuEntry("0", "Exit",            self._do_exit),
+        ])
+
+    # ── Menu actions ──────────────────────────────────────────────────────────
+
+    def _do_main_story(self) -> None:
+        main_story(
+            self.ctx.player,
+            self.ctx.player.story_progress,
+            self.ctx.combat,
+        )
+
+    def _do_explore(self) -> None:
+        self.ctx.explore.explore(self.ctx.player)
+
+    def _do_exit(self) -> None:
         if self._prompt_until_valid("Save before quitting? (y/n) ", {"y", "n"}) == "y":
-            self.save_system.save()
+            self.ctx.save_system.save()
         typewriter("Exiting the game", dramatic=True)
 
-    # ── Helpers ──────────────────────────────────────────────────────────────
+    # ── Helpers ───────────────────────────────────────────────────────────────
 
-    def _show_main_menu(self) -> str:
-        print("\n=== MENU ===")
-        for key, label in self.MENU_OPTIONS.items():
-            prefix = "[0]" if key == "0" else f"[{key}]"
-            print(f"{prefix} {label}")
-        return input("> ").strip()
+    def _print_title(self) -> None:
+        d = self.ctx.data
+        print(f"=== {d.game_name.upper()} ===")
+        print(f"Version : {d.version}")
+        print(f"Author  : {d.author}\n")
 
     @staticmethod
     def _prompt_until_valid(prompt: str, valid: set[str]) -> str:
