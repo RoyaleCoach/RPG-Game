@@ -1,105 +1,91 @@
+from __future__ import annotations
+
+
 class Player:
+    """Represents the player character and all associated state."""
+
+    # Experience required to level up (constant for now, easy to change later)
+    EXP_PER_LEVEL = 100
+    HP_PER_LEVEL = 100
+    MANA_PER_LEVEL = 10
+    ATTACK_BONUS_PER_LEVEL = 2
+
     def __init__(
         self,
-        name="Adventurer",
-        hp=100,
-        attack=10,
-        quest=None,
-        defense=5,
-        gold=50,
-        inventory=None,
-        exp=0,
-        level=1,
-        floor=1,
-        weapon="Fists",
-        armor=None,
-        story_progress=0,
-        completed_quests=None,
-        enemies_killed=0,
-        puzzles_solved=0,
-        boss_progress=0,
-        dungeon_runs=0,
-        items=None,
-        mana=None,
-        learned_spells=None,
-        skill_points=0,
-        unlocked_skills=None,
-        luck=0,
-        reputation=0,
-        last_event=None,
-        skip_next_battle=False,
-        skip_next_trap=False,
-        skip_next_boss_preparation=False
+        name: str = "Adventurer",
+        hp: int = 100,
+        attack: int = 10,
+        defense: int = 5,
+        gold: int = 50,
+        mana: int | None = None,
+        level: int = 1,
+        exp: int = 0,
+        floor: int = 1,
+        weapon: str = "Fists",
+        armor: str | None = None,
+        inventory: dict | None = None,
+        learned_spells: list | None = None,
+        skill_points: int = 0,
+        unlocked_skills: list | None = None,
+        quest: list | None = None,
+        completed_quests: list | None = None,
+        story_progress: int = 0,
+        enemies_killed: int = 0,
+        puzzles_solved: int = 0,
+        boss_progress: int = 0,
+        dungeon_runs: int = 0,
+        luck: int = 0,
+        reputation: int = 0,
+        last_event: str | None = None,
+        skip_next_battle: bool = False,
+        skip_next_trap: bool = False,
+        skip_next_boss_preparation: bool = False,
+        items: dict | None = None,
     ):
-        self.name = name
-
+        # ── Item catalog (injected from game data) ───────────────────────────
         self.items = items or {}
+        self.weapons = self.items.get("weapons", {})
+        self.potions = self.items.get("potions", {})
+        self.defends = self.items.get("defends", {})
 
-        self.weapons = self.items.get(
-            "weapons",
-            {}
-        )
-
-        self.potions = self.items.get(
-            "potions",
-            {}
-        )
-
-        self.defends = self.items.get(
-            "defends",
-            {}
-        )
-
-        self._hp = hp
+        # ── Core stats ───────────────────────────────────────────────────────
+        self.name = name
         self._base_attack = attack
         self._base_defense = defense
-
-        self.gold = gold
-
-        self.inventory = (
-            inventory
-            if inventory is not None
-            else {"Fists": 1}
-        )
-
-        self.exp = exp
+        self._max_mana_bonus = 0
         self.level = level
+        self._hp = min(hp, self.max_hp)
+        self._mana = mana if mana is not None else self.max_mana
+
+        # ── Resources ────────────────────────────────────────────────────────
+        self.gold = gold
+        self.exp = exp
+
+        # ── Location ─────────────────────────────────────────────────────────
         self.floor = floor
 
+        # ── Equipment & inventory ────────────────────────────────────────────
         self.weapon = weapon
         self.armor = armor
+        self.inventory = inventory if inventory is not None else {"Fists": 1}
 
-        self.story_progress = story_progress
+        # ── Spells & skills ──────────────────────────────────────────────────
+        self.learned_spells = learned_spells or []
+        self.skill_points = skill_points
+        self.unlocked_skills = unlocked_skills or []
+
+        # ── Quests & story ───────────────────────────────────────────────────
         self.quest = quest or []
+        self.completed_quests = completed_quests or []
+        self.story_progress = story_progress
 
+        # ── Statistics ───────────────────────────────────────────────────────
         self.enemies_killed = enemies_killed
         self.puzzles_solved = puzzles_solved
-
-        self.completed_quests = (
-            completed_quests or []
-        )
-
         self.boss_progress = boss_progress
         self.dungeon_runs = dungeon_runs
 
-        self._max_mana_bonus = 0
-
-        self._mana = (
-            mana
-            if mana is not None
-            else self.max_mana
-        )
-
-        self.learned_spells = (
-            learned_spells or []
-        )
-
-        self.skill_points = skill_points
-
-        self.unlocked_skills = (
-            unlocked_skills or []
-        )
-
+        # ── Misc ─────────────────────────────────────────────────────────────
         self.luck = luck
         self.reputation = reputation
         self.last_event = last_event
@@ -107,267 +93,168 @@ class Player:
         self.skip_next_trap = skip_next_trap
         self.skip_next_boss_preparation = skip_next_boss_preparation
 
-    # ==========================
-    # Properties
-    # ==========================
+    # ── Properties ───────────────────────────────────────────────────────────
 
     @property
-    def hp(self):
+    def max_hp(self) -> int:
+        return self.level * self.HP_PER_LEVEL
+
+    @property
+    def max_mana(self) -> int:
+        return self.level * self.MANA_PER_LEVEL + self._max_mana_bonus
+
+    @property
+    def hp(self) -> int:
         return self._hp
 
     @hp.setter
-    def hp(self, value):
-        self._hp = min(
-            max(0, value),
-            self.max_hp
-        )
+    def hp(self, value: int) -> None:
+        self._hp = max(0, min(value, self.max_hp))
 
     @property
-    def max_hp(self):
-        return self.level * 100
-
-    @property
-    def attack(self):
-        weapon_bonus = 0
-
-        if self.weapon in self.weapons:
-            weapon_bonus = (
-                self.weapons[self.weapon]["attack"]
-            )
-
-        return self._base_attack + weapon_bonus
-
-    @attack.setter
-    def attack(self, value):
-        self._base_attack = value
-
-    @property
-    def defense(self):
-        armor_bonus = 0
-
-        if self.armor in self.defends:
-            armor_bonus = (
-                self.defends[self.armor]["defense"]
-            )
-
-        return self._base_defense + armor_bonus
-
-    @defense.setter
-    def defense(self, value):
-        self._base_defense = value
-
-    @property
-    def is_alive(self):
-        return self.hp > 0
-
-    @property
-    def exp_to_next_level(self):
-        return max(0, 100 - self.exp)
-
-    @property
-    def max_mana(self):
-        return self.level * 10 + self._max_mana_bonus
-
-    @property
-    def mana(self):
+    def mana(self) -> int:
         return self._mana
 
     @mana.setter
-    def mana(self, value):
-        self._mana = min(
-            max(0, value),
-            self.max_mana
-        )
+    def mana(self, value: int) -> None:
+        self._mana = max(0, min(value, self.max_mana))
 
-        if self._mana < 0:
-            self._mana = 0
+    @property
+    def attack(self) -> int:
+        bonus = self.weapons.get(self.weapon, {}).get("attack", 0)
+        return self._base_attack + bonus
 
-    # ==========================
-    # Display
-    # ==========================
+    @attack.setter
+    def attack(self, value: int) -> None:
+        self._base_attack = value
 
-    def show_status(self):
-        print(f"\n=== {self.name} (Lv {self.level}) ===")
-        print(f"HP: {self.hp}/{self.max_hp}")
-        print(f"Mana: {self.mana}/{self.max_mana}")
-        print(f"ATK: {self.attack}")
-        print(f"DEF: {self.defense}")
-        print(f"Weapon: {self.weapon}")
-        print(f"Armor : {self.armor or 'None'}")
-        print(
-            f"EXP: {self.exp}/100 "
-            f"(Need {self.exp_to_next_level})"
-        )
-        print(f"Floor: {self.floor}")
-        print(f"Gold: {self.gold}")
-        print(f"Luck: {self.luck}")
-        print(f"Reputation: {self.reputation}")
-        print(f"Skill Points: {self.skill_points}")
+    @property
+    def defense(self) -> int:
+        bonus = self.defends.get(self.armor, {}).get(
+            "defense", 0) if self.armor else 0
+        return self._base_defense + bonus
 
-    # ==========================
-    # Experience
-    # ==========================
+    @defense.setter
+    def defense(self, value: int) -> None:
+        self._base_defense = value
 
-    def gain_exp(self, amount):
+    @property
+    def is_alive(self) -> bool:
+        return self._hp > 0
+
+    @property
+    def exp_to_next_level(self) -> int:
+        return max(0, self.EXP_PER_LEVEL - self.exp)
+
+    # ── Display ───────────────────────────────────────────────────────────────
+
+    def show_status(self) -> None:
+        lines = [
+            f"\n=== {self.name} (Lv {self.level}) ===",
+            f"HP    : {self.hp}/{self.max_hp}",
+            f"Mana  : {self.mana}/{self.max_mana}",
+            f"ATK   : {self.attack}",
+            f"DEF   : {self.defense}",
+            f"Weapon: {self.weapon}",
+            f"Armor : {self.armor or 'None'}",
+            f"EXP   : {self.exp}/{self.EXP_PER_LEVEL} (Need {self.exp_to_next_level})",
+            f"Floor : {self.floor}",
+            f"Gold  : {self.gold}",
+            f"Luck  : {self.luck}",
+            f"Rep   : {self.reputation}",
+            f"SP    : {self.skill_points}",
+        ]
+        print("\n".join(lines))
+
+    # ── Experience & levelling ────────────────────────────────────────────────
+
+    def gain_exp(self, amount: int) -> None:
         self.exp += amount
+        print(f"✨ You gained {amount} EXP!")
 
-        print(
-            f"✨ You gained "
-            f"{amount} EXP!"
-        )
-
-        while self.exp >= 100:
-
-            self.exp -= 100
+        while self.exp >= self.EXP_PER_LEVEL:
+            self.exp -= self.EXP_PER_LEVEL
             self.level += 1
-
-            self._base_attack += 2
-
+            self._base_attack += self.ATTACK_BONUS_PER_LEVEL
             self.skill_points += 1
-
-            self.hp = self.max_hp
+            self.hp = self.max_hp      # triggers setter → clamps to new max
             self.mana = self.max_mana
+            print(f"🎉 Level UP! Now Lv {self.level}")
+            print(f"🎯 +1 Skill Point (Total: {self.skill_points})")
 
-            print(
-                f"🎉 Level UP! "
-                f"Now Lv {self.level}"
-            )
+    # ── Equipment ─────────────────────────────────────────────────────────────
 
-            print(
-                f"🎯 +1 Skill Point "
-                f"(Total: {self.skill_points})"
-            )
+    def _resolve_item(self, name: str, catalog: dict) -> str | None:
+        """Case-insensitive lookup; returns the canonical key or None."""
+        name_lower = name.lower()
+        return next((k for k in catalog if k.lower() == name_lower), None)
 
-    # ==========================
-    # Equipment
-    # ==========================
-
-    def equip_weapon(self, weapon_name):
-        weapon_name = weapon_name.lower()
-        matched_weapon = None
-
-        for weapon in self.weapons:
-            if weapon.lower() == weapon_name:
-                matched_weapon = weapon
-                break
-
-        if matched_weapon is None:
+    def equip_weapon(self, weapon_name: str) -> bool:
+        """Equip a weapon. Returns True if something went wrong."""
+        key = self._resolve_item(weapon_name, self.weapons)
+        if key is None:
             print("⚠️ Unknown weapon.")
             return True
-
-        if matched_weapon not in self.inventory:
+        if key not in self.inventory:
             print("⚠️ Weapon not in inventory.")
             return True
-
-        if self.weapon == matched_weapon:
-            print("⚠️ This weapon is already equipped.")
+        if self.weapon == key:
+            print("⚠️ Already equipped.")
             return True
-
-        self.weapon = matched_weapon
-
-        print(
-            f"🗡️ You equipped "
-            f"{matched_weapon}!"
-        )
-
+        self.weapon = key
+        print(f"🗡️ You equipped {key}!")
         return False
 
-    def equip_defense(self, armor_name):
-
-        armor_name = armor_name.lower()
-
-        matched_armor = None
-
-        for armor in self.defends:
-            if armor.lower() == armor_name:
-                matched_armor = armor
-                break
-
-        if matched_armor is None:
+    def equip_defense(self, armor_name: str) -> bool:
+        """Equip armor. Returns True if something went wrong."""
+        key = self._resolve_item(armor_name, self.defends)
+        if key is None:
             print("⚠️ Unknown armor.")
             return True
-
-        if matched_armor not in self.inventory:
+        if key not in self.inventory:
             print("⚠️ Armor not in inventory.")
             return True
-
-        if self.armor == matched_armor:
-            print("⚠️ This armor is already equipped.")
+        if self.armor == key:
+            print("⚠️ Already equipped.")
             return True
-
-        self.armor = matched_armor
-
-        print(
-            f"🛡️ You equipped "
-            f"{matched_armor}!"
-        )
-
+        self.armor = key
+        print(f"🛡️ You equipped {key}!")
         return False
 
-    # ==========================
-    # Potions
-    # ==========================
+    # ── Potions ───────────────────────────────────────────────────────────────
 
-    def equip_potion(self, potion_name):
-
-        potion_name = potion_name.lower()
-
-        matched_potion = None
-
-        for potion in self.potions:
-            if potion.lower() == potion_name:
-                matched_potion = potion
-                break
-
-        if matched_potion is None:
+    def equip_potion(self, potion_name: str) -> None:
+        """Use a consumable potion from inventory."""
+        key = self._resolve_item(potion_name, self.potions)
+        if key is None:
             print("⚠️ Unknown potion.")
             return
-
-        if matched_potion not in self.inventory:
+        if key not in self.inventory:
             print("⚠️ Potion not in inventory.")
             return
 
-        heal_amount = (
-            self.potions[matched_potion]["effect"]
-        )
+        heal = self.potions[key]["effect"]
+        self.hp += heal
 
-        self.hp += heal_amount
+        self.inventory[key] -= 1
+        if self.inventory[key] <= 0:
+            del self.inventory[key]
 
-        self.inventory[matched_potion] -= 1
+        print(f"🧪 You used {key}! HP +{heal}.")
 
-        if self.inventory[matched_potion] <= 0:
-            self.inventory.pop(matched_potion)
+    # ── Combat ────────────────────────────────────────────────────────────────
 
-        print(
-            f"🧪 You used "
-            f"{matched_potion}! "
-            f"HP increased by "
-            f"{heal_amount}."
-        )
-
-    # ==========================
-    # Combat
-    # ==========================
-
-    def damage(self, amount, guard):
-
-        final_damage = max(
-            1,
-            amount - guard
-        )
-
-        self.hp -= final_damage
-
+    def damage(self, amount: int, guard: int) -> int:
+        """Apply incoming damage after guard reduction. Returns damage dealt."""
+        final = max(1, amount - guard)
+        self.hp -= final
         if not self.is_alive:
             print("💀 Game Over!")
+        return final
 
-        return final_damage
+    # ── Persistence ───────────────────────────────────────────────────────────
 
-    # ==========================
-    # Save Data
-    # ==========================
-
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             "name": self.name,
             "hp": self.hp,
@@ -396,5 +283,5 @@ class Player:
             "last_event": self.last_event,
             "skip_next_battle": self.skip_next_battle,
             "skip_next_trap": self.skip_next_trap,
-            "skip_next_boss_preparation": self.skip_next_boss_preparation
+            "skip_next_boss_preparation": self.skip_next_boss_preparation,
         }
