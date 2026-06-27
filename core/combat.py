@@ -41,7 +41,7 @@ class Combat:
             # -------------------------
             # PLAYER TURN
             # -------------------------
-            if action == "attack":
+            if action in ["attack", "a"]:
 
                 damage = random.randint(
                     1,
@@ -57,13 +57,13 @@ class Combat:
                     f"You dealt {damage} damage!"
                 )
 
-            elif action == "defend":
+            elif action in ["defend", "d"]:
 
                 print(
                     "You brace yourself."
                 )
 
-            elif action == "heal":
+            elif action in ["heal", "h"]:
 
                 print("\n=== POTIONS ===")
 
