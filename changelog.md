@@ -549,3 +549,18 @@ Magic Apprentice (Base Passive, Cost: 0)
 - Reduced direct dependencies inside `Game`.
 - Improved overall project structure following the Single Responsibility Principle (SRP).
 ```
+
+---
+
+## [0.7.2] - 2026-06-27
+
+### Changed
+
+* Redesigned the save file structure.
+* Refactored the save/load system for better scalability.
+* Improved data organization and maintainability.
+* Prepared the save system for future features.
+
+### Breaking Changes
+
+* Save files created with previous versions are not compatible with v0.7.2.

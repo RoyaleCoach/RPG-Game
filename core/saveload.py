@@ -1,187 +1,171 @@
+"""
+core/saveload.py
+----------------
+Responsible for **only** three things:
+
+1. Writing a Python dict to a JSON file on disk.
+2. Reading a JSON file from disk and returning a Python dict.
+3. Telling callers whether a save file exists.
+
+It knows *nothing* about Player fields, world state, or gameplay.
+All serialization logic lives in ``Player.to_dict()`` / ``Player.from_dict()``.
+"""
+
+from __future__ import annotations
+
 import json
-import time
 import os
 import sys
+import time
+from typing import Any
 
 from core.player import Player
 
 
-# -------------------------
-# BASE DIRECTORY
-# -------------------------
-if getattr(sys, "frozen", False):
-    BASE_DIR = os.path.dirname(sys.executable)
-else:
-    BASE_DIR = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            ".."
-        )
-    )
+# ── Path resolution ───────────────────────────────────────────────────────────
 
-SAVE_DIR = os.path.join(
-    BASE_DIR,
-    "save"
-)
+def _resolve_base_dir() -> str:
+    """Return the project root, whether running from source or a frozen exe."""
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(sys.executable)
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
+
+BASE_DIR = _resolve_base_dir()
+SAVE_DIR = os.path.join(BASE_DIR, "save")
+
+
+# ── SaveSystem ────────────────────────────────────────────────────────────────
 
 class SaveSystem:
+    """
+    Thin persistence layer: reads and writes save files.
 
-    def __init__(self, game):
+    Responsibilities
+    ~~~~~~~~~~~~~~~~
+    * Resolve the file path for a given save-slot name.
+    * Wrap the player payload with metadata (timestamp) before writing.
+    * Strip the metadata wrapper and delegate reconstruction to ``Player``.
+    * Report I/O errors without crashing the caller.
+
+    Non-responsibilities (intentionally excluded)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    * Knowing what fields Player contains.
+    * Duplicating world-state values that Player already owns.
+    * Any gameplay logic.
+    """
+
+    CURRENT_SAVE_VERSION = 2  # bump when the save format changes
+
+    def __init__(self, game: Any) -> None:
         self.game = game
 
-    # -------------------------
-    # HELPERS
-    # -------------------------
-    def get_save_path(
-        self,
-        filename="save.json"
-    ):
-        return os.path.join(
-            SAVE_DIR,
-            filename
-        )
+    # ── Public interface ──────────────────────────────────────────────────────
 
-    # -------------------------
-    # SAVE GAME
-    # -------------------------
-    def save(
-        self,
-        filename="save.json"
-    ):
+    def save(self, filename: str = "save.json") -> bool:
+        """
+        Serialize the current player and write it to *filename*.
 
-        os.makedirs(
-            SAVE_DIR,
-            exist_ok=True
-        )
+        Returns ``True`` on success, ``False`` on any I/O or serialization error.
+        The caller may show its own message; this method prints a confirmation
+        or error so the user always gets feedback.
+        """
+        os.makedirs(SAVE_DIR, exist_ok=True)
+        path = self._save_path(filename)
 
-        path = self.get_save_path(
-            filename
-        )
-
-        save_data = {
-            "timestamp": time.time(),
-
-            "player": self.game.player.to_dict(),
-
-            "world": {
-                "current_floor": (
-                    self.game.player.floor
-                ),
-
-                "boss_progress": (
-                    self.game.player.boss_progress
-                ),
-
-                "dungeon_runs": (
-                    self.game.player.dungeon_runs
-                )
-            }
-        }
+        payload = self._build_payload(self.game.player)
 
         try:
-
-            with open(
-                path,
-                "w",
-                encoding="utf-8"
-            ) as f:
-
-                json.dump(
-                    save_data,
-                    f,
-                    indent=4,
-                    ensure_ascii=False
-                )
-
-            print(
-                f"💾 Game saved: {path}"
-            )
-
+            with open(path, "w", encoding="utf-8") as fh:
+                json.dump(payload, fh, indent=4, ensure_ascii=False)
+            print(f"💾 Game saved: {path}")
             return True
-
-        except (
-            OSError,
-            TypeError
-        ) as e:
-
-            print(
-                f"SAVE ERROR: {e}"
-            )
-
+        except (OSError, TypeError) as exc:
+            print(f"SAVE ERROR: {exc}")
             return False
 
-    # -------------------------
-    # LOAD GAME
-    # -------------------------
-    def load(
-        self,
-        filename="save.json"
-    ):
+    def load(self, filename: str = "save.json") -> Player | None:
+        """
+        Load a save file and return a fully constructed ``Player``.
 
-        path = self.get_save_path(
-            filename
-        )
+        Returns ``None`` if the file is missing, corrupt, or structurally
+        invalid.  Callers should treat ``None`` as "no save available" and
+        fall back to creating a new player.
+
+        Note: the returned player has no item catalog attached.
+        The caller must call ``player.initialize_items(game_data.items)``
+        before the player is used in gameplay.
+        """
+        path = self._save_path(filename)
 
         try:
+            with open(path, "r", encoding="utf-8") as fh:
+                raw = json.load(fh)
+        except FileNotFoundError:
+            print(f"LOAD ERROR: save file not found at {path}")
+            return None
+        except json.JSONDecodeError as exc:
+            print(f"LOAD ERROR: save file is corrupt — {exc}")
+            return None
 
-            with open(
-                path,
-                "r",
-                encoding="utf-8"
-            ) as f:
+        player = self._reconstruct_player(raw)
+        if player is not None:
+            print(f"📂 Save loaded: {path}")
+        return player
 
-                save_data = json.load(f)
+    def save_exists(self, filename: str = "save.json") -> bool:
+        """Return True if the given save file exists on disk."""
+        return os.path.isfile(self._save_path(filename))
 
-            player_data = (
-                save_data["player"]
-            )
+    # ── Private helpers ───────────────────────────────────────────────────────
 
-            world_data = (
-                save_data["world"]
-            )
+    def _save_path(self, filename: str) -> str:
+        """Resolve the full path for *filename* inside the save directory."""
+        return os.path.join(SAVE_DIR, filename)
 
-            player = Player(
-                **player_data
-            )
+    def _build_payload(self, player: Player) -> dict[str, Any]:
+        """
+        Wrap the player's save data with top-level metadata.
 
-            player.floor = (
-                world_data.get(
-                    "current_floor",
-                    1
-                )
-            )
+        The ``player_data`` key contains exactly what ``Player.to_dict()``
+        returns — SaveSystem never inspects or copies individual fields.
+        """
+        return {
+            "save_version": self.CURRENT_SAVE_VERSION,
+            "timestamp": time.time(),
+            "player_data": player.to_dict(),
+        }
 
-            player.boss_progress = (
-                world_data.get(
-                    "boss_progress",
-                    0
-                )
-            )
+    def _reconstruct_player(self, raw: dict[str, Any]) -> Player | None:
+        """
+        Extract player data from the save payload and delegate to Player.
 
-            player.dungeon_runs = (
-                world_data.get(
-                    "dungeon_runs",
-                    0
-                )
-            )
+        Handles two envelope shapes:
+          * New format  (v2+): ``raw["player_data"]`` holds the sectioned dict.
+          * Legacy format (v1): ``raw["player"]`` was the flat player dict and
+            ``raw["world"]`` held duplicate floor/boss/run counters.
 
-            print(
-                f"📂 Save loaded: {path}"
-            )
+        In the legacy case we merge the two sub-dicts before handing off to
+        ``Player.from_dict()``, which recognises the flat structure and applies
+        its own legacy path.
+        """
+        try:
+            if "player_data" in raw:
+                # New format — delegate entirely to Player
+                return Player.from_dict(raw["player_data"])
 
-            return player
+            # Legacy format — merge player + world into a flat dict
+            legacy_player = dict(raw.get("player", {}))
+            legacy_world = raw.get("world", {})
 
-        except (
-            FileNotFoundError,
-            json.JSONDecodeError,
-            KeyError,
-            TypeError,
-            ValueError
-        ) as e:
+            # World section may have held the authoritative floor/boss values;
+            # prefer world if present (matches original SaveSystem behaviour).
+            legacy_player.setdefault("floor", legacy_world.get("current_floor", 1))
+            legacy_player.setdefault("boss_progress", legacy_world.get("boss_progress", 0))
+            legacy_player.setdefault("dungeon_runs", legacy_world.get("dungeon_runs", 0))
 
-            print(
-                f"LOAD ERROR: {e}"
-            )
+            return Player.from_dict(legacy_player)
 
+        except (KeyError, TypeError, ValueError) as exc:
+            print(f"LOAD ERROR: could not reconstruct player — {exc}")
             return None

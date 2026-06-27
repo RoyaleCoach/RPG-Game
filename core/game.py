@@ -41,18 +41,30 @@ class Game:
             "Start new (n) or load (l)? ", {"n", "l"})
 
         if choice == "l":
-            self.ctx.player = self.ctx.save_system.load()
-            if self.ctx.player is None:
-                print("⚠️  Save not found — starting a new game.")
-                self.ctx.player = self._create_new_player()
-            else:
-                self.ctx.player.initialize_items(self.ctx.data.items)
+            self.ctx.player = self._load_or_create_player()
         else:
             self.ctx.player = self._create_new_player()
 
         self._game_loop()
 
-    # ── Player creation ───────────────────────────────────────────────────────
+    # ── Player creation / loading ─────────────────────────────────────────────
+
+    def _load_or_create_player(self) -> Player:
+        """
+        Attempt to load a saved game; fall back to a fresh player on failure.
+
+        After loading, the item catalog is re-injected because it is NOT stored
+        in the save file (it lives in game data, not player state).
+        """
+        player = self.ctx.save_system.load()
+
+        if player is None:
+            print("⚠️  Save not found — starting a new game.")
+            return self._create_new_player()
+
+        # Re-attach item catalog — it is never persisted, always injected.
+        player.initialize_items(self.ctx.data.items)
+        return player
 
     def _create_new_player(self, name: str | None = None) -> Player:
         """
@@ -105,15 +117,15 @@ class Game:
         ctx = self.ctx  # local alias for brevity inside lambdas
 
         return MenuRegistry([
-            MenuEntry("1", "Main Story", self._do_main_story),
+            MenuEntry("1", "Main Story",     self._do_main_story),
             MenuEntry("2", "Explore Dungeon", self._do_explore),
             MenuEntry("3", "Merchant", lambda: ctx.merchant.trade(ctx.player)),
             MenuEntry("4", "Inventory",
                       lambda: ctx.inventory.open(ctx.player)),
             MenuEntry("5", "Skill Tree",
                       lambda: ctx.skill_tree_menu.show_skill_tree(ctx.player)),
-            MenuEntry("6", "Save Game", ctx.save_system.save),
-            MenuEntry("0", "Exit", self._do_exit),
+            MenuEntry("6", "Save Game",       ctx.save_system.save),
+            MenuEntry("0", "Exit",            self._do_exit),
         ])
 
     # ── Menu actions ──────────────────────────────────────────────────────────
