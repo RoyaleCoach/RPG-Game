@@ -3,20 +3,18 @@ core/player.py
 --------------
 Represents the player character and all associated runtime state.
 
+Perubahan dari versi sebelumnya:
+  [NEW] critical_chance     — % peluang critical hit (default 15)
+  [NEW] critical_multiplier — pengali damage saat crit (default 2.0)
+  [NEW] accuracy            — menaikkan minimum damage (default 5)
+  [NEW] dodge               — % peluang menghindari seluruh damage (default 5)
+  [NEW] status_effects      — list effect aktif (Burn, Poison, dll.)
+
 Serialization contract
 ~~~~~~~~~~~~~~~~~~~~~~
 ``to_dict()``   → produces a *minimal* save payload grouped by responsibility.
 ``from_dict()`` → reconstructs a Player from that payload with safe defaults
                   for every missing field (backward-compatible with old saves).
-
-Rules for what goes into ``to_dict()``:
-  • Save only *persistent* state — data that cannot be reconstructed at runtime.
-  • Do NOT save computed values (``attack``, ``defense``) — only the base
-    scalars that feed them (``_base_attack``, ``_base_defense``).
-  • Do NOT save the item / spell / quest *databases* — those are injected from
-    game data after loading.
-  • Group fields by responsibility so future sections can be added or removed
-    independently (player core, world progress, quests, statistics, flags).
 """
 
 from __future__ import annotations
@@ -64,6 +62,11 @@ class Player:
         skip_next_trap: bool = False,
         skip_next_boss_preparation: bool = False,
         items: dict | None = None,
+        # ── NEW combat stats ──────────────────────────────────────────────────
+        critical_chance: int = 15,
+        critical_multiplier: float = 2.0,
+        accuracy: int = 5,
+        dodge: int = 5,
     ) -> None:
         # ── Item catalog (injected from game data) ───────────────────────────
         self.initialize_items(items or {})
@@ -113,16 +116,24 @@ class Player:
         self.skip_next_trap = skip_next_trap
         self.skip_next_boss_preparation = skip_next_boss_preparation
 
+        # ── NEW: Combat stats ─────────────────────────────────────────────────
+        # critical_chance: peluang crit dalam persen (0-100)
+        self.critical_chance = critical_chance
+        # critical_multiplier: pengali damage saat crit (mis. 2.0 = 2x damage)
+        self.critical_multiplier = critical_multiplier
+        # accuracy: menaikkan minimum damage; semakin tinggi → damage lebih konsisten
+        self.accuracy = accuracy
+        # dodge: peluang dalam persen untuk menghindari seluruh serangan
+        self.dodge = dodge
+
+        # ── NEW: Status effects ───────────────────────────────────────────────
+        # Dikelola oleh status_effects.py; tidak di-save (transient per battle)
+        self.status_effects: list = []
+
     # ── Item catalog ─────────────────────────────────────────────────────────
 
     def initialize_items(self, items: dict) -> None:
-        """
-        Attach the shared item catalog to the player.
-
-        Called after creating a new player or loading a save.
-        Keeping this logic inside Player prevents external classes
-        from depending on Player's internal attributes.
-        """
+        """Attach the shared item catalog to the player."""
         self.items = items
         self.weapons = items.get("weapons", {})
         self.potions = items.get("potions", {})
@@ -190,6 +201,9 @@ class Player:
             f"Mana  : {self.mana}/{self.max_mana}",
             f"ATK   : {self.attack}",
             f"DEF   : {self.defense}",
+            f"CRIT  : {self.critical_chance}% x{self.critical_multiplier}",
+            f"ACC   : {self.accuracy}",
+            f"DODGE : {self.dodge}%",
             f"Weapon: {self.weapon}",
             f"Armor : {self.armor or 'None'}",
             f"EXP   : {self.exp}/{self.EXP_PER_LEVEL} (Need {self.exp_to_next_level})",
@@ -199,64 +213,80 @@ class Player:
             f"Rep   : {self.reputation}",
             f"SP    : {self.skill_points}",
         ]
+        # Tampilkan status effect aktif (jika ada)
+        if self.status_effects:
+            fx = ", ".join(repr(e) for e in self.status_effects)
+            lines.append(f"STATUS: {fx}")
         print("\n".join(lines))
 
     # ── Experience & levelling ────────────────────────────────────────────────
 
     def gain_exp(self, amount: int) -> None:
         self.exp += amount
-        print(f"✨ You gained {amount} EXP!")
-
+        print(f"✨ +{amount} EXP")
         while self.exp >= self.EXP_PER_LEVEL:
             self.exp -= self.EXP_PER_LEVEL
-            self.level += 1
-            self._base_attack += self.ATTACK_BONUS_PER_LEVEL
-            self.skill_points += 1
-            self.hp = self.max_hp      # triggers setter → clamps to new max
-            self.mana = self.max_mana
-            print(f"🎉 Level UP! Now Lv {self.level}")
-            print(f"🎯 +1 Skill Point (Total: {self.skill_points})")
+            self._level_up()
+
+    def _level_up(self) -> None:
+        self.level += 1
+        self._base_attack += self.ATTACK_BONUS_PER_LEVEL
+        # Kecil bonus stats saat level up
+        self.critical_chance = min(50, self.critical_chance + 1)
+        self.accuracy = min(self.attack, self.accuracy + 1)
+        self.dodge = min(40, self.dodge + 1)
+        self._hp = self.max_hp   # full heal on level up
+        self._mana = self.max_mana
+        print(
+            f"\n🎉 Level Up! {self.name} sekarang Level {self.level}!\n"
+            f"   ATK: {self.attack} | HP: {self.max_hp} | "
+            f"CRIT: {self.critical_chance}% | ACC: {self.accuracy} | DODGE: {self.dodge}%"
+        )
+        self.skill_points += 1
 
     # ── Equipment ─────────────────────────────────────────────────────────────
 
     def _resolve_item(self, name: str, catalog: dict) -> str | None:
-        """Case-insensitive lookup; returns the canonical key or None."""
-        name_lower = name.lower()
-        return next((k for k in catalog if k.lower() == name_lower), None)
+        """Return the canonical key matching *name* (case-insensitive)."""
+        if name in catalog:
+            return name
+        lower = name.lower()
+        for key in catalog:
+            if key.lower() == lower:
+                return key
+        return None
 
-    def equip_weapon(self, weapon_name: str) -> bool:
-        """Equip a weapon. Returns True if something went wrong."""
+    def equip_weapon(self, weapon_name: str) -> None:
         key = self._resolve_item(weapon_name, self.weapons)
         if key is None:
             print("⚠️ Unknown weapon.")
-            return True
+            return
         if key not in self.inventory:
             print("⚠️ Weapon not in inventory.")
-            return True
-        if self.weapon == key:
-            print("⚠️ Already equipped.")
-            return True
+            return
+        req = self.weapons[key].get("level_required", 1)
+        if self.level < req:
+            print(f"⚠️ Need level {req} to equip {key}.")
+            return
         self.weapon = key
-        print(f"🗡️ You equipped {key}!")
-        return False
+        atk = self.weapons[key]["attack"]
+        print(f"⚔️ Equipped {key} (ATK +{atk}).")
 
-    def equip_defense(self, armor_name: str) -> bool:
-        """Equip armor. Returns True if something went wrong."""
+    def equip_defense(self, armor_name: str) -> None:
         key = self._resolve_item(armor_name, self.defends)
         if key is None:
             print("⚠️ Unknown armor.")
-            return True
+            return
         if key not in self.inventory:
             print("⚠️ Armor not in inventory.")
-            return True
-        if self.armor == key:
-            print("⚠️ Already equipped.")
-            return True
+            return
+        req = self.defends[key].get("level_required", 1)
+        if self.level < req:
+            print(f"⚠️ Need level {req} to equip {key}.")
+            return
         self.armor = key
-        print(f"🛡️ You equipped {key}!")
-        return False
-
-    # ── Potions ───────────────────────────────────────────────────────────────
+        defense = self.defends[key]["defense"]
+        print(f"🛡️ Equipped {key} (DEF +{defense}).")
 
     def equip_potion(self, potion_name: str) -> None:
         """Use a consumable potion from inventory."""
@@ -292,21 +322,9 @@ class Player:
     def to_dict(self) -> dict[str, Any]:
         """
         Serialize the player into a minimal, responsibility-grouped payload.
-
-        Design decisions
-        ~~~~~~~~~~~~~~~~
-        * Only *persistent* state is stored — nothing that can be reconstructed
-          at runtime (e.g. ``attack`` and ``defense`` are computed properties;
-          only ``_base_attack`` / ``_base_defense`` are saved).
-        * Fields are grouped by *responsibility* so sections can evolve
-          independently without touching unrelated data.
-        * ``floor``, ``boss_progress``, and ``dungeon_runs`` live here (single
-          source of truth) — the old ``world`` section in SaveSystem is gone.
-        * Transient skip-flags ARE saved so a session interrupted mid-dungeon
-          restores correctly.
+        Status effects TIDAK disimpan (transient, di-reset setiap battle baru).
         """
         return {
-            # Who the player is and their core RPG state
             "player": {
                 "name": self.name,
                 "level": self.level,
@@ -319,15 +337,18 @@ class Player:
                 "luck": self.luck,
                 "reputation": self.reputation,
                 "skill_points": self.skill_points,
+                # NEW stats — disimpan agar progres level-up tersimpan
+                "critical_chance": self.critical_chance,
+                "critical_multiplier": self.critical_multiplier,
+                "accuracy": self.accuracy,
+                "dodge": self.dodge,
             },
-            # Where the player is and what world state they've accumulated
             "world": {
                 "floor": self.floor,
                 "boss_progress": self.boss_progress,
                 "dungeon_runs": self.dungeon_runs,
                 "last_event": self.last_event,
             },
-            # What the player owns and has learned
             "loadout": {
                 "weapon": self.weapon,
                 "armor": self.armor,
@@ -335,18 +356,15 @@ class Player:
                 "learned_spells": self.learned_spells,
                 "unlocked_skills": self.unlocked_skills,
             },
-            # Active and completed quests and story chapter
             "quests": {
                 "story_progress": self.story_progress,
                 "quest": self.quest,
                 "completed_quests": self.completed_quests,
             },
-            # Lifetime counters (achievements / leaderboards)
             "statistics": {
                 "enemies_killed": self.enemies_killed,
                 "puzzles_solved": self.puzzles_solved,
             },
-            # One-time flags that survive a session save mid-dungeon
             "flags": {
                 "skip_next_battle": self.skip_next_battle,
                 "skip_next_trap": self.skip_next_trap,
@@ -358,20 +376,9 @@ class Player:
     def from_dict(cls, data: dict[str, Any]) -> "Player":
         """
         Reconstruct a Player from a ``to_dict()`` payload.
-
-        Backward compatibility
-        ~~~~~~~~~~~~~~~~~~~~~~
-        Every field has a safe default so old flat saves (pre-refactor) and
-        new sectioned saves both load without crashing.  The method checks for
-        the new sectioned format first; if sections are absent it falls back to
-        reading the top-level keys that the old ``to_dict()`` wrote.
-
-        The item catalog is NOT part of the save — callers must call
-        ``player.initialize_items(game_data.items)`` after loading.
+        Backward-compatible: new stats default ke nilai awal jika tidak ada.
         """
-        # ── Detect save format ────────────────────────────────────────────────
         is_sectioned = "player" in data and isinstance(data["player"], dict)
-
         if is_sectioned:
             return cls._from_sectioned_dict(data)
         else:
@@ -379,7 +386,6 @@ class Player:
 
     @classmethod
     def _from_sectioned_dict(cls, data: dict[str, Any]) -> "Player":
-        """Reconstruct from the new multi-section save format."""
         p = data.get("player", {})
         w = data.get("world", {})
         lo = data.get("loadout", {})
@@ -388,7 +394,6 @@ class Player:
         f = data.get("flags", {})
 
         return cls(
-            # player section
             name=p.get("name", "Adventurer"),
             level=p.get("level", 1),
             exp=p.get("exp", 0),
@@ -400,39 +405,34 @@ class Player:
             luck=p.get("luck", 0),
             reputation=p.get("reputation", 0),
             skill_points=p.get("skill_points", 0),
-            # world section
+            # NEW stats (backward-compat: default jika save lama)
+            critical_chance=p.get("critical_chance", 15),
+            critical_multiplier=p.get("critical_multiplier", 2.0),
+            accuracy=p.get("accuracy", 5),
+            dodge=p.get("dodge", 5),
             floor=w.get("floor", 1),
             boss_progress=w.get("boss_progress", 0),
             dungeon_runs=w.get("dungeon_runs", 0),
             last_event=w.get("last_event", None),
-            # loadout section
             weapon=lo.get("weapon", "Fists"),
             armor=lo.get("armor", None),
             inventory=lo.get("inventory", {"Fists": 1}),
             learned_spells=lo.get("learned_spells", []),
             unlocked_skills=lo.get("unlocked_skills", []),
-            # quests section
             story_progress=q.get("story_progress", 0),
             quest=q.get("quest", []),
             completed_quests=q.get("completed_quests", []),
-            # statistics section
             enemies_killed=s.get("enemies_killed", 0),
             puzzles_solved=s.get("puzzles_solved", 0),
-            # flags section
             skip_next_battle=f.get("skip_next_battle", False),
             skip_next_trap=f.get("skip_next_trap", False),
-            skip_next_boss_preparation=f.get("skip_next_boss_preparation", False),
+            skip_next_boss_preparation=f.get(
+                "skip_next_boss_preparation", False),
         )
 
     @classmethod
     def _from_legacy_dict(cls, data: dict[str, Any]) -> "Player":
-        """
-        Reconstruct from the old flat ``to_dict()`` format.
-
-        Kept for backward compatibility with saves written before this refactor.
-        The old format stored ``attack`` / ``defense`` as base values (not
-        computed), so we read them directly.
-        """
+        """Backward compat untuk save format lama (flat dict)."""
         return cls(
             name=data.get("name", "Adventurer"),
             level=data.get("level", 1),
@@ -445,6 +445,10 @@ class Player:
             luck=data.get("luck", 0),
             reputation=data.get("reputation", 0),
             skill_points=data.get("skill_points", 0),
+            critical_chance=data.get("critical_chance", 15),
+            critical_multiplier=data.get("critical_multiplier", 2.0),
+            accuracy=data.get("accuracy", 5),
+            dodge=data.get("dodge", 5),
             floor=data.get("floor", 1),
             boss_progress=data.get("boss_progress", 0),
             dungeon_runs=data.get("dungeon_runs", 0),
@@ -461,5 +465,6 @@ class Player:
             puzzles_solved=data.get("puzzles_solved", 0),
             skip_next_battle=data.get("skip_next_battle", False),
             skip_next_trap=data.get("skip_next_trap", False),
-            skip_next_boss_preparation=data.get("skip_next_boss_preparation", False),
+            skip_next_boss_preparation=data.get(
+                "skip_next_boss_preparation", False),
         )

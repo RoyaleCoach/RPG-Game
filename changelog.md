@@ -525,7 +525,6 @@ Magic Apprentice (Base Passive, Cost: 0)
 
 ---
 
-```markdown
 ## [0.7.2] - 2026-06-26
 
 ### Added
@@ -548,19 +547,56 @@ Magic Apprentice (Base Passive, Cost: 0)
 - Encapsulated player initialization responsibilities.
 - Reduced direct dependencies inside `Game`.
 - Improved overall project structure following the Single Responsibility Principle (SRP).
-```
 
 ---
 
-## [0.7.2] - 2026-06-27
+## [0.8.0] - 2026-06-27
+
+### Added
+
+- Added **Critical Hit** system with configurable `critical_chance` and `critical_multiplier` stats.
+- Added **Accuracy** stat to increase minimum damage while preserving maximum damage.
+- Added **Dodge** mechanic that allows entities to completely avoid incoming attacks.
+- Added reusable **Status Effect** framework with lifecycle hooks (`on_apply`, `tick`, and `on_expire`).
+- Added built-in status effects:
+  - Burn
+  - Poison
+  - Bleed
+  - Freeze
+  - Stun
+  - Regeneration
+
+- Added spell-to-status-effect mapping for automatic effect application.
+- Added **MultiphaseBoss** system supporting multiple combat phases.
+- Added shared combat helper functions for damage calculation and dodge resolution.
 
 ### Changed
 
-* Redesigned the save file structure.
-* Refactored the save/load system for better scalability.
-* Improved data organization and maintainability.
-* Prepared the save system for future features.
+- Refactored combat damage calculation to support Critical Hits and Accuracy.
+- Improved enemy AI with weighted decision making.
+- Enemies can now:
+  - Attack
+  - Cast spells
+  - Defend
+  - Dodge
 
-### Breaking Changes
+- Bosses now transition between multiple phases with unique stats and abilities.
+- Combat now processes active status effects at the beginning of each turn.
+- Player and Enemy now share common combat mechanics to reduce duplicated logic.
+- Save/Load system now supports the following new player stats:
+  - `critical_chance`
+  - `critical_multiplier`
+  - `accuracy`
+  - `dodge`
 
-* Save files created with previous versions are not compatible with v0.7.2.
+### Fixed
+
+- Improved combat consistency by reducing extreme low-damage rolls through the Accuracy system.
+- Prevented enemies from repeatedly using Dodge by introducing a cooldown.
+- Ensured older save files remain compatible by automatically applying default values for newly added stats.
+
+### Technical
+
+- Introduced a modular status effect architecture that allows new effects to be added without modifying the combat engine.
+- Improved extensibility for future spells, bosses, and enemy behaviors.
+- Simplified combat logic through reusable helper methods and reduced code duplication.
