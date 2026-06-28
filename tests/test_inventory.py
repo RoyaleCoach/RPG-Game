@@ -1,99 +1,110 @@
 """
-Unit tests for Inventory system.
+tests/test_inventory.py
+----------------------
+Unit tests for Inventory.
 """
 
-import unittest
+import pytest
+from unittest.mock import patch
 from core.inventory import Inventory
 from core.player import Player
 
 
-class TestInventory(unittest.TestCase):
-    """Tests for Inventory functionality."""
+class TestInventoryItems:
+    """Inventory item management."""
 
-    def setUp(self):
-        """Set up test fixtures."""
-        self.items = {
-            "weapons": {
-                "Iron Sword": {
-                    "attack": 5,
-                    "rarity": "common"
-                },
-                "Steel Sword": {
-                    "attack": 10,
-                    "rarity": "uncommon"
-                }
-            },
-            "defends": {
-                "Iron Armor": {
-                    "defense": 3,
-                    "rarity": "common"
-                }
-            },
-            "potions": {
-                "health_potion": {
-                    "effect": 50,
-                    "rarity": "common"
-                }
-            }
-        }
+    def test_weapons_loaded(self, inventory, items_data):
+        assert len(inventory.weapons) > 0
+        assert "Iron Sword" in inventory.weapons
 
-        self.inventory = Inventory(self.items)
+    def test_potions_loaded(self, inventory, items_data):
+        assert len(inventory.potions) > 0
+        assert "Health Potion" in inventory.potions
 
-        self.player = Player(
-            name="TestPlayer",
-            hp=100,
-            attack=10,
-            defense=5,
-            level=1,
-            items=self.items
-        )
+    def test_defends_loaded(self, inventory, items_data):
+        assert len(inventory.defends) > 0
+        assert "Leather Armour" in inventory.defends
 
-    def test_inventory_initialization(self):
-        """Test inventory initialization."""
-        self.assertIn("weapons", self.items)
-        self.assertIn("defends", self.items)
-        self.assertIn("potions", self.items)
+    def test_weapon_has_rarity(self, inventory):
+        assert "rarity" in inventory.weapons["Iron Sword"]
 
-    def test_player_inventory(self):
-        """Test player inventory."""
-        self.assertIsNotNone(self.player.inventory)
-        self.assertIn("Fists", self.player.inventory)
+    def test_potion_has_rarity(self, inventory):
+        assert "rarity" in inventory.potions["Health Potion"]
 
-    def test_player_weapons(self):
-        """Test player weapon data."""
-        self.assertIsNotNone(self.player.weapons)
-        self.assertIn("Iron Sword", self.player.weapons)
-
-    def test_player_potions(self):
-        """Test player potion data."""
-        self.assertIsNotNone(self.player.potions)
-        self.assertIn("health_potion", self.player.potions)
-
-    def test_player_armor(self):
-        """Test player armor data."""
-        self.assertIsNotNone(self.player.defends)
-        self.assertIn("Iron Armor", self.player.defends)
-
-    def test_add_to_inventory(self):
-        """Test adding items to inventory."""
-        self.player.inventory["health_potion"] = self.player.inventory.get(
-            "health_potion", 0) + 1
-        self.assertGreater(self.player.inventory.get("health_potion", 0), 0)
-
-    def test_weapon_attack_bonus(self):
-        """Test weapon attack bonus."""
-        self.player.weapon = "Iron Sword"
-        expected_attack = self.player._base_attack + \
-            self.items["weapons"]["Iron Sword"]["attack"]
-        self.assertEqual(self.player.attack, expected_attack)
-
-    def test_armor_defense_bonus(self):
-        """Test armor defense bonus."""
-        self.player.armor = "Iron Armor"
-        expected_defense = self.player._base_defense + \
-            self.items["defends"]["Iron Armor"]["defense"]
-        self.assertEqual(self.player.defense, expected_defense)
+    def test_armor_has_rarity(self, inventory):
+        assert "rarity" in inventory.defends["Leather Armour"]
 
 
-if __name__ == "__main__":
-    unittest.main()
+class TestInventoryAddRemove:
+    """Adding and removing items from player inventory."""
+
+    def test_add_item(self, player):
+        player.inventory["Iron Sword"] = 1
+        assert player.inventory["Iron Sword"] == 1
+
+    def test_stack_items(self, player):
+        player.inventory["Health Potion"] = 1
+        player.inventory["Health Potion"] += 1
+        assert player.inventory["Health Potion"] == 2
+
+    def test_remove_item(self, player):
+        player.inventory["Iron Sword"] = 1
+        del player.inventory["Iron Sword"]
+        assert "Iron Sword" not in player.inventory
+
+
+class TestInventoryEquip:
+    """Equipping items."""
+
+    def test_equip_weapon(self, player, items_data):
+        player.inventory["Iron Sword"] = 1
+        player.level = 5
+        player.equip_weapon("Iron Sword")
+        assert player.weapon == "Iron Sword"
+
+    def test_equip_armor(self, player, items_data):
+        player.inventory["Leather Armour"] = 1
+        player.level = 2  # Leather Armour requires level 2
+        player.equip_defense("Leather Armour")
+        assert player.armor == "Leather Armour"
+
+    def test_equip_unknown_weapon(self, player):
+        player.equip_weapon("Unknown Weapon")
+        assert player.weapon == "Fists"
+
+    def test_equip_weapon_not_in_inventory(self, player):
+        player.equip_weapon("Dragon Slayer")
+        assert player.weapon == "Fists"
+
+
+class TestInventoryRarityDisplay:
+    """Rarity labels in inventory display."""
+
+    def test_weapon_rarity_label(self, inventory):
+        from core.rarity import get_rarity_label
+        sword = inventory.weapons["Iron Sword"]
+        label = get_rarity_label(sword["rarity"])
+        assert label == "[Uncommon]"
+
+    def test_common_rarity_label(self, inventory):
+        from core.rarity import get_rarity_label
+        fists = inventory.weapons["Fists"]
+        label = get_rarity_label(fists["rarity"])
+        assert label == "[Common]"
+
+    def test_legendary_rarity_label(self, inventory):
+        from core.rarity import get_rarity_label
+        ds = inventory.weapons["Dragon Slayer"]
+        label = get_rarity_label(ds["rarity"])
+        assert label == "[Legendary]"
+
+
+class TestInventoryDisplay:
+    """Inventory display doesn't crash."""
+
+    def test_open_displays_without_error(self, inventory, player, capsys):
+        # Mock input to exit immediately
+        with patch('builtins.input', return_value='0'):
+            inventory.open(player)
+        captured = capsys.readouterr()
+        assert "INVENTORY" in captured.out

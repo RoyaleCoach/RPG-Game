@@ -1,1 +1,1 @@
-"""Tests package for RPG Game."""
+# tests package

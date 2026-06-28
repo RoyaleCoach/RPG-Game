@@ -210,7 +210,7 @@ class SaveSystem:
             world_data = self.world_repo.load_world_data(save_id)
             flags_data = self.flags_repo.load_flags(save_id)
             loadout_data = self.loadout_repo.load_loadout(save_id)
-            inventory_data = loadout_data.pop("inventory", {})
+            inventory_data = self.inventory_repo.load_inventory(save_id)
             story_progress = self.quest_repo.load_quest_meta(save_id)
             active_quests = self.quest_repo.load_active_quests(save_id)
             completed_quests = self.quest_repo.load_completed_quests(save_id)
