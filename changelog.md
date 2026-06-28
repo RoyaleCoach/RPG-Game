@@ -625,3 +625,33 @@ Magic Apprentice (Base Passive, Cost: 0)
 - Refactored the damage pipeline to prioritize Defense before Health.
 - Unified dodge resolution for both Player and Enemy using the shared combat logic.
 - Simplified combat calculations by removing the legacy player Defend action while preserving defensive gameplay.
+
+---
+
+## [0.8.2] - 2026-06-28
+
+### Added
+
+- Added **SQLite** backend support for the Save/Load system.
+- Added automatic database initialization and schema creation on first launch.
+- Added structured database storage for player progress and game data.
+
+### Changed
+
+- Replaced the JSON-based Save/Load system with **SQLite** for improved reliability and scalability.
+- Refactored the SaveSystem into a modular architecture with separated responsibilities.
+- Improved data persistence by storing game state in normalized database tables instead of a single JSON file.
+- Updated save handling to use reusable repository components for different game systems.
+
+### Fixed
+
+- Improved save consistency by using database transactions during save operations.
+- Reduced the risk of save corruption caused by interrupted writes.
+- Improved compatibility for future game features through a more extensible storage architecture.
+
+### Technical
+
+- Introduced a dedicated database layer for SQLite connection and query management.
+- Separated database schema initialization from save/load logic.
+- Reduced code duplication by centralizing common database operations.
+- Improved maintainability through repository-based data access and modular SaveSystem components.
