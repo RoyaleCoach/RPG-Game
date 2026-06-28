@@ -20,20 +20,26 @@
         • Boss Skills
         • Multi-Phase Boss
         ↓
-0.7.0 Combat Expansion
+0.7.0 Code improvement
+        • Refactoring
+        • Code eficiency
+        • Progression
+        • Skill enhancement
+        ↓
+0.8.0 Combat Expansion
         • Critical Hit
         • Accuracy
         • Dodge
         • Status Effects
         • Enemy AI Improvements
         ↓
-0.8.0 Loot & Progression
+0.9.0 Loot & Progression
         • Loot Tables
         • Rare Drops
         • Equipment Rarity
         • Item Encyclopedia
         ↓
-0.9.0 Crafting Update
+0.10.0 Crafting Update
         • Crafting
         • Blacksmith
         • Equipment Upgrade
