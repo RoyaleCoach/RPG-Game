@@ -655,3 +655,25 @@ Magic Apprentice (Base Passive, Cost: 0)
 - Separated database schema initialization from save/load logic.
 - Reduced code duplication by centralizing common database operations.
 - Improved maintainability through repository-based data access and modular SaveSystem components.
+
+---
+
+## [0.8.3] - 2026-06-29
+
+### Fixed
+
+- Fixed `execute_non_query` not correctly distinguishing between single-tuple params (`conn.execute`) and list-of-tuples params (`conn.executemany`), which caused `ProgrammingError` on batch inserts.
+- Fixed `save_active_quests` and `save_completed_quests` sending individual tuples instead of batch lists, resulting in incomplete quest saves.
+- Fixed stale `__pycache__` bytecode causing the game to run old debug-heavy code even after source files were cleaned.
+
+### Changed
+
+- Removed all debug `print()` statements from the entire `core/savesystem/` module (`database.py`, `inventory_repository.py`, `quest_repository.py`, `schema.py`).
+- Retained error-level `print()` to `stderr` for SQLite failures and unexpected exceptions.
+- Streamlined `execute_non_query` parameter handling with strict type checking for `list` vs `tuple` vs empty.
+
+### Technical
+
+- `execute_non_query` now uses `isinstance(params, list)` to route to `executemany` and `isinstance(params, tuple)` to route to `execute`, eliminating ambiguous parameter binding errors.
+- Empty list params are now silently skipped instead of logging a debug message.
+- All `__pycache__` directories were purged to force Python to recompile from the updated `.py` source files.

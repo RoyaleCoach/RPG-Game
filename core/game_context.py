@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     # Forward references so this module has no circular imports at runtime.
     from core.player import Player
-    from core.saveload import SaveSystem
+    from core.save_system import SaveSystem  # <<< MODIFIED IMPORT
     from core.combat import Combat
     from core.inventory import Inventory
     from core.skill import Skill
@@ -115,7 +115,7 @@ class GameContext:
     def _init_core_systems(self) -> None:
         """Systems that underpin everything: save, quests, combat."""
         from core.enemy import Enemy
-        from core.saveload import SaveSystem
+        from core.save_system import SaveSystem  # <<< MODIFIED IMPORT
         from core.skill import Skill
         from world.quest import QuestSystem
         from core.combat import Combat
