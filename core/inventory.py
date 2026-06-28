@@ -1,3 +1,6 @@
+from core.rarity import get_rarity_label
+
+
 class Inventory:
 
     def __init__(self, items):
@@ -43,29 +46,32 @@ class Inventory:
                     elif item == player.armor:
                         equipped = " [EQUIPPED]"
 
+                    rarity = ""
                     if item in self.weapons:
-
+                        r = self.weapons[item].get("rarity", "Common")
+                        rarity = f" {get_rarity_label(r)}"
                         text = (
-                            f"- {item} x{qty} "
-                            f"(ATK: {self.weapons[item]['attack']})"
+                            f"- {item}{rarity}\n"
+                            f"    ATK +{self.weapons[item]['attack']}"
                         )
 
                     elif item in self.potions:
-
+                        r = self.potions[item].get("rarity", "Common")
+                        rarity = f" {get_rarity_label(r)}"
                         text = (
-                            f"- {item} x{qty} "
-                            f"(Heal: {self.potions[item]['effect']} HP)"
+                            f"- {item}{rarity}\n"
+                            f"    Heal: {self.potions[item]['effect']} HP"
                         )
 
                     elif item in self.defends:
-
+                        r = self.defends[item].get("rarity", "Common")
+                        rarity = f" {get_rarity_label(r)}"
                         text = (
-                            f"- {item} x{qty} "
-                            f"(DEF: {self.defends[item]['defense']})"
+                            f"- {item}{rarity}\n"
+                            f"    DEF +{self.defends[item]['defense']}"
                         )
 
                     else:
-
                         text = (
                             f"- {item} x{qty}"
                         )
@@ -129,9 +135,11 @@ class Inventory:
 
         for item in available_weapons:
 
+            r = self.weapons[item].get("rarity", "Common")
+            rarity_label = get_rarity_label(r)
             print(
-                f"- {item} "
-                f"(ATK: {self.weapons[item]['attack']})"
+                f"{rarity_label} {item}\n"
+                f"    ATK +{self.weapons[item]['attack']}"
             )
 
         weapon_name = input(
@@ -165,9 +173,11 @@ class Inventory:
 
         for item in available_potions:
 
+            r = self.potions[item].get("rarity", "Common")
+            rarity_label = get_rarity_label(r)
             print(
-                f"- {item} "
-                f"(Heal: {self.potions[item]['effect']} HP)"
+                f"{rarity_label} {item}\n"
+                f"    Heal: {self.potions[item]['effect']} HP"
             )
 
         potion_name = input(
@@ -201,9 +211,11 @@ class Inventory:
 
         for item in available_armors:
 
+            r = self.defends[item].get("rarity", "Common")
+            rarity_label = get_rarity_label(r)
             print(
-                f"- {item} "
-                f"(DEF: {self.defends[item]['defense']})"
+                f"{rarity_label} {item}\n"
+                f"    DEF +{self.defends[item]['defense']}"
             )
 
         armor_name = input(

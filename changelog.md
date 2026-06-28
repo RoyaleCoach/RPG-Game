@@ -1,5 +1,7 @@
 # Changelog
 
+---
+
 ## [0.1.0] - 2025-12-20
 
 ### Added
@@ -677,3 +679,38 @@ Magic Apprentice (Base Passive, Cost: 0)
 - `execute_non_query` now uses `isinstance(params, list)` to route to `executemany` and `isinstance(params, tuple)` to route to `execute`, eliminating ambiguous parameter binding errors.
 - Empty list params are now silently skipped instead of logging a debug message.
 - All `__pycache__` directories were purged to force Python to recompile from the updated `.py` source files.
+
+---
+
+## [0.9.0] - 2026-06-29
+
+### Added
+
+- **Loot Table System** — Every enemy now has its own data-driven loot table with guaranteed drops (e.g. gold) and randomized item drops with configurable drop chance and quantity range.
+- **Rare Drops** — Independent rare drop roll (per-mille chance) for each enemy, supporting unique equipment, crafting materials, and collectibles. Displays a special "RARE DROP!" message when triggered.
+- **Equipment Rarity** — Five rarity tiers: Common, Uncommon, Rare, Epic, Legendary. Each rarity provides a stat multiplier and sell value multiplier. Rarity is displayed in inventory and equip menus.
+- **Item Encyclopedia** — Automatically records every discovered item. Unknown items remain hidden until obtained. Supports filtering by rarity and type (equipment, consumable, materials). Shows per-category and overall completion percentage.
+- Added `Item Encyclopedia` as main menu option `[6]` (Save Game moved to `[7]`).
+- Added `data/loot_tables.json` with loot tables for all enemies including bosses.
+
+### Changed
+
+- Combat victory rewards now roll loot table drops in addition to base gold/EXP rewards.
+- Inventory display now shows rarity label (e.g. `[Rare]`) and formatted stats for each item.
+- New `LootEngine` class handles all loot logic, decoupled from combat code.
+- New `ItemEncyclopedia` class tracks discovered items, auto-synced with player inventory after combat and on game load/new game.
+
+### Technical
+
+- New modules:
+  - `core/rarity.py` — rarity data definitions and helper functions.
+  - `core/loot.py` — LootTable, RareDrops, and LootEngine classes.
+  - `core/encyclopedia.py` — ItemEncyclopedia class with filtering and display.
+- `core/combat.py` — Added `set_loot_engine()` and `set_encyclopedia()` methods. `_award_victory()` now rolls loot and syncs encyclopedia.
+- `core/game_context.py` — Creates LootEngine and ItemEncyclopedia, wires them into Combat. Loads `loot_tables.json` via DataLoader.
+- `core/data_loader.py` — Added `load_loot_tables()` method.
+- `core/game.py` — Added menu entry for encyclopedia, syncs encyclopedia on player create/load.
+- `core/inventory.py` — Updated display to show rarity labels and formatted item stats.
+- All items in `data/items.json` already had `rarity` fields — no changes needed to existing item data.
+
+---

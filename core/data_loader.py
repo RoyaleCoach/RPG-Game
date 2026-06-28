@@ -61,6 +61,9 @@ class DataLoader:
     def load_skill_tree(self):
         return self.load_json("skill_tree.json")
 
+    def load_loot_tables(self):
+        return self.load_json("loot_tables.json")
+
     # -------------------------
     # RELOAD SYSTEM (HOT RELOAD OPTIONAL)
     # -------------------------

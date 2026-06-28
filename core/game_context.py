@@ -18,16 +18,21 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     # Forward references so this module has no circular imports at runtime.
     from core.player import Player
-    from core.save_system import SaveSystem  # <<< MODIFIED IMPORT
+    from core.save_system import SaveSystem
     from core.combat import Combat
     from core.inventory import Inventory
     from core.skill import Skill
     from core.skill_tree import SkillTree
     from core.skill_tree_menu import SkillTreeMenu
+    from core.loot import LootEngine
+    from core.encyclopedia import ItemEncyclopedia
     from world.map import Explore
     from world.merchant import Merchant
     from world.dungeon import Dungeon
     from world.quest import QuestSystem
+
+
+
 
 
 # ── Game data ─────────────────────────────────────────────────────────────────
@@ -46,6 +51,7 @@ class GameData:
     quests: dict = field(default_factory=dict)
     bosses: dict = field(default_factory=dict)
     skill_tree: dict = field(default_factory=dict)
+    loot_tables: dict = field(default_factory=dict)
 
     # Version / meta
     version: str = "Unknown"
@@ -71,6 +77,7 @@ class GameData:
             quests=loader.load_quests(),
             bosses=loader.load_bosses(),
             skill_tree=loader.load_skill_tree(),
+            loot_tables=loader.load_loot_tables(),
             version=version_raw.get("version", "Unknown"),
             game_name=version_raw.get("game_name", "Unknown Game"),
             author=version_raw.get("author", "Unknown"),
@@ -131,6 +138,22 @@ class GameContext:
             self.data.items,
             self.skill_system,
         )
+
+        # Loot & encyclopedia (attached to combat for rewards)
+        from core.loot import LootEngine
+        from core.encyclopedia import ItemEncyclopedia
+
+        self.loot_engine: "LootEngine" = LootEngine(
+            self.data.loot_tables,
+            self.data.items,
+        )
+        self.encyclopedia: "ItemEncyclopedia" = ItemEncyclopedia(
+            self.data.items,
+        )
+
+        # Wire loot + encyclopedia into combat
+        self.combat.set_loot_engine(self.loot_engine)
+        self.combat.set_encyclopedia(self.encyclopedia)
 
     def _init_gameplay_systems(self) -> None:
         """Systems the player interacts with during a session."""

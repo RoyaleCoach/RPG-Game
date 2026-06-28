@@ -1,0 +1,302 @@
+{
+  "enemies": {
+    "Goblin": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 5, "max": 15}
+        ],
+        "random": [
+          {"item": "Wooden Sword", "chance": 10, "min": 1, "max": 1},
+          {"item": "Small Health Potion", "chance": 25, "min": 1, "max": 1},
+          {"item": "Dagger", "chance": 5, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Goblin Tooth", "chance": 5, "type": "collectible", "min": 1, "max": 1}
+      ]
+    },
+    "Skeleton": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 8, "max": 20}
+        ],
+        "random": [
+          {"item": "Dagger", "chance": 15, "min": 1, "max": 1},
+          {"item": "Small Health Potion", "chance": 20, "min": 1, "max": 2},
+          {"item": "Mana Potion", "chance": 10, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Bone Fragment", "chance": 4, "type": "material", "min": 1, "max": 2}
+      ]
+    },
+    "Dark Wolf": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 10, "max": 25}
+        ],
+        "random": [
+          {"item": "Leather Armour", "chance": 8, "min": 1, "max": 1},
+          {"item": "Health Potion", "chance": 15, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Wolf Pelt", "chance": 6, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Bomber": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 15, "max": 30}
+        ],
+        "random": [
+          {"item": "Health Potion", "chance": 30, "min": 1, "max": 2},
+          {"item": "Mana Potion", "chance": 20, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Blast Powder", "chance": 8, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Venom Spider": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 12, "max": 28}
+        ],
+        "random": [
+          {"item": "Health Potion", "chance": 20, "min": 1, "max": 1},
+          {"item": "Iron Sword", "chance": 8, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Spider Venom", "chance": 5, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Ghoul": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 15, "max": 35}
+        ],
+        "random": [
+          {"item": "Iron Sword", "chance": 12, "min": 1, "max": 1},
+          {"item": "Health Potion", "chance": 25, "min": 1, "max": 2}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Ghoul Claw", "chance": 4, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Bone Archer": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 18, "max": 40}
+        ],
+        "random": [
+          {"item": "Long Bow", "chance": 10, "min": 1, "max": 1},
+          {"item": "Health Potion", "chance": 20, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Ancient Arrowhead", "chance": 3, "type": "collectible", "min": 1, "max": 1}
+      ]
+    },
+    "Dark Shaman": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 20, "max": 45}
+        ],
+        "random": [
+          {"item": "Mana Potion", "chance": 30, "min": 1, "max": 2},
+          {"item": "Magic Staff", "chance": 6, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Shadow Essence", "chance": 5, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Stone Golem": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 30, "max": 60}
+        ],
+        "random": [
+          {"item": "Iron Armour", "chance": 15, "min": 1, "max": 1},
+          {"item": "Large Health Potion", "chance": 20, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Stone Core", "chance": 6, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Ogre": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 35, "max": 70}
+        ],
+        "random": [
+          {"item": "Battle Axe", "chance": 12, "min": 1, "max": 1},
+          {"item": "Large Health Potion", "chance": 25, "min": 1, "max": 2}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Ogre Tusk", "chance": 5, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Necromancer": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 40, "max": 80}
+        ],
+        "random": [
+          {"item": "Fire Wand", "chance": 8, "min": 1, "max": 1},
+          {"item": "Greater Mana Potion", "chance": 25, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Necromancer's Tome", "chance": 3, "type": "collectible", "min": 1, "max": 1}
+      ]
+    },
+    "Giant": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 45, "max": 90}
+        ],
+        "random": [
+          {"item": "Knight Sword", "chance": 10, "min": 1, "max": 1},
+          {"item": "Large Health Potion", "chance": 30, "min": 1, "max": 2}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Giant's Ring", "chance": 4, "type": "collectible", "min": 1, "max": 1}
+      ]
+    },
+    "Doom Knight": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 60, "max": 120}
+        ],
+        "random": [
+          {"item": "Knight Armour", "chance": 12, "min": 1, "max": 1},
+          {"item": "Mega Health Potion", "chance": 20, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Doom Fragment", "chance": 5, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Abyss Walker": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 80, "max": 150}
+        ],
+        "random": [
+          {"item": "Magic Cloak", "chance": 10, "min": 1, "max": 1},
+          {"item": "Mega Health Potion", "chance": 25, "min": 1, "max": 2}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Abyss Shard", "chance": 6, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Mimic": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 50, "max": 100}
+        ],
+        "random": [
+          {"item": "Knight Shield", "chance": 15, "min": 1, "max": 1},
+          {"item": "Large Health Potion", "chance": 30, "min": 1, "max": 2}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Mimic Chest", "chance": 8, "type": "collectible", "min": 1, "max": 1}
+      ]
+    },
+    "Goblin King": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 100, "max": 200}
+        ],
+        "random": [
+          {"item": "Knight Sword", "chance": 20, "min": 1, "max": 1},
+          {"item": "Knight Armour", "chance": 15, "min": 1, "max": 1},
+          {"item": "Mega Health Potion", "chance": 40, "min": 1, "max": 3}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Goblin Crown", "chance": 10, "type": "collectible", "min": 1, "max": 1}
+      ]
+    },
+    "Skeleton Lord": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 150, "max": 300}
+        ],
+        "random": [
+          {"item": "War Hammer", "chance": 15, "min": 1, "max": 1},
+          {"item": "Magic Cloak", "chance": 12, "min": 1, "max": 1},
+          {"item": "Greater Mana Potion", "chance": 35, "min": 1, "max": 2}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Lord's Skull", "chance": 8, "type": "collectible", "min": 1, "max": 1}
+      ]
+    },
+    "Ancient Dragon": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 250, "max": 500}
+        ],
+        "random": [
+          {"item": "Dragon Scale Armour", "chance": 10, "min": 1, "max": 1},
+          {"item": "Elixir", "chance": 25, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Dragon Heart", "chance": 5, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Demon Overlord": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 400, "max": 700}
+        ],
+        "random": [
+          {"item": "Guardian Plate", "chance": 8, "min": 1, "max": 1},
+          {"item": "Elixir", "chance": 30, "min": 1, "max": 2}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Demon Horn", "chance": 6, "type": "material", "min": 1, "max": 1}
+      ]
+    },
+    "Forgotten God": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 600, "max": 1200}
+        ],
+        "random": [
+          {"item": "Divine Armour", "chance": 5, "min": 1, "max": 1},
+          {"item": "Phoenix Tear", "chance": 15, "min": 1, "max": 1}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Divine Relic", "chance": 8, "type": "collectible", "min": 1, "max": 1}
+      ]
+    },
+    "The First Hollow": {
+      "loot": {
+        "guaranteed": [
+          {"item": "Gold", "min": 800, "max": 1500}
+        ],
+        "random": [
+          {"item": "Excalibur", "chance": 3, "min": 1, "max": 1},
+          {"item": "Phoenix Tear", "chance": 20, "min": 1, "max": 2}
+        ]
+      },
+      "rare_drops": [
+        {"item": "Hollow Fragment", "chance": 10, "type": "collectible", "min": 1, "max": 1}
+      ]
+    }
+  }
+}

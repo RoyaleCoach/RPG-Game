@@ -88,6 +88,16 @@ class Combat:
         self.quest_system = quest_system
         self.potions = items.get("potions", {})
         self.skill_system = skill_system
+        self._loot_engine = None
+        self._encyclopedia = None
+
+    def set_loot_engine(self, loot_engine) -> None:
+        """Attach a LootEngine for combat rewards."""
+        self._loot_engine = loot_engine
+
+    def set_encyclopedia(self, encyclopedia) -> None:
+        """Attach an ItemEncyclopedia for auto-discovery."""
+        self._encyclopedia = encyclopedia
 
     # ─────────────────────────────────────────────────────────────────────────
     # MAIN BATTLE LOOP
@@ -531,6 +541,10 @@ class Combat:
 
     def _award_victory(self, player: "Player", enemy: "Enemy") -> None:
         """Berikan reward setelah menang."""
+        # Loot system integration
+        loot_engine = getattr(self, "_loot_engine", None)
+        drops = []
+
         if isinstance(enemy, Boss):
             player.gold += enemy.gold_reward
             player.gain_exp(enemy.exp_reward)
@@ -549,6 +563,18 @@ class Combat:
             player.gain_exp(10)
             print("\n🏆 Kemenangan!")
             print(f"+{reward} Gold")
+
+        # Roll loot table drops (after base rewards)
+        if loot_engine is not None:
+            drops = loot_engine.roll_for_enemy(enemy, player)
+            if drops:
+                from core.loot import LootEngine
+                LootEngine.display_drops(drops)
+
+        # Sync encyclopedia with new items
+        encyclopedia = getattr(self, "_encyclopedia", None)
+        if encyclopedia is not None:
+            encyclopedia.sync_with_player(player.inventory)
 
     # ─────────────────────────────────────────────────────────────────────────
     # UTILITY
