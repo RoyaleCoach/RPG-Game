@@ -11,6 +11,9 @@ Perubahan dari versi sebelumnya:
   [NEW] Status effects    — tick awal setiap giliran (Burn, Poison, dll.)
   [NEW] MultiphaseBoss    — cek try_advance_phase() saat HP boss ≤ 0
   [NEW] Enemy spell cast  — enemy bisa cast spell dari spell pool-nya
+  [NEW] Defense as shield — DEF berfungsi sebagai second health bar; damage
+                            enemy dikurangi ke DEF dulu, sisanya ke HP.
+                            Aksi defend player dihapus.
 """
 
 from __future__ import annotations
@@ -96,8 +99,9 @@ class Combat:
 
         Returns True jika player menang, False jika kalah.
         """
-        # Defense saat ini (bisa berubah oleh defend/spell buff)
-        battle_defense = player.defense
+        # Defense berfungsi sebagai second health bar — menyerap damage enemy
+        # sebelum HP berkurang. Diisi ulang dari player.defense setiap battle.
+        current_defense = player.defense
 
         while player.hp > 0 and enemy.hp > 0:
 
@@ -106,10 +110,11 @@ class Combat:
             if isinstance(enemy, MultiphaseBoss):
                 phase_info = f" [Phase {enemy.phase_number}/{enemy.total_phases}]"
 
+            shield_bar = f"🛡️ {current_defense}/{player.defense}" if current_defense > 0 else "🛡️ HABIS"
             print(
                 f"\n{player.name} HP: {player.hp}/{player.max_hp} "
-                f"| Mana: {player.mana}/{player.max_mana} "
-                f"| DEF: {battle_defense} | "
+                f"| {shield_bar} "
+                f"| Mana: {player.mana}/{player.max_mana} | "
                 f"{enemy.name}{phase_info} HP: {enemy.hp}/{enemy.max_hp}"
             )
 
@@ -122,17 +127,18 @@ class Combat:
                 break
 
             # ── Input player ──────────────────────────────────────────────────
+            player_is_dodging = False
             if not player_can_act:
                 # Ter-stun/freeze — skip giliran
                 print(f"⚡ {player.name} tidak bisa bergerak!")
             else:
                 action = (
-                    input("Choose action (attack / defend / heal / spell): ")
+                    input("Choose action (attack / heal / spell / dodge): ")
                     .lower()
                     .strip()
                 )
-                battle_defense = self._player_turn(
-                    player, enemy, action, battle_defense
+                current_defense, player_is_dodging = self._player_turn(
+                    player, enemy, action, current_defense
                 )
 
             if not enemy.is_alive:
@@ -152,9 +158,9 @@ class Combat:
 
             # ── Giliran enemy ─────────────────────────────────────────────────
             if enemy_can_act:
-                battle_defense = self._enemy_turn(
+                current_defense = self._enemy_turn(
                     player, enemy, action if player_can_act else "none",
-                    battle_defense
+                    current_defense, player_is_dodging
                 )
             else:
                 print(f"⚡ {enemy.name} tidak bisa bergerak!")
@@ -181,28 +187,30 @@ class Combat:
         player: "Player",
         enemy: "Enemy",
         action: str,
-        battle_defense: int,
-    ) -> int:
-        """Proses aksi player. Returns battle_defense (bisa berubah)."""
+        current_defense: int,
+    ) -> tuple[int, bool]:
+        """Proses aksi player. Returns (current_defense, player_is_dodging)."""
+        player_is_dodging = False
 
         if action in ("attack", "a"):
             self._player_attack(player, enemy)
-
-        elif action in ("defend", "d"):
-            print("🛡️ Kau bersiap menangkis.")
 
         elif action in ("heal", "h"):
             self._player_heal(player)
 
         elif action == "spell":
-            battle_defense = self._player_spell(
-                player, enemy, battle_defense
+            current_defense = self._player_spell(
+                player, enemy, current_defense
             )
+
+        elif action in ("dodge", "dg"):
+            player_is_dodging = True
+            print(f"💨 {player.name} bersiap menghindar dari serangan berikutnya!")
 
         else:
             print("❌ Aksi tidak valid.")
 
-        return battle_defense
+        return current_defense, player_is_dodging
 
     def _player_attack(self, player: "Player", enemy: "Enemy") -> None:
         """Serangan fisik player ke enemy (dengan accuracy & crit)."""
@@ -233,17 +241,17 @@ class Combat:
         self,
         player: "Player",
         enemy: "Enemy",
-        battle_defense: int,
+        current_defense: int,
     ) -> int:
-        """Cast spell player. Returns (mungkin updated) battle_defense."""
+        """Cast spell player. Returns (mungkin updated) current_defense."""
         if self.skill_system is None:
             print("Sihir tidak tersedia.")
-            return battle_defense
+            return current_defense
 
         available_spells = self.skill_system.get_available_spells(player)
         if not available_spells:
             print("Kau belum mengetahui mantra apapun.")
-            return battle_defense
+            return current_defense
 
         print("\n=== SPELLS ===")
         for name, data in available_spells.items():
@@ -258,12 +266,12 @@ class Combat:
 
         if spell is None or spell_name not in player.learned_spells:
             print("⚠️ Spell tidak valid.")
-            return battle_defense
+            return current_defense
 
         cost = spell.get("cost", 0)
         if player.mana < cost:
             print("⚠️ Mana tidak cukup.")
-            return battle_defense
+            return current_defense
 
         player.mana -= cost
         description = spell.get(
@@ -273,8 +281,8 @@ class Combat:
         print(description.replace("[caster]", player.name))
 
         # Terapkan efek spell (damage/heal/buff)
-        battle_defense = self.apply_spell_effect(
-            player, enemy, spell, battle_defense
+        current_defense = self.apply_spell_effect(
+            player, enemy, spell, current_defense
         )
 
         # Terapkan status effect jika spell punya (mis. Fireball → Burn)
@@ -282,7 +290,7 @@ class Combat:
         if status_effect:
             apply_effect_to(enemy, status_effect)
 
-        return battle_defense
+        return current_defense
 
     # ─────────────────────────────────────────────────────────────────────────
     # ENEMY TURN (dengan AI)
@@ -293,11 +301,12 @@ class Combat:
         player: "Player",
         enemy: "Enemy",
         player_last_action: str,
-        battle_defense: int,
+        current_defense: int,
+        player_is_dodging: bool = False,
     ) -> int:
         """
         Giliran enemy dengan AI sederhana.
-        Returns (mungkin updated) battle_defense.
+        Returns (mungkin updated) current_defense.
         """
         # Enemy punya mana? (opsional — Enemy sederhana tidak punya mana)
         enemy_mana = getattr(enemy, "mana", 10 if enemy.spells else 0)
@@ -305,61 +314,85 @@ class Combat:
 
         if action == "defend":
             print(f"\n🛡️ {enemy.name} bersiap menangkis.")
-            # Enemy defend: damage ke player dikurangi pada serangan berikutnya
-            # (disimulasikan dengan tidak menyerang giliran ini)
-            return battle_defense
+            return current_defense
 
         if action == "dodge":
-            # Enemy siap dodge — tandai agar bisa dipakai saat player hit
-            # (pada implementasi ini dodge enemy dicek di _resolve_enemy_attack)
             print(f"\n💨 {enemy.name} melompat menghindar dan tidak menyerang!")
-            return battle_defense
+            return current_defense
 
         if action == "spell" and enemy.spells:
-            return self._enemy_cast_spell(player, enemy, battle_defense)
+            return self._enemy_cast_spell(player, enemy, current_defense, player_is_dodging)
 
         # Default: attack
-        return self._enemy_attack(player, enemy, player_last_action, battle_defense)
+        return self._enemy_attack(player, enemy, current_defense, player_is_dodging)
 
     def _enemy_attack(
         self,
         player: "Player",
         enemy: "Enemy",
-        player_last_action: str,
-        battle_defense: int,
+        current_defense: int,
+        player_is_dodging: bool = False,
     ) -> int:
-        """Serangan fisik enemy ke player."""
+        """
+        Serangan fisik enemy ke player.
+        Damage diserap oleh current_defense (second health bar) terlebih dahulu;
+        sisanya baru mengurangi HP player.
+        """
         damage, is_crit = roll_damage(enemy, enemy.attack)
 
-        # Defend player → kurangi damage 50%
-        if player_last_action in ("defend", "d"):
-            damage //= 2
-
         # Cek dodge player
-        if roll_dodge(player):
-            print(
-                f"\n🌀 Dodge! {player.name} menghindari serangan {enemy.name}!")
-            return battle_defense
+        if player_is_dodging:
+            dodge_bonus = getattr(player, "dodge", 0) + \
+                30  # +30% bonus saat aktif dodge
+            dodged = random.randint(1, 100) <= min(dodge_bonus, 95)  # cap 95%
+        else:
+            dodged = roll_dodge(player)
+
+        if dodged:
+            dodge_msg = (
+                f"\n🌀 Dodge! {player.name} dengan sigap mengelak dari serangan {enemy.name}!"
+                if player_is_dodging
+                else f"\n🌀 Dodge! {player.name} menghindari serangan {enemy.name}!"
+            )
+            print(dodge_msg)
+            return current_defense
 
         if is_crit:
             print(f"\n💥 Critical Hit dari {enemy.name}! ", end="")
 
-        final_damage = player.damage(damage, battle_defense)
+        # Serap damage ke defense terlebih dahulu
+        if current_defense >= damage:
+            current_defense -= damage
+            print(
+                f"{enemy.name} menyerang {damage} damage → "
+                f"diserap oleh armor. (DEF tersisa: {current_defense})"
+            )
+        elif current_defense > 0:
+            leftover = damage - current_defense
+            print(
+                f"{enemy.name} menyerang {damage} damage → "
+                f"{current_defense} diserap armor, {leftover} menembus ke HP!"
+            )
+            current_defense = 0
+            player.hp = max(0, player.hp - leftover)
+            if not player.is_alive:
+                print("💀 Game Over!")
+        else:
+            # Defense sudah habis — damage langsung ke HP
+            player.hp = max(0, player.hp - damage)
+            print(
+                f"{enemy.name} menyerang dan mengenai {damage} damage langsung ke HP!")
+            if not player.is_alive:
+                print("💀 Game Over!")
 
-        # Setiap serangan sedikit mengikis defense battle (armor aus)
-        battle_defense = max(
-            0,
-            battle_defense - max(1, damage // 4)
-        )
-
-        print(f"{enemy.name} menyerang dan mengenai {final_damage} damage.")
-        return battle_defense
+        return current_defense
 
     def _enemy_cast_spell(
         self,
         player: "Player",
         enemy: "Enemy",
-        battle_defense: int,
+        current_defense: int,
+        player_is_dodging: bool = False,
     ) -> int:
         """Enemy memilih dan menggunakan spell secara acak."""
         spell_name = random.choice(enemy.spells)
@@ -371,7 +404,7 @@ class Combat:
 
         if spell is None:
             # Spell tidak ada di database → fallback ke attack
-            return self._enemy_attack(player, enemy, "", battle_defense)
+            return self._enemy_attack(player, enemy, current_defense, player_is_dodging)
 
         description = spell.get(
             "description",
@@ -379,21 +412,52 @@ class Combat:
         )
         print(f"\n{description.replace('[caster]', enemy.name)}")
 
-        # Damage/heal/buff ke PLAYER (target dibalik)
-        # Enemy spell selalu menyerang player; heal/buff pada diri sendiri
         spell_type = spell.get("type", "st/damage")
         if "damage" in spell_type:
             damage, is_crit = roll_damage(
                 enemy, enemy.attack + spell.get("level", 1) * 3)
             if is_crit:
                 print(f"💥 Critical! ", end="")
-            if roll_dodge(player):
-                print(f"🌀 {player.name} menghindari {spell_name}!")
-            else:
-                player.damage(damage, battle_defense)
-                print(f"{enemy.name} mengenai {damage} damage pada {player.name}!")
 
-                # Status effect dari spell enemy
+            # Cek dodge player (dengan bonus jika sedang aktif dodge)
+            if player_is_dodging:
+                dodge_bonus = getattr(player, "dodge", 0) + 30
+                dodged = random.randint(1, 100) <= min(dodge_bonus, 95)
+            else:
+                dodged = roll_dodge(player)
+
+            if dodged:
+                dodge_msg = (
+                    f"🌀 {player.name} dengan sigap mengelak dari {spell_name}!"
+                    if player_is_dodging
+                    else f"🌀 {player.name} menghindari {spell_name}!"
+                )
+                print(dodge_msg)
+            else:
+                # Spell damage juga diserap defense terlebih dahulu
+                if current_defense >= damage:
+                    current_defense -= damage
+                    print(
+                        f"{spell_name} mengenai {damage} damage → "
+                        f"diserap armor. (DEF tersisa: {current_defense})"
+                    )
+                elif current_defense > 0:
+                    leftover = damage - current_defense
+                    print(
+                        f"{spell_name} mengenai {damage} damage → "
+                        f"{current_defense} diserap armor, {leftover} menembus ke HP!"
+                    )
+                    current_defense = 0
+                    player.hp = max(0, player.hp - leftover)
+                    if not player.is_alive:
+                        print("💀 Game Over!")
+                else:
+                    player.hp = max(0, player.hp - damage)
+                    print(f"{enemy.name} mengenai {damage} damage langsung ke HP!")
+                    if not player.is_alive:
+                        print("💀 Game Over!")
+
+                # Status effect dari spell enemy (hanya terkena jika tidak dodge)
                 status_effect = get_spell_effect(spell_name)
                 if status_effect:
                     apply_effect_to(player, status_effect)
@@ -408,7 +472,7 @@ class Combat:
             enemy.attack += boost
             print(f"{enemy.name} menguat! ATK +{boost}!")
 
-        return battle_defense
+        return current_defense
 
     # ─────────────────────────────────────────────────────────────────────────
     # SPELL EFFECTS (player spells)
@@ -419,7 +483,7 @@ class Combat:
         player: "Player",
         enemy: "Enemy",
         spell: dict,
-        battle_defense: int,
+        current_defense: int,
     ) -> int:
         """
         Terapkan efek langsung spell (damage/heal/buff).
@@ -452,13 +516,14 @@ class Combat:
 
         elif "buff" in spell_type:
             boost = spell.get("level", 1) * 2
-            battle_defense += boost
-            print(f"Defense meningkat sebesar {boost} untuk giliran ini!")
+            current_defense += boost
+            print(
+                f"🛡️ Armor menguat! DEF +{boost} (sekarang: {current_defense})!")
 
         else:
             print("Spell tidak memberikan efek.")
 
-        return battle_defense
+        return current_defense
 
     # ─────────────────────────────────────────────────────────────────────────
     # VICTORY

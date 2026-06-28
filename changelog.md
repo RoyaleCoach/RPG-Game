@@ -600,3 +600,28 @@ Magic Apprentice (Base Passive, Cost: 0)
 - Introduced a modular status effect architecture that allows new effects to be added without modifying the combat engine.
 - Improved extensibility for future spells, bosses, and enemy behaviors.
 - Simplified combat logic through reusable helper methods and reduced code duplication.
+
+---
+
+## [0.8.1] - 2026-06-28
+
+### Changed
+
+- Reworked the **Defend** mechanic into a secondary health layer.
+- Defense points are now consumed before HP when taking damage.
+- Removed the **Defend** action from the player's turn.
+- Updated combat flow so defensive durability is handled automatically during damage calculation.
+- Improved combat balance by making defensive stats more meaningful throughout battles.
+
+### Fixed
+
+- Fixed an issue where only enemies could successfully use the Dodge mechanic.
+- Players can now correctly dodge incoming attacks based on their `dodge` stat.
+- Fixed damage handling to properly deplete Defense before reducing HP.
+- Improved combat consistency between Player and Enemy damage resolution.
+
+### Technical
+
+- Refactored the damage pipeline to prioritize Defense before Health.
+- Unified dodge resolution for both Player and Enemy using the shared combat logic.
+- Simplified combat calculations by removing the legacy player Defend action while preserving defensive gameplay.
