@@ -424,3 +424,6 @@ save/
 .vscode/
 
 .env
+
+core/save/
+*.db

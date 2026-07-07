@@ -43,7 +43,7 @@ class Player:
         exp: int = 0,
         floor: int = 1,
         weapon: str = "Fists",
-        armor: str | None = None,
+        armor: str = "Health Potion",
         inventory: dict | None = None,
         learned_spells: list | None = None,
         skill_points: int = 0,
@@ -62,7 +62,7 @@ class Player:
         skip_next_trap: bool = False,
         skip_next_boss_preparation: bool = False,
         items: dict | None = None,
-        # ── NEW combat stats ──────────────────────────────────────────────────
+        # ── NEW combat stats ─────────────────────────────────────────────────
         critical_chance: int = 15,
         critical_multiplier: float = 2.0,
         accuracy: int = 5,
@@ -405,7 +405,6 @@ class Player:
             luck=p.get("luck", 0),
             reputation=p.get("reputation", 0),
             skill_points=p.get("skill_points", 0),
-            # NEW stats (backward-compat: default jika save lama)
             critical_chance=p.get("critical_chance", 15),
             critical_multiplier=p.get("critical_multiplier", 2.0),
             accuracy=p.get("accuracy", 5),
@@ -415,7 +414,7 @@ class Player:
             dungeon_runs=w.get("dungeon_runs", 0),
             last_event=w.get("last_event", None),
             weapon=lo.get("weapon", "Fists"),
-            armor=lo.get("armor", None),
+            armor=lo.get("armor", "Health Potion"),
             inventory=lo.get("inventory", {"Fists": 1}),
             learned_spells=lo.get("learned_spells", []),
             unlocked_skills=lo.get("unlocked_skills", []),
@@ -426,8 +425,7 @@ class Player:
             puzzles_solved=s.get("puzzles_solved", 0),
             skip_next_battle=f.get("skip_next_battle", False),
             skip_next_trap=f.get("skip_next_trap", False),
-            skip_next_boss_preparation=f.get(
-                "skip_next_boss_preparation", False),
+            skip_next_boss_preparation=f.get("skip_next_boss_preparation", False),
         )
 
     @classmethod
@@ -454,7 +452,7 @@ class Player:
             dungeon_runs=data.get("dungeon_runs", 0),
             last_event=data.get("last_event", None),
             weapon=data.get("weapon", "Fists"),
-            armor=data.get("armor", None),
+            armor=data.get("armor", "Health Potion"),
             inventory=data.get("inventory", {"Fists": 1}),
             learned_spells=data.get("learned_spells", []),
             unlocked_skills=data.get("unlocked_skills", []),
@@ -465,6 +463,5 @@ class Player:
             puzzles_solved=data.get("puzzles_solved", 0),
             skip_next_battle=data.get("skip_next_battle", False),
             skip_next_trap=data.get("skip_next_trap", False),
-            skip_next_boss_preparation=data.get(
-                "skip_next_boss_preparation", False),
+            skip_next_boss_preparation=data.get("skip_next_boss_preparation", False),
         )

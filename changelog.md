@@ -714,3 +714,22 @@ Magic Apprentice (Base Passive, Cost: 0)
 - All items in `data/items.json` already had `rarity` fields — no changes needed to existing item data.
 
 ---
+
+## [0.9.1] - 2026-07-07
+
+### Added
+
+- **Early Game Welcome Bonus** — New players now automatically receive bonus `Health Potion` supplies at the start of the game to significantly increase survivability on the introductory floors.
+
+### Changed
+
+- **Early Floor Balancing** — Rebalanced (reduced) the maximum HP and stat scaling of enemies on early floors (`Floor 1` to `Floor 3`) to create a smoother, more accessible learning curve for beginners.
+- Updated the default `inventory` payload during new character initialization to include the starter recovery items immediately.
+
+### Technical
+
+- `core/player.py` — Updated the `__init__` constructor's default `inventory` argument to automatically include `Health Potion` alongside the baseline `Fists` weapon.
+- `data/enemies.json` — Adjusted baseline HP parameters and growth curves for low-level enemies (e.g., Slimes, Goblins) spawning on the initial floors.
+- `core/game_context.py` / `core/game.py` — Ensured that new game initialization logic successfully applies the adjusted starting items without breaking backward compatibility for legacy save files.
+
+---
