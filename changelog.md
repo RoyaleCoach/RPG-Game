@@ -490,7 +490,6 @@
 
 ---
 
-
 ## [0.9.2] - 2026-07-18
 ### Changed
 - Defense Mechanic Clarification: Removed the unused `guard` parameter from `Player.damage` method in `core/player.py` to align with the `current_defense` shield absorption approach in `core/combat.py`, streamlining damage calculation logic.
