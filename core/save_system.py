@@ -233,7 +233,18 @@ class SaveSystem:
 
             # Reconstruct a Player instance from the saved payload
             player_instance = Player.from_dict(full_loaded_data)
-            # Re-attach the shared item catalog (not persisted in the save)
+            # Re-apply passive skill effects from unlocked skills
+            if hasattr(self.game, 'ctx') and hasattr(self.game.ctx, 'skill_tree'):
+                skill_tree = self.game.ctx.skill_tree # Assume skill_tree is accessible via game context
+                for skill_id in player_instance.unlocked_skills:
+                    node = skill_tree.get_node(skill_id)
+                    if node and node.skill_type == 'passive':
+                        # Re-apply the effects to the freshly loaded player instance
+                        player_instance._apply_passive_effects(player_instance, node)
+            else:
+                print("WARNING: Skill tree context not available during load. Passive effects may not be re-applied.")
+
+            # Sync encyclopedia with new items
             if hasattr(self.game, 'ctx') and hasattr(self.game.ctx, 'data'):
                 player_instance.initialize_items(self.game.ctx.data.items)
             print(f"Successfully loaded game from slot '{normalized_slot}'")

@@ -17,7 +17,60 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass, field
-from typing import Optional
+from enum import Enum
+from typing import Optional, Dict, Any
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AI PROFILE SYSTEM
+# ─────────────────────────────────────────────────────────────────────────────
+
+class AIProfile(Enum):
+    """
+    Different AI behavior profiles for enemies.
+    Each profile has distinct action preferences and strategies.
+    """
+    BALANCED = "balanced"    # Default behavior (current logic)
+    AGGRESSIVE = "aggressive"  # High attack weight, low defense
+    DEFENSIVE = "defensive"    # Prioritizes defending, uses spells when low
+    CASTER = "caster"          # Prefers spells, moderate defense
+    SUPPORT = "support"        # Uses buffs/debuffs, lower damage focus
+
+
+@dataclass
+class AIWeights:
+    """Container for AI action weights."""
+    attack: float = 50.0
+    defend: float = 10.0
+    spell: float = 0.0
+    dodge: float = 0.0
+
+
+# Default weight configurations for each AI profile
+AI_PROFILE_WEIGHTS: Dict[AIProfile, Dict[str, AIWeights]] = {
+    AIProfile.BALANCED: {
+        "default": AIWeights(attack=50.0, defend=10.0, spell=25.0, dodge=15.0),
+        "low_hp": AIWeights(attack=35.0, defend=40.0, spell=20.0, dodge=5.0),
+    },
+    AIProfile.AGGRESSIVE: {
+        "default": AIWeights(attack=70.0, defend=5.0, spell=20.0, dodge=5.0),
+        "low_hp": AIWeights(attack=50.0, defend=25.0, spell=15.0, dodge=10.0),
+    },
+    AIProfile.DEFENSIVE: {
+        "default": AIWeights(attack=30.0, defend=35.0, spell=20.0, dodge=15.0),
+        "low_hp": AIWeights(attack=20.0, defend=50.0, spell=25.0, dodge=5.0),
+    },
+    AIProfile.CASTER: {
+        "default": AIWeights(attack=25.0, defend=15.0, spell=50.0, dodge=10.0),
+        "low_hp": AIWeights(attack=20.0, defend=20.0, spell=45.0, dodge=15.0),
+    },
+    AIProfile.SUPPORT: {
+        "default": AIWeights(attack=20.0, defend=25.0, spell=45.0, dodge=10.0),
+        "low_hp": AIWeights(attack=15.0, defend=35.0, spell=40.0, dodge=10.0)
+    }
+}
+
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -49,6 +102,7 @@ class Enemy:
         accuracy: int = 3,
         dodge: int = 5,
         spells: Optional[list[str]] = None,
+        ai_profile: AIProfile = AIProfile.BALANCED,
     ) -> None:
         self.name = name
         self.hp = hp
@@ -69,6 +123,8 @@ class Enemy:
         self.spells: list[str] = spells or []
         # Cooldown dodge: enemy tidak bisa dodge setiap giliran
         self._dodge_cooldown: int = 0
+        # AI behavior profile
+        self.ai_profile = ai_profile
 
     # ── Convenience ──────────────────────────────────────────────────────────
 
@@ -85,13 +141,13 @@ class Enemy:
 
     def choose_action(self, mana: int = 0) -> str:
         """
-        AI sederhana berbasis probabilitas.
+        AI berbasis profil dengan bobot aksi yang bervariasi.
 
         Logika:
-          - HP rendah (< 30%) → lebih sering defend
-          - Punya mana & spell tersedia → coba cast spell
-          - Dodge cooldown selesai & HP oke → kadang dodge
-          - Default → attack
+          - Menggunakan profil AI untuk menentukan bobot aksi
+          - HP rendah → beralih ke profil "low_hp"
+          - Spell aktif bila ada dan mana > 0
+          - Dodge dengan cooldown
 
         Returns salah satu dari: "attack", "defend", "spell", "dodge"
         """
@@ -99,26 +155,29 @@ class Enemy:
         if self._dodge_cooldown > 0:
             self._dodge_cooldown -= 1
 
+        # Ambil profil AI yang sesuai
+        profile_weights = AI_PROFILE_WEIGHTS.get(
+            self.ai_profile, AIProfile.BALANCED
+        )
+        weight_key = "low_hp" if self.hp_ratio < 0.30 else "default"
+        weights_data = profile_weights[weight_key]
+
         weights: dict[str, float] = {
-            "attack": 50.0,
-            "defend": 10.0,
-            "spell":  0.0,
-            "dodge":  0.0,
+            "attack": weights_data.attack,
+            "defend": weights_data.defend,
+            "spell": weights_data.spell if self.spells and mana > 0 else 0.0,
+            "dodge": 0.0,  # Set to 0, will be adjusted below if applicable
         }
 
-        # Boost defend saat HP rendah
-        if self.hp_ratio < 0.30:
-            weights["defend"] += 30
-            weights["attack"] -= 15
-
-        # Aktifkan spell jika ada dan mana cukup
+        # Adjust spell weight based on mana availability
         if self.spells and mana > 0:
-            weights["spell"] = 25.0
-            weights["attack"] -= 10
+            weights["spell"] = weights_data.spell
+        else:
+            weights["spell"] = 0.0
 
         # Aktifkan dodge jika cooldown selesai dan HP tidak kritis
         if self._dodge_cooldown == 0 and self.hp_ratio > 0.20:
-            weights["dodge"] = 15.0
+            weights["dodge"] = weights_data.dodge
 
         # Normalisasi agar total ≥ 0 untuk semua pilihan
         actions = list(weights.keys())

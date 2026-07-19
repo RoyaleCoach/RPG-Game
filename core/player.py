@@ -309,7 +309,7 @@ class Player:
 
     # ── Combat ────────────────────────────────────────────────────────────────
 
-    def damage(self, amount: int, guard: int) -> int:
+    def damage(self, amount: int) -> int:
         """Apply incoming damage after guard reduction. Returns damage dealt."""
         final = max(1, amount - guard)
         self.hp -= final

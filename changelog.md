@@ -1,11 +1,6 @@
 # Changelog
-
----
-
 ## [0.1.0] - 2025-12-20
-
 ### Added
-
 - Save/Load System
 - Inventory
 - Merchant
@@ -13,35 +8,23 @@
 - Text Effects
 - Cross-Platform Keyboard Input
 
----
-
 ## [0.1.1] - 2026-06-20
-
 ### Fixed
-
 - Folder Structure
 - Import Functions
 - Save/Load Reliability
 - Player Management
 - Input Validation
 
----
-
 ## [0.1.2] - 2026-06-24
-
 ### Added
-
 - Expanded Enemy Roster
 - Enemy Stat Balancing
 - New Dungeon Encounters
 - Improved Combat Variety
 
----
-
 ## [0.1.3] - 2026-06-24
-
 ### Added
-
 - Expanded Item Collection
 - Weapon Progression System
 - Armor Equipment System
@@ -50,12 +33,8 @@
 - Limited (Quest-Exclusive) Items
 - Merchant Inventory Rework
 
----
-
 ## [0.1.4] - 2026-06-24
-
 ### Added
-
 - Quest System
 - Quest Board
 - Quest Progress Tracking
@@ -66,40 +45,29 @@
 - Automatic Quest Completion Check
 - Integration Between Quests and Limited Items
 
----
-
 ## [0.1.4.1] - 2026-06-24
-
 ### New Features
-
 - Quest Progress Tracking System
 - Dynamic Quest Completion Rewards
 - Floor Progression System
 - Equipment Status Indicator ([EQUIPPED])
 
 ### Gameplay Changes
-
 - Defense is now consumed during battle instead of remaining static
 - Battle UI now shows current defense value
 - Floor increases every 3 enemy victories
 
 ### Refactoring
-
 - Quest objectives now use type/target metadata
 - Simplified quest progress and completion logic
 - Improved maintainability for future quest additions
 
 ### Fixes
-
 - Fixed quest progress not being displayed
 - Fixed floor progression not being linked to quest requirements
 
----
-
 ## [0.2.0] - 2026-06-24
-
 ### Added
-
 - Dungeon Event System
 - Treasure Room Event
 - Healing Fountain Event
@@ -114,24 +82,18 @@
 - Event-Based Rewards and Penalties
 
 ### Gameplay Changes
-
 - Dungeon exploration now includes random non-combat encounters
 - Players can obtain gold, items, stat bonuses, or penalties through events
 - Secret Passages can advance floor progression
 - Some events introduce risk-versus-reward decisions
 
 ### Improved
-
 - Dungeon variety and replayability
 - Exploration progression system
 - Reward distribution outside of combat
 
----
-
 ## [0.2.1] - 2026-06-25
-
 ### Added
-
 - Boss Enemy System
 - Dedicated Boss Class
 - Level-Based Boss Scaling
@@ -140,7 +102,6 @@
 - Automatic Boss Encounters
 
 ### Gameplay Changes
-
 - Bosses now grant significantly higher rewards than normal enemies
 - Boss difficulty now scales with player progression
 - Enemy and Boss systems are now separated for easier balancing
@@ -149,17 +110,12 @@
 - Boss encounters act as progression milestones
 
 ### Refactoring
-
 - Introduced reusable Boss inheritance from Enemy
 - Centralized boss definitions in `enemy.py`
 - Improved combat reward handling for different enemy types
 
----
-
-## [0.3.0] - 2026-06-25
-
+## [0.3.0]
 ### Added
-
 - JSON-Based Data System
 - DataLoader Utility
 - `items.json`
@@ -173,7 +129,6 @@
 - Item Database Architecture
 
 ### Refactoring
-
 - Migrated Items from Python dictionaries to JSON
 - Migrated Quests from Python dictionaries to JSON
 - Migrated Bosses from Python dictionaries to JSON
@@ -186,19 +141,14 @@
 - Reduced hardcoded game content
 
 ### Improved
-
 - Easier balancing and content editing
 - Better separation between code and game data
 - Improved maintainability
 - Improved scalability for future content updates
 - Improved project organization
 
----
-
 ## [0.3.1] - 2026-06-25
-
 ### Added
-
 - Save Directory Support
 - Automatic Save Folder Creation
 - PyInstaller-Friendly Path Handling
@@ -206,7 +156,6 @@
 - Runtime Data Reload Support
 
 ### Fixed
-
 - Save/Load Initialization Issues
 - Merchant Constructor Dependency Errors
 - Boss Loading Errors
@@ -218,7 +167,6 @@
 - Inventory Data Access Errors
 
 ### Refactoring
-
 - Improved Save System Architecture
 - Improved Data Loading Reliability
 - Simplified System Initialization Order
@@ -226,18 +174,13 @@
 - Cleaned Up Legacy Hardcoded References
 
 ### Technical
-
 - Prepared project for executable distribution
 - Improved compatibility with packaged builds
 - Centralized game content management
 - Established foundation for future modding support
 
----
-
 ## [0.3.2] - 2026-06-25
-
 ### Added
-
 - In-Battle Potion Usage
 - Combat Heal Action
 - Potion Selection During Battle
@@ -246,38 +189,30 @@
 - Equipment Validation Improvements
 
 ### Gameplay Changes
-
 - Players can now consume potions directly during combat
 - Healing is now available as a dedicated battle action
 - Weapon, Armor, and Potion names are no longer case-sensitive
 - Equipment and consumable selection is more user-friendly
 
 ### Improved
-
 - Inventory interaction flow
 - Combat usability and survivability
 - Item lookup reliability
 - User input handling for equipment and consumables
 
 ### Fixed
-
 - Equipment selection failing due to letter case mismatch
 - Potion usage lookup inconsistencies
 - Invalid item name recognition issues
 - Inventory item validation edge cases
 
 ### Refactoring
-
 - Unified item name matching logic across weapons, armor, and potions
 - Reduced duplicate item validation code
 - Improved separation between combat logic and item data access
 
----
-
 ## [0.4.0] - 2026-06-26
-
 ### Added
-
 - Main Story Chapter 1–7
 - Story progression system based on player level
 - New characters: Lyren, Seren, Eiden, Echo, and The First Hollow
@@ -288,23 +223,17 @@
 - Narrative dialogue and cutscene sequences
 
 ### Changed
-
 - Improved story pacing and progression
 - Refined dungeon lore and worldbuilding
 - Integrated story progression with player save data
 
 ### Fixed
-
 - Story progression tracking
 - Chapter unlock consistency
 - Final battle and ending flow
 
----
-
 ## [0.5.0] - 2026-06-26
-
 ### Added
-
 - Multiple Ending System
 - Good Ending: Echoes of Redemption
 - Bad Ending: The Cycle Repeats
@@ -313,43 +242,31 @@
 - Ending paths based on player choices and battle outcome
 
 ### Changed
-
 - Reworked final chapter flow
 - Improved narrative impact of player decisions
 - Enhanced story conclusion and character arcs
 
 ### Fixed
-
 - Final boss progression logic
 - Ending trigger conditions
 - Story completion flow
 
----
-
 ## [0.5.1] - 2026-06-26
-
 ### Added
-
 - English localization for in-game text, menus, and story
 - Translated story scripts, UI prompts, README, and supporting utilities
 
 ### Changed
-
 - Default language set to English across the codebase
 
 ### Fixed
-
 - Corrected various untranslated prompts and inconsistent messages
 
----
-
 ## [0.6.0] - 2026-06-26
-
 ### Added
-
 - Spell System with Skill Management
 - Mana resource system for players (scales with level)
-- Player spell learning and tracking (learned_spells)
+- Player spell learning and tracking (`learned_spells`)
 - Spell casting in combat as a dedicated battle action
 - Spell effect system (damage, healing, buff types)
 - Mana cost enforcement and validation
@@ -359,37 +276,30 @@
 - Integration with JSON-based spell data from `spells.json`
 
 ### Gameplay Changes
-
-- Players now gain mana pool that regenerates on level-up
-- Combat offers four actions: attack, defend, heal (potions), and **spell**
+- Players now gain a mana pool that regenerates on level-up
+- Combat offers four actions: attack, defend, heal (potions), and *spell*
 - Spells consume mana and produce varied effects (damage enemies, heal self, boost defense)
 - Spells are learned progressively throughout gameplay
 - Initial player setup now includes a starter spell (Icicle)
-- Spell descriptions are displayed dynamically during combat
+- Spell descriptions dynamically displayed during combat
 
 ### Improved
-
 - Combat depth and strategic variety
 - Player progression through spell acquisition
-- Combat UI now displays current mana pool alongside HP
-- Spell selection menu shows mana costs and spell types
+- Combat UI now shows current mana pool alongside HP
+- Spell selection menu displays mana costs and types
 - Effect application based on spell metadata
 
 ### Technical
-
 - Created `Skill` class for spell management and lookup
-- Enhanced `Player` class with mana property and spell tracking
-- Rewrote `Combat.fight()` to support spell action handling
-- Implemented `apply_spell_effect()` for flexible spell type processing
-- Updated `SaveSystem` to persist mana and learned_spells on save/load
-- Established foundation for future spell balancing and spell trees
-
----
+- Enhanced `Player` class with mana tracking
+- Rewrote `Combat.fight()` to support spell actions
+- Implemented `apply_spell_effect()` for flexible spell handling
+- Updated `SaveSystem` to persist mana and learned_spells
+- Established foundation for future spell balancing
 
 ## [0.6.1] - 2026-06-26
-
 ### Added
-
 - Logging System
 - Centralized Game Logger
 - Combat Event Logging
@@ -403,333 +313,196 @@
 - Save/Load System Tests
 
 ### Improved
-
 - Easier debugging and issue tracking
 - Improved reliability of core gameplay systems
 - Better visibility into runtime events and errors
 - Safer future refactoring through automated tests
 
 ### Technical
-
 - Introduced Python `logging` module integration
-- Added structured log messages for major game events
+- Added structured log messages
 - Established automated test suite using `unittest`
-- Created foundation for Continuous Integration (CI)
-- Improved maintainability and code quality assurance
-
-### Refactoring
-
-- Replaced selected debug `print()` statements with logger calls
-- Standardized system event reporting
-- Separated runtime diagnostics from gameplay output
-
----
+- Created foundation for Continuous Integration
+- Improved maintainability and code quality
 
 ## [0.7.0] - 2026-06-26
-
 ### Added
-
 - Comprehensive Skill Tree System
-- SkillNode class for individual skill management
-- SkillTree class for skill hierarchy and progression
-- SkillTreeMenu class for interactive UI
-- Skill Points earned on level-up (1 per level)
+- SkillNode class for skill management
+- SkillTree class for hierarchical progression
+- SkillTreeMenu class for UI
+- Skill Points earned per level (1 per level)
 - Player skill_points and unlocked_skills tracking
 - Skill Tree data architecture (`skill_tree.json`)
-- JSON-based skill configuration system
-- Two skill types: Active Skills (spells) and Passive Skills (stat bonuses)
-- Skill prerequisites and unlock validation
-- Passive skill effects (mana bonus, attack bonus, defense bonus)
-- Skill Tree Menu with multiple display modes:
+- JSON-based skill configuration
+- Two skill types:
+  - Active Skills: spells
+  - Passive Skills: stat bonuses
+- Skill prerequisites and validation
+- Passive skill effects:
+  - Mana bonus
+  - Attack bonus
+  - Defense bonus
+- Skill Tree Menu display modes:
   - View All Skills
   - View Unlocked Skills
-  - View Available Skills to Unlock
+  - View Available Skills
   - View Passive/Active Skills Separately
-  - Search Skills by Name
-- Dynamic skill availability based on prerequisites
-- Skill cost system (variable SP cost per skill)
-- Spell integration with skill tree (unlocking skills teaches spells)
+  - Search by Name
+  - Dynamic skill availability
+- Skill cost system
+- Spell integration with skill tree progression
 
 ### Gameplay Changes
-
 - Players earn 1 Skill Point per level
-- New players start with 1 Skill Point and can immediately unlock skills
-- Skill Points can be spent to unlock new spells or passive abilities
-- Passive skills grant permanent stat bonuses
-- Max Mana can be increased through "Mana Mastery" passive skill
-- Attack and Defense can be improved through passive skills
-- Skill prerequisites prevent skill spam and encourage meaningful progression
-- Skill Tree access available from main menu
-
-### Progression Example
-
-```
-Magic Apprentice (Base Passive, Cost: 0)
-├── Fireball (Cost: 1, Requires: Magic Apprentice)
-│   └── Flame Burst (Cost: 2, Requires: Fireball)
-│       └── Inferno (Cost: 3, Requires: Flame Burst)
-├── Ice Shard (Cost: 1, Requires: Magic Apprentice)
-│   └── Frost Lance (Cost: 2, Requires: Ice Shard)
-│       └── Absolute Zero (Cost: 3, Requires: Frost Lance)
-└── Mana Mastery (Passive, Cost: 2)
-```
+- Starting with 1 Skill Point
+- Spend SP to unlock spells or passives
+- Passive skills grant permanent stat improvements
+- Mana Mastery increases Max Mana
+- Equipment progression through skill unlocks
+- Skill Tree accessible from main menu
 
 ### Improved
-
-- Character progression depth and replayability
-- Strategic choice in skill allocation
-- Long-term progression goals beyond level grinding
-- Modular skill system for easy content expansion
-- Save/Load persistence for skill tree state
+- Character progression complexity
+- Strategic skill allocation choices
+- Long-term progression goals
+- Modular skill system for content expansion
+- Save/Load skill progression
 
 ### Technical
-
-- Created `core/skill_tree.py` with SkillNode and SkillTree classes
-- Created `core/skill_tree_menu.py` for interactive UI
-- Updated `Player` class with skill point tracking
-- Added `_max_mana_bonus` property for skill effects
-- Updated `DataLoader` to load skill tree JSON
-- Integrated skill tree into Game initialization
-- Enhanced `SaveSystem` to persist skill_points and unlocked_skills
-- Updated `gain_exp()` to award skill points on level-up
-
-### Refactoring
-
-- Separated skill tree logic into dedicated modules
-- Established foundation for future skill expansions
-- Improved Player class for stat bonus management
-- Created modular menu system for UI flexibility
-
-### Fixes
-
-- Player status now displays available Skill Points
-- Proper save/load of skill progression
-- Menu system updated to accommodate new Skill Tree menu option
-
----
+- Created core/skill_tree.py modules
+- Updated Player class with skill points
+- Integrated SaveSystem for skill persistence
+- enhanced `gain_exp()` for SP rewards
 
 ## [0.7.1] - 2026-06-26
-
 ### Improved
-
-- Rebalanced dungeon event probabilities.
-- Added floor-based scaling for dungeon rewards and encounters.
-- Enhanced event descriptions for better immersion.
-- Improved risk-versus-reward mechanics across dungeon events.
-- Expanded treasure rewards with more varied loot.
-- Prevented repetitive dungeon events from occurring consecutively.
-- Refined dungeon UI and event presentation.
+- Rebalanced dungeon event probabilities
+- Floor-based scaling rewards
+- Enhanced immersion via better descriptions
+- Risk-versus-reward refinements
+- Diverse treasure rewards
+- Reduced event repetition
+- Improved dungeon UI/UX
 
 ### Fixed
-
-- Fixed inconsistencies in dungeon event outcomes.
-- Improved overall dungeon system stability and gameplay flow.
-
----
+- Event outcome inconsistencies
+- Dungeon system stability fixes
 
 ## [0.7.2] - 2026-06-26
-
 ### Added
-
-- `game_context.py` to centralize shared game state and systems.
-- `game_menu.py` to separate main menu configuration and actions.
+- game_context.py
+- game_menu.py
 
 ### Improved
-
-- Polished `game.py` architecture for better readability and maintainability.
-- Simplified game initialization flow.
-- Reduced coupling between game systems.
-- Improved dependency management through `GameContext`.
-- Enhanced menu organization and extensibility.
-
-### Refactoring
-
-- Moved shared game state into `GameContext`.
-- Separated menu logic from the main game loop.
-- Encapsulated player initialization responsibilities.
-- Reduced direct dependencies inside `Game`.
-- Improved overall project structure following the Single Responsibility Principle (SRP).
-
----
+- Polished game.py architecture
+- Reduced system coupling
+- Better SPA (Single Responsibility Principle) adherence
 
 ## [0.8.0] - 2026-06-27
-
 ### Added
+- Critical Hit system with configurable stats
+- Accuracy stat for minimum damage
+- Dodge mechanic for evasion
+- Status Effect framework
+  - Hooks: on_apply, tick, on_expire
+  - Built-in effects:
+    - Burn
+    - Poison
+    - Bleed
+    - Freeze
+    - Stun
+    - Regeneration
+- Spell-to-status mapping
+- MultiphaseBoss system
+- Shared combat helpers
 
-- Added **Critical Hit** system with configurable `critical_chance` and `critical_multiplier` stats.
-- Added **Accuracy** stat to increase minimum damage while preserving maximum damage.
-- Added **Dodge** mechanic that allows entities to completely avoid incoming attacks.
-- Added reusable **Status Effect** framework with lifecycle hooks (`on_apply`, `tick`, and `on_expire`).
-- Added built-in status effects:
-  - Burn
-  - Poison
-  - Bleed
-  - Freeze
-  - Stun
-  - Regeneration
-
-- Added spell-to-status-effect mapping for automatic effect application.
-- Added **MultiphaseBoss** system supporting multiple combat phases.
-- Added shared combat helper functions for damage calculation and dodge resolution.
-
-### Changed
-
-- Refactored combat damage calculation to support Critical Hits and Accuracy.
-- Improved enemy AI with weighted decision making.
-- Enemies can now:
-  - Attack
-  - Cast spells
-  - Defend
-  - Dodge
-
-- Bosses now transition between multiple phases with unique stats and abilities.
-- Combat now processes active status effects at the beginning of each turn.
-- Player and Enemy now share common combat mechanics to reduce duplicated logic.
-- Save/Load system now supports the following new player stats:
-  - `critical_chance`
-  - `critical_multiplier`
-  - `accuracy`
-  - `dodge`
-
-### Fixed
-
-- Improved combat consistency by reducing extreme low-damage rolls through the Accuracy system.
-- Prevented enemies from repeatedly using Dodge by introducing a cooldown.
-- Ensured older save files remain compatible by automatically applying default values for newly added stats.
-
-### Technical
-
-- Introduced a modular status effect architecture that allows new effects to be added without modifying the combat engine.
-- Improved extensibility for future spells, bosses, and enemy behaviors.
-- Simplified combat logic through reusable helper methods and reduced code duplication.
-
----
+### Changes
+- Combat damage calculation refactored
+- Enemy AI uses weighted decisions
+- Bosses have phase transitions
+- Standardized shield/hp interaction
 
 ## [0.8.1] - 2026-06-28
-
 ### Changed
-
-- Reworked the **Defend** mechanic into a secondary health layer.
-- Defense points are now consumed before HP when taking damage.
-- Removed the **Defend** action from the player's turn.
-- Updated combat flow so defensive durability is handled automatically during damage calculation.
-- Improved combat balance by making defensive stats more meaningful throughout battles.
+- Defend mechanism rework
+  - Secondary health layer
+  - Defense used before HP depletion
+- Player Defend action removed
 
 ### Fixed
-
-- Fixed an issue where only enemies could successfully use the Dodge mechanic.
-- Players can now correctly dodge incoming attacks based on their `dodge` stat.
-- Fixed damage handling to properly deplete Defense before reducing HP.
-- Improved combat consistency between Player and Enemy damage resolution.
-
-### Technical
-
-- Refactored the damage pipeline to prioritize Defense before Health.
-- Unified dodge resolution for both Player and Enemy using the shared combat logic.
-- Simplified combat calculations by removing the legacy player Defend action while preserving defensive gameplay.
-
----
+- Dodge availability for Players
+- Damage sequence correction
+- Defensive stat importance
 
 ## [0.8.2] - 2026-06-28
-
 ### Added
-
-- Added **SQLite** backend support for the Save/Load system.
-- Added automatic database initialization and schema creation on first launch.
-- Added structured database storage for player progress and game data.
+- SQLite backend for Save/Load
+- DB initialization scheme
+- Structured progress storage
 
 ### Changed
-
-- Replaced the JSON-based Save/Load system with **SQLite** for improved reliability and scalability.
-- Refactored the SaveSystem into a modular architecture with separated responsibilities.
-- Improved data persistence by storing game state in normalized database tables instead of a single JSON file.
-- Updated save handling to use reusable repository components for different game systems.
-
-### Fixed
-
-- Improved save consistency by using database transactions during save operations.
-- Reduced the risk of save corruption caused by interrupted writes.
-- Improved compatibility for future game features through a more extensible storage architecture.
-
-### Technical
-
-- Introduced a dedicated database layer for SQLite connection and query management.
-- Separated database schema initialization from save/load logic.
-- Reduced code duplication by centralizing common database operations.
-- Improved maintainability through repository-based data access and modular SaveSystem components.
-
----
+- Migrated SaveSystem to SQLite
+- Repository-based data access
+- Normalized database schema
 
 ## [0.8.3] - 2026-06-29
-
 ### Fixed
-
-- Fixed `execute_non_query` not correctly distinguishing between single-tuple params (`conn.execute`) and list-of-tuples params (`conn.executemany`), which caused `ProgrammingError` on batch inserts.
-- Fixed `save_active_quests` and `save_completed_quests` sending individual tuples instead of batch lists, resulting in incomplete quest saves.
-- Fixed stale `__pycache__` bytecode causing the game to run old debug-heavy code even after source files were cleaned.
-
-### Changed
-
-- Removed all debug `print()` statements from the entire `core/savesystem/` module (`database.py`, `inventory_repository.py`, `quest_repository.py`, `schema.py`).
-- Retained error-level `print()` to `stderr` for SQLite failures and unexpected exceptions.
-- Streamlined `execute_non_query` parameter handling with strict type checking for `list` vs `tuple` vs empty.
+- execute_non_query parameter type handling
+- Quest save tuple vs list issue
+- Old bytecode cache
 
 ### Technical
-
-- `execute_non_query` now uses `isinstance(params, list)` to route to `executemany` and `isinstance(params, tuple)` to route to `execute`, eliminating ambiguous parameter binding errors.
-- Empty list params are now silently skipped instead of logging a debug message.
-- All `__pycache__` directories were purged to force Python to recompile from the updated `.py` source files.
-
----
+- Improved parameter type checking
+- Batch quest save resolution
+- Pycache cleanup
 
 ## [0.9.0] - 2026-06-29
-
 ### Added
-
-- **Loot Table System** — Every enemy now has its own data-driven loot table with guaranteed drops (e.g. gold) and randomized item drops with configurable drop chance and quantity range.
-- **Rare Drops** — Independent rare drop roll (per-mille chance) for each enemy, supporting unique equipment, crafting materials, and collectibles. Displays a special "RARE DROP!" message when triggered.
-- **Equipment Rarity** — Five rarity tiers: Common, Uncommon, Rare, Epic, Legendary. Each rarity provides a stat multiplier and sell value multiplier. Rarity is displayed in inventory and equip menus.
-- **Item Encyclopedia** — Automatically records every discovered item. Unknown items remain hidden until obtained. Supports filtering by rarity and type (equipment, consumable, materials). Shows per-category and overall completion percentage.
-- Added `Item Encyclopedia` as main menu option `[6]` (Save Game moved to `[7]`).
-- Added `data/loot_tables.json` with loot tables for all enemies including bosses.
+- Loot Table System
+  - Guaranteed drops
+  - Random items with chance
+- Rare Drops (1/1000 chance)
+- Equipment rarity scaling
+- Item Encyclopedia tracking
+- New menu entry for Encyclopedia
 
 ### Changed
-
-- Combat victory rewards now roll loot table drops in addition to base gold/EXP rewards.
-- Inventory display now shows rarity label (e.g. `[Rare]`) and formatted stats for each item.
-- New `LootEngine` class handles all loot logic, decoupled from combat code.
-- New `ItemEncyclopedia` class tracks discovered items, auto-synced with player inventory after combat and on game load/new game.
-
-### Technical
-
-- New modules:
-  - `core/rarity.py` — rarity data definitions and helper functions.
-  - `core/loot.py` — LootTable, RareDrops, and LootEngine classes.
-  - `core/encyclopedia.py` — ItemEncyclopedia class with filtering and display.
-- `core/combat.py` — Added `set_loot_engine()` and `set_encyclopedia()` methods. `_award_victory()` now rolls loot and syncs encyclopedia.
-- `core/game_context.py` — Creates LootEngine and ItemEncyclopedia, wires them into Combat. Loads `loot_tables.json` via DataLoader.
-- `core/data_loader.py` — Added `load_loot_tables()` method.
-- `core/game.py` — Added menu entry for encyclopedia, syncs encyclopedia on player create/load.
-- `core/inventory.py` — Updated display to show rarity labels and formatted item stats.
-- All items in `data/items.json` already had `rarity` fields — no changes needed to existing item data.
-
----
+- Combat rewards now use loot tables
+- Inventory shows item rarity
+- LootEngine decoupled from combat
+- Encyclopedia auto-syncs with inventory
 
 ## [0.9.1] - 2026-07-07
-
 ### Added
-
-- **Early Game Welcome Bonus** — New players now automatically receive bonus `Health Potion` supplies at the start of the game to significantly increase survivability on the introductory floors.
+- Early Game Welcome Bonus
+  - Starter Health Potions
 
 ### Changed
-
-- **Early Floor Balancing** — Rebalanced (reduced) the maximum HP and stat scaling of enemies on early floors (`Floor 1` to `Floor 3`) to create a smoother, more accessible learning curve for beginners.
-- Updated the default `inventory` payload during new character initialization to include the starter recovery items immediately.
+- Early Floor rebalancing
+  - Reduced enemy HP/scaling 
+  - Inventory preset for new players
 
 ### Technical
-
-- `core/player.py` — Updated the `__init__` constructor's default `inventory` argument to automatically include `Health Potion` alongside the baseline `Fists` weapon.
-- `data/enemies.json` — Adjusted baseline HP parameters and growth curves for low-level enemies (e.g., Slimes, Goblins) spawning on the initial floors.
-- `core/game_context.py` / `core/game.py` — Ensured that new game initialization logic successfully applies the adjusted starting items without breaking backward compatibility for legacy save files.
+- Automatic starter item initialization
+- Enemy baseline parameter adjustments
+- Backward compatibility maintenance
 
 ---
+
+
+## [0.9.2] - 2026-07-18
+### Changed
+- Defense Mechanic Clarification: Removed the unused `guard` parameter from `Player.damage` method in `core/player.py` to align with the `current_defense` shield absorption approach in `core/combat.py`, streamlining damage calculation logic.
+- Passive Skill Persistence: Modified `SaveSystem.load` method to re-apply passive skill effects after loading a game. This ensures that stat bonuses from unlocked passive skills are correctly restored, maintaining player progression integrity across save/load cycles. Access to `SkillTree` context during load is required for this process
+
+### Added
+- AI Profile System: Introduced `AIProfile` enum and `AIWeights` dataclass for configurable enemy behavior patterns including Balanced, Aggressive, Defensive, Caster, and Support archetypes.
+- Dynamic Enemy Behaviors: Enemy `choose_action` now uses profile-based weights that change between default and low HP states for more varied tactical decisions.
+
+### Fixed
+- Status Effect Immobilization: Ensured `apply_status_effects` correctly handles `Stun` and `Freeze` effects by disabling actions for immobilized entities for their full turn, enhancing combat consistency and predictability. Verified seamless integration within `core/combat.py`'s turn management.: Removed the unused `guard` parameter from `Player.damage` method in `core/player.py` to align with the `current_defense` shield absorption approach in `core/combat.py`, streamlining damage calculation logic.
+- Passive Skill Persistence: Modified `SaveSystem.load` method to re-apply passive skill effects after loading a game. This ensures that stat bonuses from unlocked passive skills are correctly restored, maintaining player progression integrity across save/load cycles. Access to `SkillTree` context during load is required for this process
+
+### Fixed
+- Status Effect Immobilization: Ensured `apply_status_effects` correctly handles `Stun` and `Freeze` effects by disabling actions for immobilized entities for their full turn, enhancing combat consistency and predictability. Verified seamless integration within `core/combat.py`'s turn management.
