@@ -64,8 +64,8 @@ class Game:
 
         # Re-attach item catalog — it is never persisted, always injected.
         player.initialize_items(self.ctx.data.items)
-        # Sync encyclopedia with loaded inventory
-        self.ctx.encyclopedia.sync_with_player(player.inventory)
+        # Sync encyclopedia with discovered items from save + current inventory
+        self.ctx.sync_encyclopedia()
         return player
 
     def _create_new_player(self, name: str | None = None) -> Player:
@@ -82,7 +82,7 @@ class Game:
         player.initialize_items(self.ctx.data.items)
         self.ctx.skill_system.learn_spell(player, "icicle")
         # Sync encyclopedia with starting inventory
-        self.ctx.encyclopedia.sync_with_player(player.inventory)
+        self.ctx.sync_encyclopedia()
         intro_story(player)
         return player
 
