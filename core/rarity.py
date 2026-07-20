@@ -48,6 +48,12 @@ RARITIES: dict[str, dict] = {
         "sell_multiplier": 3.0,
         "order": 4,
     },
+    "Mythic": {
+        "label": "[Mythic]",
+        "stat_multiplier": 2.0,
+        "sell_multiplier": 4.0,
+        "order": 5,
+    },
 }
 
 
