@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 
 
@@ -28,20 +29,16 @@ class DataLoader:
                 return json.load(f)
 
         except FileNotFoundError:
-
             print(
-                f"❌ File tidak ditemukan: {path}"
+                f"❌ CRITICAL: Data file not found: {path}"
             )
-
-            return {}
+            sys.exit(1)
 
         except json.JSONDecodeError as e:
-
             print(
-                f"❌ JSON error di {path}: {e}"
+                f"❌ CRITICAL: Invalid JSON in {path}: {e}"
             )
-
-            return {}
+            sys.exit(1)
 
     def load_quests(self):
         return self.load_json("quests.json")
