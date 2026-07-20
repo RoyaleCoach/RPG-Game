@@ -93,7 +93,7 @@ class Explore:
                 else:
 
                     damage = random.randint(5, 15)
-                    final_damage = player.damage(damage, 0)
+                    final_damage = player.damage(damage)
 
                     print(f"HP -{final_damage}")
 
