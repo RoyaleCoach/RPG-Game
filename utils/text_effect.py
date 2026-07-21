@@ -141,6 +141,9 @@ def dialog_choice(question, choices):
         selected choice key as a string.
     """
 
+    if not isinstance(choices, (list, dict)):
+        raise TypeError("choices must be a list or dict")
+
     typewriter(f"\n{question}")
 
     if isinstance(choices, dict):
@@ -152,11 +155,6 @@ def dialog_choice(question, choices):
 
         for i, text in enumerate(choices, start=1):
             print(f"[{i}] {text}")
-
-        else:
-            raise TypeError(
-                "choices must be a list or dict"
-            )
 
     while True:
 

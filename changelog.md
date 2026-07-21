@@ -1,4 +1,5 @@
 # Changelog
+
 ## [0.1.0] - 2025-12-20
 ### Added
 - Save/Load System
@@ -505,3 +506,29 @@
 
 ### Fixed
 - Status Effect Immobilization: Ensured `apply_status_effects` correctly handles `Stun` and `Freeze` effects by disabling actions for immobilized entities for their full turn, enhancing combat consistency and predictability. Verified seamless integration within `core/combat.py`'s turn management.
+
+---
+
+## [0.9.3] - 2026-07-19
+### Fixed
+- **CRITICAL:** `Player.damage()` — removed undefined `guard` variable (NameError) and fixed argument arity. Puzzle traps no longer crash the game.
+- **CRITICAL:** `SaveSystem.load()` — fixed `_apply_passive_effects` called on wrong class (AttributeError). Passive skill bonuses now correctly re-apply on load.
+- **CRITICAL:** `dialog_choice()` — fixed `else` clause bound to `for` loop instead of `elif`. List choices no longer raise TypeError after successful display.
+- **HIGH:** `cursed_shrine` level-up now uses `_level_up()` instead of raw `player.level += 1`. Grants proper stat bonuses, heal, and skill point.
+- **HIGH:** `player.attack`/`player.defense` setter double-counting — dungeon events now modify `_base_attack`/`_base_defense` directly.
+- **HIGH:** `healing_fountain` and `cursed_shrine` damage now use `player.damage()` method for consistent death checking.
+- **HIGH:** `skill_tree.json` — added 4 missing spells (`flame_burst`, `frost_lance`, `inferno`, `absolute_zero`) to `spells.json`.
+- **HIGH:** `rarity.py` — added missing `Mythic` rarity. Mythic items no longer display as Common.
+- **MEDIUM:** `Enemy.random_enemy()` — enemies now scale HP/ATK with floor (6% per floor, capped at 2.2x).
+- **MEDIUM:** `status_effects.py` — removed duplicate immobilization messages from Stun/Freeze tick.
+- **MEDIUM:** `encyclopedia.py` — discovery progress now persists through save/load via `Player._discovered_items`.
+- **MEDIUM:** `inventory_repository.py`, `loadout_repository.py`, `quest_repository.py` — save operations now atomic (single transaction) to prevent data loss on crash.
+- **MEDIUM:** `quest_repository.py` — fixed type hints from `List[Dict]` to `List[Any]` to match actual quest data format.
+- **MEDIUM:** `data_loader.py` — missing/corrupt JSON files now cause `sys.exit(1)` instead of silent `{}` return.
+- **LOW:** `version.json` — updated from 0.9.1 to 0.9.2 to match changelog.
+
+### Tests
+- Updated `test_data_loader.py` — `test_load_nonexistent_exits` expects SystemExit.
+- Updated `test_rarity.py` — 6 rarities (added Mythic), fixed unknown-rarity test.
+- Updated `test_player.py` — default armor is "Health Potion" per actual code.
+- All 359 tests pass.

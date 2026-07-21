@@ -235,12 +235,11 @@ class SaveSystem:
             player_instance = Player.from_dict(full_loaded_data)
             # Re-apply passive skill effects from unlocked skills
             if hasattr(self.game, 'ctx') and hasattr(self.game.ctx, 'skill_tree'):
-                skill_tree = self.game.ctx.skill_tree # Assume skill_tree is accessible via game context
+                skill_tree = self.game.ctx.skill_tree
                 for skill_id in player_instance.unlocked_skills:
                     node = skill_tree.get_node(skill_id)
                     if node and node.skill_type == 'passive':
-                        # Re-apply the effects to the freshly loaded player instance
-                        player_instance._apply_passive_effects(player_instance, node)
+                        skill_tree._apply_passive_effects(player_instance, node)
             else:
                 print("WARNING: Skill tree context not available during load. Passive effects may not be re-applied.")
 

@@ -215,7 +215,7 @@ class Dungeon:
             print("The fountain is still. Nothing happens.")
         else:
             damage = self._scaled_damage(player, 15)
-            player.hp -= damage
+            player.damage(damage)
             print(f"☠️ Poisoned! -{damage} HP")
 
     # -------------------------
@@ -241,8 +241,8 @@ class Dungeon:
         outcome = random.randint(1, 3)
 
         if outcome == 1:
-            player.attack += 5 + max(0, player.luck)
-            player.hp -= 20 + player.floor * 2
+            player._base_attack += 5 + max(0, player.luck)
+            player.damage(20 + player.floor * 2)
             player.gain_exp(self._scaled_exp(player, 12))
             print(f"+{5 + max(0, player.luck)} ATK, -{20 + player.floor * 2} HP")
         elif outcome == 2:
@@ -251,7 +251,7 @@ class Dungeon:
             player.gain_exp(self._scaled_exp(player, 10))
             print(f"+{gold_gain} Gold")
         else:
-            player.level += 1
+            player._level_up()
             player.gain_exp(self._scaled_exp(player, 20))
             print("📈 Level Up!")
 
@@ -283,11 +283,11 @@ class Dungeon:
         player.gold -= offer_cost
 
         if random.randint(1, 2) == 1:
-            player.attack += 2 + max(0, player.luck // 2)
+            player._base_attack += 2 + max(0, player.luck // 2)
             player.gain_exp(self._scaled_exp(player, 10))
             print(f"⚔️ ATK +{2 + max(0, player.luck // 2)}")
         else:
-            player.defense += 2 + max(0, player.luck // 2)
+            player._base_defense += 2 + max(0, player.luck // 2)
             player.gain_exp(self._scaled_exp(player, 10))
             print(f"🛡️ DEF +{2 + max(0, player.luck // 2)}")
 

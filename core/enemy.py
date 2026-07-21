@@ -197,38 +197,50 @@ class Enemy:
 
     @staticmethod
     def random_enemy(floor: int) -> "Enemy":
-        """Kembalikan enemy acak sesuai floor."""
+        """Kembalikan enemy acak sesuai floor.
+
+        Stats scale with floor so enemies remain challenging as the
+        player progresses.  Each pool defines base stats for the
+        lowest floor in its range; every additional floor adds a
+        small percentage on top.
+        """
+        # Scaling: 6 % per floor, capped at +120 % (floor 20+)
+        scale = 1.0 + min(floor * 0.06, 1.20)
+
+        def _e(name, hp, attack, **kw) -> "Enemy":
+            return Enemy(name, int(hp * scale), int(attack * scale), **kw)
+
         if floor <= 5:
             pool = [
-                Enemy("Goblin",     15,  8, critical_chance=8, dodge=3),
-                Enemy("Skeleton",   24, 10, critical_chance=10, accuracy=4),
-                Enemy("Dark Wolf",  28, 12, dodge=12),
-                Enemy("Bomber",     30, 20, critical_chance=20,
+                _e("Goblin",     15,  8, critical_chance=8, dodge=3),
+                _e("Skeleton",   24, 10, critical_chance=10, accuracy=4),
+                _e("Dark Wolf",  28, 12, dodge=12),
+                _e("Bomber",     30, 20, critical_chance=20,
                       critical_multiplier=2.0),
             ]
         elif floor <= 15:
             pool = [
-                Enemy("Venom Spider", 38, 14, dodge=8,
+                _e("Venom Spider", 38, 14, dodge=8,
                       spells=["poison_bite"]),
-                Enemy("Ghoul",        40, 15, critical_chance=15),
-                Enemy("Bone Archer",  42, 16, accuracy=8),
-                Enemy("Dark Shaman",  50, 18, critical_chance=12,
+                _e("Ghoul",        40, 15, critical_chance=15),
+                _e("Bone Archer",  42, 16, accuracy=8),
+                _e("Dark Shaman",  50, 18, critical_chance=12,
                       spells=["shadow_bolt"]),
             ]
         elif floor <= 25:
             pool = [
-                Enemy("Stone Golem",   70, 18, dodge=3, accuracy=6),
-                Enemy("Ogre",          82, 20, critical_chance=12,
+                _e("Stone Golem",   70, 18, dodge=3, accuracy=6),
+                _e("Ogre",          82, 20, critical_chance=12,
                       critical_multiplier=2.0),
-                Enemy("Necromancer",    86, 22, spells=[
+                _e("Necromancer",    86, 22, spells=[
                       "shadow_bolt", "icicle"]),
-                Enemy("Giant",         90, 15, accuracy=10),
+                _e("Giant",         90, 15, accuracy=10),
             ]
         else:
             pool = [
-                Enemy("Doom Knight",   100, 25, critical_chance=18,
+                _e("Doom Knight",   100, 25, critical_chance=18,
                       critical_multiplier=2.5, dodge=8),
-                Enemy("Abyss Walker",  180, 28, dodge=15,
+                _e("Abyss Walker",  180, 28, dodge=15,
                       spells=["shadow_bolt", "arcane_burst"]),
             ]
         return random.choice(pool)

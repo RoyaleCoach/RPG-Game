@@ -55,6 +55,38 @@
     "obtain": "dungeon"
   },
 
+  "flame_burst": {
+    "type": "aoe/damage",
+    "level": 5,
+    "description": "[caster] unleashes a burst of flames!",
+    "cost": 25,
+    "obtain": "dungeon"
+  },
+
+  "frost_lance": {
+    "type": "st/damage",
+    "level": 5,
+    "description": "[caster] launches a Frost Lance!",
+    "cost": 25,
+    "obtain": "dungeon"
+  },
+
+  "inferno": {
+    "type": "aoe/damage",
+    "level": 8,
+    "description": "[caster] engulfs everything in Inferno!",
+    "cost": 35,
+    "obtain": "dungeon"
+  },
+
+  "absolute_zero": {
+    "type": "st/damage",
+    "level": 8,
+    "description": "[caster] brings Absolute Zero upon the battlefield!",
+    "cost": 35,
+    "obtain": "dungeon"
+  },
+
   "mana_shield": {
     "type": "st/buff",
     "level": 6,

@@ -17,27 +17,23 @@ class InventoryRepository:
     def save_inventory(self, save_id: int, inventory_data: Dict[str, int]) -> None:
         """
         Saves the player's inventory for a given save ID.
-        This implementation clears existing inventory for the save_id and re-inserts.
-        Ensures efficient bulk insertion using database.py's executemany capability.
+        Deletes existing inventory and re-inserts in a single transaction
+        to prevent data loss on crash.
         """
-        # First, delete existing inventory items for this save_id.
-        self.execute_non_query(self.db_path, "DELETE FROM inventory_items WHERE save_id = ?", (save_id,))
-        
-        # Prepare data for bulk insertion if inventory_data is not empty.
-        if inventory_data: 
-            insert_query = """
-                INSERT INTO inventory_items (save_id, item_name, quantity)
-                VALUES (?, ?, ?)
-            """
-            # Prepare data as a list of tuples for executemany.
-            items_to_insert: List[Tuple[int, str, int]] = [
-                (save_id, item_name, quantity)
-                for item_name, quantity in inventory_data.items()
-            ]
-            
-            if items_to_insert:
-                # Call execute_non_query with the list of tuples; database.py should handle executemany.
-                self.execute_non_query(self.db_path, insert_query, items_to_insert)
+        from core.savesystem.database import get_db_connection
+        with get_db_connection(self.db_path) as conn:
+            conn.execute("DELETE FROM inventory_items WHERE save_id = ?", (save_id,))
+            if inventory_data:
+                insert_query = """
+                    INSERT INTO inventory_items (save_id, item_name, quantity)
+                    VALUES (?, ?, ?)
+                """
+                items_to_insert: List[Tuple[int, str, int]] = [
+                    (save_id, item_name, quantity)
+                    for item_name, quantity in inventory_data.items()
+                ]
+                if items_to_insert:
+                    conn.executemany(insert_query, items_to_insert)
 
     def load_inventory(self, save_id: int) -> Dict[str, int]:
         """

@@ -130,6 +130,10 @@ class Player:
         # Dikelola oleh status_effects.py; tidak di-save (transient per battle)
         self.status_effects: list = []
 
+        # ── Encyclopedia tracking ────────────────────────────────────────────
+        # Set by GameContext when syncing with ItemEncyclopedia.
+        self._discovered_items: set[str] = set()
+
     # ── Item catalog ─────────────────────────────────────────────────────────
 
     def initialize_items(self, items: dict) -> None:
@@ -310,8 +314,12 @@ class Player:
     # ── Combat ────────────────────────────────────────────────────────────────
 
     def damage(self, amount: int) -> int:
-        """Apply incoming damage after guard reduction. Returns damage dealt."""
-        final = max(1, amount - guard)
+        """Apply incoming damage to HP. Returns damage dealt.
+
+        Defence absorption is handled by the combat system
+        (see core/combat.py current_defense shield).
+        """
+        final = max(1, amount)
         self.hp -= final
         if not self.is_alive:
             print("💀 Game Over!")
@@ -365,6 +373,9 @@ class Player:
                 "enemies_killed": self.enemies_killed,
                 "puzzles_solved": self.puzzles_solved,
             },
+            "encyclopedia": {
+                "discovered": sorted(getattr(self, '_discovered_items', [])),
+            },
             "flags": {
                 "skip_next_battle": self.skip_next_battle,
                 "skip_next_trap": self.skip_next_trap,
@@ -392,8 +403,9 @@ class Player:
         q = data.get("quests", {})
         s = data.get("statistics", {})
         f = data.get("flags", {})
+        enc = data.get("encyclopedia", {})
 
-        return cls(
+        player = cls(
             name=p.get("name", "Adventurer"),
             level=p.get("level", 1),
             exp=p.get("exp", 0),
@@ -427,6 +439,9 @@ class Player:
             skip_next_trap=f.get("skip_next_trap", False),
             skip_next_boss_preparation=f.get("skip_next_boss_preparation", False),
         )
+        # Restore encyclopedia discovery data (not present in old saves)
+        player._discovered_items = set(enc.get("discovered", []))
+        return player
 
     @classmethod
     def _from_legacy_dict(cls, data: dict[str, Any]) -> "Player":

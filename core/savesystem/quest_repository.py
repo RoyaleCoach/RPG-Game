@@ -1,7 +1,7 @@
 # quest_repository.py
 
 import json
-from typing import Any, Dict, List, Tuple, Union # Added Tuple and Union for type hints
+from typing import Any, List, Tuple
 
 class QuestRepository:
     """
@@ -39,26 +39,25 @@ class QuestRepository:
             return 0 
         return rows[0]["story_progress"] # rows[0] is safe if query returns items
 
-    def save_active_quests(self, save_id: int, active_quests: List[Dict[str, Any]]) -> None:
+    def save_active_quests(self, save_id: int, active_quests: List[Any]) -> None:
         """
         Saves the list of active quests for a given save ID.
-        Clears existing active quests and inserts the new ones.
+        Clears existing active quests and inserts the new ones in a single transaction.
         """
-        # First, delete existing active quests for this save_id.
-        self.execute_non_query(self.db_path, "DELETE FROM quests_active WHERE save_id = ?", (save_id,))
-        
-        if not active_quests:
-            return 
+        from core.savesystem.database import get_db_connection
+        with get_db_connection(self.db_path) as conn:
+            conn.execute("DELETE FROM quests_active WHERE save_id = ?", (save_id,))
+            if not active_quests:
+                return
+            quests_to_insert: List[Tuple[int, str]] = [
+                (save_id, self.dict_to_json_string(quest)) for quest in active_quests
+            ]
+            conn.executemany(
+                "INSERT INTO quests_active (save_id, quest_data) VALUES (?, ?)",
+                quests_to_insert,
+            )
 
-        insert_query = "INSERT INTO quests_active (save_id, quest_data) VALUES (?, ?)"
-        
-        # Prepare data as a list of tuples (save_id, JSON string of quest data)
-        quests_to_insert: List[Tuple[int, str]] = [(save_id, self.dict_to_json_string(quest)) for quest in active_quests]
-        
-        for quest_tuple in quests_to_insert:
-            self.execute_non_query(self.db_path, insert_query, quest_tuple)
-
-    def load_active_quests(self, save_id: int) -> List[Dict[str, Any]]:
+    def load_active_quests(self, save_id: int) -> List[Any]:
         """
         Loads active quests for a given save ID.
         Returns a list of quest dictionaries.
@@ -70,32 +69,31 @@ class QuestRepository:
         active_quests = []
         for row in rows:
             try:
-                quest_dict = self.json_string_to_dict(row["quest_data"])
-                active_quests.append(quest_dict)
-            except Exception as e: # Catching all exceptions during decoding
+                quest_data = self.json_string_to_dict(row["quest_data"])
+                active_quests.append(quest_data)
+            except Exception as e:
                 print(f"Error decoding quest data for save_id {save_id}: {e}")
-                continue # Continue to next row if decoding fails
+                continue
         return active_quests
 
-    def save_completed_quests(self, save_id: int, completed_quests: List[Dict[str, Any]]) -> None:
+    def save_completed_quests(self, save_id: int, completed_quests: List[Any]) -> None:
         """
         Saves the list of completed quests for a given save ID.
-        Clears existing completed quests and inserts the new ones.
+        Clears existing completed quests and inserts the new ones in a single transaction.
         """
-        self.execute_non_query(self.db_path, "DELETE FROM quests_completed WHERE save_id = ?", (save_id,))
-        
-        if not completed_quests:
-            return 
+        from core.savesystem.database import get_db_connection
+        with get_db_connection(self.db_path) as conn:
+            conn.execute("DELETE FROM quests_completed WHERE save_id = ?", (save_id,))
+            if not completed_quests:
+                return
+            quests_to_insert = [(save_id, self.dict_to_json_string(quest)) for quest in completed_quests]
+            conn.executemany(
+                "INSERT INTO quests_completed (save_id, quest_data) VALUES (?, ?)",
+                quests_to_insert,
+            )
 
-        insert_query = "INSERT INTO quests_completed (save_id, quest_data) VALUES (?, ?)"
-        
-        quests_to_insert = [(save_id, self.dict_to_json_string(quest)) for quest in completed_quests]
-        
-        for quest_tuple in quests_to_insert:
-            self.execute_non_query(self.db_path, insert_query, quest_tuple)
 
-
-    def load_completed_quests(self, save_id: int) -> List[Dict[str, Any]]:
+    def load_completed_quests(self, save_id: int) -> List[Any]:
         """
         Loads completed quests for a given save ID.
         Returns a list of quest dictionaries.
@@ -107,9 +105,9 @@ class QuestRepository:
         completed_quests = []
         for row in rows:
             try:
-                quest_dict = self.json_string_to_dict(row["quest_data"])
-                completed_quests.append(quest_dict)
-            except Exception as e: # Catching all exceptions during decoding
+                quest_data = self.json_string_to_dict(row["quest_data"])
+                completed_quests.append(quest_data)
+            except Exception as e:
                 print(f"Error decoding completed quest data for save_id {save_id}: {e}")
-                continue # Continue to next row if decoding fails
+                continue
         return completed_quests

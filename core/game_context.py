@@ -171,6 +171,21 @@ class GameContext:
             quest_system=self.quest_system,
         )
 
+    def sync_encyclopedia(self) -> None:
+        """Sync encyclopedia with player's discovered items and inventory.
+
+        Call this after player creation or load to restore discovery progress.
+        """
+        if self.player is None:
+            return
+        # Restore items discovered in previous sessions
+        for item_name in getattr(self.player, '_discovered_items', []):
+            self.encyclopedia.discover(item_name)
+        # Also sync with current inventory
+        self.encyclopedia.sync_with_player(self.player.inventory)
+        # Push discovered set back into player for future saves
+        self.player._discovered_items = set(self.encyclopedia.discovered)
+
     def _init_ui_systems(self) -> None:
         """Systems that present information or menus to the player."""
         from core.skill_tree import SkillTree

@@ -178,8 +178,8 @@ class Freeze(StatusEffect):
         print(f"❄️ {target.name} membeku! ({self.duration} giliran)")
 
     def _apply_effect(self, target: EntityType) -> None:
-        # Combat mengecek is_frozen sebelum giliran target
-        print(f"❄️ {target.name} terlalu beku untuk bergerak!")
+        # Combat loop prints the skip message; this is a no-op to avoid duplicates.
+        pass
 
     def on_expire(self, target: EntityType) -> None:
         print(f"🌡️ {target.name} bebas dari pembekuan.")
@@ -203,7 +203,8 @@ class Stun(StatusEffect):
         print(f"⚡ {target.name} terpana! ({self.duration} giliran)")
 
     def _apply_effect(self, target: EntityType) -> None:
-        print(f"⚡ {target.name} tidak bisa bergerak karena terpana!")
+        # Combat loop prints the skip message; this is a no-op to avoid duplicates.
+        pass
 
     def on_expire(self, target: EntityType) -> None:
         print(f"✅ {target.name} kembali sadar.")
@@ -296,9 +297,13 @@ def apply_effect_to(target: EntityType, effect: StatusEffect) -> None:
 
 SPELL_EFFECTS: dict[str, type[StatusEffect]] = {
     "fireball":      Burn,
+    "flame_burst":   Burn,
+    "inferno":       Burn,
     "origin_flame":  Burn,
     "shadow_bolt":   Bleed,
     "icicle":        Freeze,
+    "frost_lance":   Freeze,
+    "absolute_zero": Freeze,
     "arcane_burst":  Stun,
     "requiem_of_light": Burn,
 }
