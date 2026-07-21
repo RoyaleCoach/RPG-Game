@@ -44,9 +44,9 @@ class TestDataLoader:
         version = loader.load_version()
         assert "version" in version
 
-    def test_load_nonexistent_returns_empty(self, loader):
-        result = loader.load_json("nonexistent.json")
-        assert result == {}
+    def test_load_nonexistent_exits(self, loader):
+        with pytest.raises(SystemExit):
+            loader.load_json("nonexistent.json")
 
     def test_reload_items(self, loader):
         result = loader.reload("items")

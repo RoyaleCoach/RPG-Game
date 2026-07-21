@@ -26,8 +26,8 @@ class TestPlayerInitialization:
     def test_default_weapon(self, player):
         assert player.weapon == "Fists"
 
-    def test_default_armor_is_none(self, player):
-        assert player.armor is None
+    def test_default_armor_is_health_potion(self, player):
+        assert player.armor == "Health Potion"
 
     def test_default_inventory_has_fists(self, player):
         assert "Fists" in player.inventory

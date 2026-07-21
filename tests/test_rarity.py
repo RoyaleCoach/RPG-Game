@@ -14,11 +14,11 @@ from core.rarity import (
 class TestRarityData:
     """Rarity definitions."""
 
-    def test_five_rarities_exist(self):
-        assert len(RARITIES) == 5
+    def test_six_rarities_exist(self):
+        assert len(RARITIES) == 6
 
     def test_all_rarities_present(self):
-        expected = {"Common", "Uncommon", "Rare", "Epic", "Legendary"}
+        expected = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"}
         assert set(RARITIES.keys()) == expected
 
     def test_common_has_correct_multipliers(self):
@@ -54,7 +54,7 @@ class TestRarityFunctions:
         assert r["label"] == "[Legendary]"
 
     def test_get_rarity_unknown_defaults_to_common(self):
-        r = get_rarity("Mythic")
+        r = get_rarity("NonExistent")
         assert r["label"] == "[Common]"
 
     def test_get_rarity_label(self):
@@ -79,7 +79,7 @@ class TestRarityFunctions:
 
     def test_all_rarities_sorted(self):
         rarities = all_rarities()
-        assert rarities == ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
+        assert rarities == ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"]
 
     def test_all_rarities_returns_list(self):
         assert isinstance(all_rarities(), list)
